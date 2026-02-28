@@ -1,11 +1,12 @@
 <?php
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage lang
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2026 Academe Research, Inc.
  *
  */
 
@@ -149,8 +150,8 @@ $string['pluginenabled'] = 'The plugin is now visible.';
 $string['plugindisabled'] = 'The plugin has been hidden.';
 $string['plugindisableduser'] = 'The %s plugin has been disabled. Please check with your administrator to have this feature enabled.';
 $string['pluginnotenabled'] = 'Plugin is hidden. You must make the %s plugin visible first.';
-$string['pluginexplainaddremove'] = 'Plugins in Mahara are always installed and can be accessed if people know the URLs and would otherwise have access. Rather than enabling and disabling the functionality, plugins are hidden or made visible by clicking on the \'Hide\' or \'Show\' links beside the plugins below.';
-$string['pluginexplainartefactblocktypes'] = 'When hiding an \'artefact\' type plugin, Mahara also stops the display of the blocks related to it.';
+$string['pluginexplainaddremove'] = 'Plugins in ePortfolios are always installed and can be accessed if people know the URLs and would otherwise have access. Rather than enabling and disabling the functionality, plugins are hidden or made visible by clicking on the \'Hide\' or \'Show\' links beside the plugins below.';
+$string['pluginexplainartefactblocktypes'] = 'When hiding an \'artefact\' type plugin, ePortfolios also stops the display of the blocks related to it.';
 $string['pluginbrokenanddisabledtitle1'] = 'The broken plugin "%s" was disabled.';
 $string['pluginbrokenanddisabled'] = 'Someone attempted to load the %s plugin, but it could not be loaded.
 To prevent further errors, the plugin has been disabled.
@@ -967,7 +968,7 @@ $string['phpuploaderror_2'] = 'The uploaded file exceeds the max_file_size direc
 $string['phpuploaderror_3'] = 'The uploaded file was only partially uploaded.';
 $string['phpuploaderror_4'] = 'No file was uploaded.';
 $string['phpuploaderror_6'] = 'Missing a temporary folder.';
-$string['phpuploaderror_7'] = 'Failed to write file to disk. Check that your filesystem has enough space to write to the Mahara dataroot and/or the PHP \'upload_tmp_dir\' directories.';
+$string['phpuploaderror_7'] = 'Failed to write file to disk. Check that your filesystem has enough space to write to the ePortfolios dataroot and/or the PHP \'upload_tmp_dir\' directories.';
 $string['phpuploaderror_8'] = 'File upload stopped by extension.';
 $string['adminphpuploaderror'] = 'A file upload error was probably caused by your server configuration.';
 $string['noinputnamesupplied'] = 'No input name is provided.';
@@ -1334,7 +1335,7 @@ $string['members'] = 'Members';
 $string['blocks'] = 'Blocks';
 $string['artefacts'] = 'Artefacts';
 $string['posts'] = 'Posts';
-$string['facebookdescription'] = 'Mahara is an open source ePortfolio and social networking web application.
+$string['facebookdescription'] = 'ePortfolios is an open-source ePortfolio & Competency Platform.
 It provides people with tools to create and maintain a digital portfolio of their learning and social networking features to allow them to interact with each other.';
 
 // Form change checker
@@ -1365,7 +1366,7 @@ $string['searching'] = "Searching...";
 
 // Style guide
 $string['styleguide_title'] = 'Style guide';
-$string['styleguide_description'] = 'This style guide describes all the different types of components used by Mahara. They are in one place so you can easily check if you have styled everything when you are developing a new theme or plugin. Apply a different theme to your site to see what the individual components look like.';
+$string['styleguide_description'] = 'This style guide describes all the different types of components used by ePortfolios. They are in one place so you can easily check if you have styled everything when you are developing a new theme or plugin. Apply a different theme to your site to see what the individual components look like.';
 
 // Miscellaneous (please keep these alphabetized)
 $string['cli_incorrect_value'] = 'Incorrect value, please retry.';
