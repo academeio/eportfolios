@@ -1,12 +1,12 @@
 <?php
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage skin
  * @author     Gregor Anzelj
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
- * @copyright  (C) 2010-2013 Gregor Anzelj <gregor.anzelj@gmail.com>
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2010-2013 Gregor Anzelj. (C) 2026 Academe Research, Inc.
  *
  */
 
@@ -150,8 +150,8 @@ $string['fontsizelargest'] = 'largest';
 
 $string['headerlogoimage1'] = 'Logo';
 $string['headerlogoimagenormal'] = 'Default theme logo';
-$string['headerlogoimagelight1'] = 'White Mahara logo and text (suitable for darker header backgrounds)';
-$string['headerlogoimagedark1'] = 'Dark Mahara logo and text (suitable for lighter header backgrounds)';
+$string['headerlogoimagelight1'] = 'White logo and text (suitable for darker header backgrounds)';
+$string['headerlogoimagedark1'] = 'Dark logo and text (suitable for lighter header backgrounds)';
 
 $string['normallinkcolor'] = 'Normal link colour';
 $string['hoverlinkcolor1'] = 'Hover link colour';
@@ -174,7 +174,7 @@ $string['skincustomcssdescription'] = 'Custom CSS will not be reflected in skin 
 $string['chooseviewskin'] = 'Choose page skin';
 $string['chooseskin'] = 'Choose skin';
 $string['notsavedyet'] = 'Not saved yet.';
-$string['notcompatiblewiththeme'] = 'Your Mahara site theme "%s" does not support page skins. This means the skin you select will have no effect on how you see this page, but it may affect the page\'s appearance for others viewing the site with a different theme.';
+$string['notcompatiblewiththeme'] = 'Your site theme "%s" does not support page skins. This means the skin you select will have no effect on how you see this page, but it may affect the page\'s appearance for others viewing the site with a different theme.';
 $string['notcompatiblewithpagetheme'] = 'This page\'s theme "%s" does not support page skins. The skin you choose here will have no effect on the page\'s appearance until you select a different theme.';
 $string['viewskinchanged'] = 'Page skin changed';
 $string['manageskins'] = 'Manage skins';

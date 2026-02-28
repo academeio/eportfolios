@@ -1,12 +1,13 @@
 <?php
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage lang
  * @author     Hugh Davenport <hugh@catalyst.net.nz>
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2026 Academe Research, Inc.
  *
  */
 
@@ -442,7 +443,7 @@ $string['reportdescinformation'] = '<ul>
 <ul>
 <li>Number of groups</li>
 <li>Database size</li>
-<li>Mahara version</li>
+<li>ePortfolios version</li>
 <li>Information on the running of cron</li>
 <li>Groups overview</li>
 </ul></li>

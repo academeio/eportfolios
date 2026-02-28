@@ -2,11 +2,12 @@
 
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage lang
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2026 Academe Research, Inc.
  *
  */
 defined('INTERNAL') || die();
@@ -118,16 +119,16 @@ $string['grouptypesubmitpage'] = 'Submit pages - Members can submit pages to the
 $string['hidemembership'] = 'Hide membership';
 $string['homenumber'] = 'Home phone number';
 $string['icqnumber'] = 'ICQ Number';
-$string['idownersubmitportfolio'] = 'Mahara ID of the person submitting their portfolio for assessment';
+$string['idownersubmitportfolio'] = 'ePortfolios ID of the person submitting their portfolio for assessment';
 $string['industry'] = 'Industry';
-$string['institution'] = 'Mahara institution';
+$string['institution'] = 'ePortfolios institution';
 $string['institutioncontextauthuser'] = 'The institution context of the authenticated person';
-$string['institutionforctrlgroups'] = 'Mahara institution - required for API controlled groups';
+$string['institutionforctrlgroups'] = 'ePortfolios institution - required for API controlled groups';
 $string['institutionnameauthuser'] = 'The institution full name context of the authenticated person';
 $string['internal'] = 'internal';
 $string['introduction'] = 'Introduction of the account holder';
 $string['isacollection'] = 'Is a collection';
-$string['iscollection'] = 'Does this Mahara ID represent a collection?';
+$string['iscollection'] = 'Does this ePortfolios ID represent a collection?';
 $string['jabberusername'] = 'Jabber/XMPP username';
 $string['lastname'] = 'The family name of the person';
 $string['launch_presentation_locale'] = 'LTI local of launch presentation';
@@ -141,7 +142,7 @@ $string['lock'] = 'Shall the submission be locked from editing?';
 $string['locked'] = 'Locked';
 $string['lti_message_type'] = 'LTI message type';
 $string['lti_version'] = 'LTI version';
-$string['mahara'] = 'Mahara';
+$string['mahara'] = 'ePortfolios';
 $string['memberactionexplicit'] = 'Member action: add, or remove';
 $string['memberrole'] = 'Member role: ';
 $string['memberroleexplicit'] = 'Member role: admin, tutor, member';
@@ -157,7 +158,7 @@ $string['passwordvalid'] = 'Must be at least 6 characters long. Must be differen
 $string['personalwebsite'] = 'Personal website';
 $string['plaintxtpassword'] = 'Plain text password consisting of any characters';
 $string['portfolioowneremail'] = 'Email address of the portfolio owner';
-$string['portfolioownerid'] = 'Mahara ID of the portfolio owner';
+$string['portfolioownerid'] = 'ePortfolios ID of the portfolio owner';
 $string['portfolioownerusername'] = 'Username of the portfolio owner';
 $string['portfolioquery'] = 'Portfolio query filter to apply';
 $string['portfolioremoteuser'] = 'Remote username of the portfolio owner';
@@ -213,7 +214,7 @@ $string['viewcreatetime'] = 'Page creation time';
 $string['viewdesc'] = 'Page description';
 $string['viewfullurl'] = 'Full URL of the page';
 $string['viewid'] = 'Page ID';
-$string['viewidsubmit1'] = 'Mahara ID of the portfolio that was submitted.';
+$string['viewidsubmit1'] = 'ePortfolios ID of the portfolio that was submitted.';
 $string['viewmodtime'] = 'Page modification time';
 $string['viewnotify'] = 'Shared page notifications allowed: ';
 $string['viewoutcomes'] = 'Outcomes associated with this portfolio';

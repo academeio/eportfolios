@@ -1657,7 +1657,7 @@ $string['development'] = 'Development';
 $string['exportthirdpartycsv'] = 'Export plugin information in CSV format';
 $string['Path'] = 'Path';
 $string['styleguide'] = 'Style guide';
-$string['thirdpartyplugins'] = 'Third party plugins based on README.Mahara files';
+$string['thirdpartyplugins'] = 'Third party plugins based on README files';
 $string['url'] = 'url';
 
 $string['pluginartefact'] = 'Plugin type: Artefact';

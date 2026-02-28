@@ -226,11 +226,11 @@ Note: Styles are only added for layout here in the style guide.
 
 <section data-markdown data-category="navigation">
 ### Main navigation
-The Mahara navigation is displayed in collapsible format with drop-down menus. The navigation is
+The ePortfolios navigation is displayed in collapsible format with drop-down menus. The navigation is
 split up into main navigation, administration navigation and user navigation each having their own
 icons and drop-down menus.
 
-Please see <a class="follow" href="https://wiki.mahara.org/wiki/Customising/Themes/17.04">Mahara Wiki</a> for more
+Please see <a class="follow" href="https://wiki.mahara.org/wiki/Customising/Themes/17.04">the wiki</a> for more
 details on navigation styles.
 
 <!-- Styles to fix searchbar positioning - used in this styleguide only -->
@@ -558,7 +558,7 @@ A basic card.
         <a href="#">Basic card</a>
     </h2>
     <div class="tagblock card-body">
-        <a title="1 item" href="#" class="tag">Mahara</a>
+        <a title="1 item" href="#" class="tag">ePortfolios</a>
         <a title="1 item" href="#" class="tag">{str tag=myportfolio}</a>
     </div>
 </div>
@@ -1084,7 +1084,7 @@ Used to show that an action was successful.
 
 <section data-markdown data-category="alerts">
 ### Info alert
-Used to show information about Mahara. Usually, this is only shown to administrators.
+Used to show information about ePortfolios. Usually, this is only shown to administrators.
 ```
 <div class="alert alert-info">
     This is a info alert.

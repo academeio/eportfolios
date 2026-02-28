@@ -1,11 +1,12 @@
 <?php
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage lang
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2026 Academe Research, Inc.
  *
  */
 
@@ -555,7 +556,7 @@ $string['blockssizeupdated'] = 'Block sizes were updated successfully';
 $string['dimensionsnotset'] = 'Block dimensions not set';
 $string['dontaskagain'] = 'Accept and remember';
 $string['pleaseconfirmtranslate'] = 'Convert page layout';
-$string['confirmconversionmessage'] = 'As part of Mahara 19.10 we introduced a new way to create a page layout. To be able to edit this page, you will need to convert the old to the new layout.
+$string['confirmconversionmessage'] = 'As part of the 19.10 release we introduced a new way to create a page layout. To be able to edit this page, you will need to convert the old to the new layout.
 If you want to convert only this page, click \'Accept\'. To convert all pages and not see this message again, click \'Accept and remember\'. This option can be changed in your <a href="%s">Preferences</a>. To go back to the page without editing it, click \'Cancel\'.
 ';
 $string['accessibleview'] = 'Accessible layout';

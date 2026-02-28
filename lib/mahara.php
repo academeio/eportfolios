@@ -1142,8 +1142,8 @@ function get_config_plugin($plugintype, $pluginname, $key) {
     }
     else if (isset($CFG->plugin->{$plugintype}->{$pluginname}->{$key})) {
         log_warn(
-            "Mahara 1.9-format plugin config detected in your config.php: \$cfg->plugin->{$plugintype}->{$pluginname}->{$key}."
-            . " You should change this to the Mahara 1.10 format: \$cfg->plugin_{$plugintype}_{$pluginname}_{$key}."
+            "Legacy 1.9-format plugin config detected in your config.php: \$cfg->plugin->{$plugintype}->{$pluginname}->{$key}."
+            . " You should change this to the 1.10 format: \$cfg->plugin_{$plugintype}_{$pluginname}_{$key}."
         );
         return $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
     }

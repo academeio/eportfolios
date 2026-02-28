@@ -1,11 +1,12 @@
 <?php
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage lang
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2026 Academe Research, Inc.
  *
  */
 
@@ -14,7 +15,7 @@ defined('INTERNAL') || die();
 $string['aboutdefaultcontent'] = '<h2>About us</h2>
 <p><em>Add text about your organisation or the installation here</em></p>
 
-<p><strong>[<em>Name of your installation here</em>]</strong> is powered by <a href="https://mahara.org">Mahara</a>. Mahara is provided freely as open source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify Mahara provided you agree to:</p>
+<p><strong>[<em>Name of your installation here</em>]</strong> is powered by <a href="https://github.com/AcademeResearch/ePortfolios">ePortfolios</a>. ePortfolios is provided freely as open source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify ePortfolios provided you agree to:</p>
 
 <ul>
     <li>provide the source code to others, </li>

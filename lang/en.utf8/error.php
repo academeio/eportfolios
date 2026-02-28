@@ -1,44 +1,45 @@
 <?php
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage lang
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2026 Academe Research, Inc.
  *
  */
 
 defined('INTERNAL') || die();
 
 // @todo<nigel>: most likely need much better descriptions here for these environment issues
-$string['phpversion'] = 'Mahara will not run on PHP < %s. Please upgrade your PHP version or move Mahara to a different host.';
-$string['jsonextensionnotloaded'] = 'Your server configuration does not include the JSON extension. Mahara requires this in order to send some data to and from the browser. Please make sure that it is loaded in php.ini or install it if it is not installed.';
-$string['pgsqldbextensionnotloaded'] = 'Your server configuration does not include the pgsql extension. Mahara requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini or install it if it is not installed.';
-$string['mysqldbextensionnotloaded'] = 'Your server configuration does not include the mysqli or mysql extension. Mahara requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini or install it if it is not installed.';
-$string['mysqlmodulenolongersupported1'] = 'Your server configuration does not include the mysqli extension. Please make sure that it is loaded in php.ini or install it if it is not installed. Mahara stopped supporting the mysql extension in version 16.10';
+$string['phpversion'] = 'ePortfolios will not run on PHP < %s. Please upgrade your PHP version or move ePortfolios to a different host.';
+$string['jsonextensionnotloaded'] = 'Your server configuration does not include the JSON extension. ePortfolios requires this in order to send some data to and from the browser. Please make sure that it is loaded in php.ini or install it if it is not installed.';
+$string['pgsqldbextensionnotloaded'] = 'Your server configuration does not include the pgsql extension. ePortfolios requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini or install it if it is not installed.';
+$string['mysqldbextensionnotloaded'] = 'Your server configuration does not include the mysqli or mysql extension. ePortfolios requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini or install it if it is not installed.';
+$string['mysqlmodulenolongersupported1'] = 'Your server configuration does not include the mysqli extension. Please make sure that it is loaded in php.ini or install it if it is not installed. ePortfolios stopped supporting the mysql extension in version 16.10';
 $string['unknowndbtype'] = 'Your server configuration references an unknown database type. Valid values are "postgres" and "mysql". Please change the database type setting in config.php.';
-$string['domextensionnotloaded'] = 'Your server configuration does not include the dom extension. Mahara requires this in order to parse XML data from a variety of sources.';
-$string['mbstringextensionnotloaded'] = 'Your server configuration does not include the mbstring extension. Mahara requires this to parse multi-byte strings for varying languages.';
-$string['xmlextensionnotloaded'] = 'Your server configuration does not include the %s extension. Mahara requires this in order to parse XML data from a variety of sources. Please make sure that it is loaded in php.ini or install it if it is not installed.';
-$string['gdextensionnotloaded'] = 'Your server configuration does not include the gd extension. Mahara requires this in order to perform resizes and other operations on uploaded images. Please make sure that it is loaded in php.ini or install it if it is not installed.';
+$string['domextensionnotloaded'] = 'Your server configuration does not include the dom extension. ePortfolios requires this in order to parse XML data from a variety of sources.';
+$string['mbstringextensionnotloaded'] = 'Your server configuration does not include the mbstring extension. ePortfolios requires this to parse multi-byte strings for varying languages.';
+$string['xmlextensionnotloaded'] = 'Your server configuration does not include the %s extension. ePortfolios requires this in order to parse XML data from a variety of sources. Please make sure that it is loaded in php.ini or install it if it is not installed.';
+$string['gdextensionnotloaded'] = 'Your server configuration does not include the gd extension. ePortfolios requires this in order to perform resizes and other operations on uploaded images. Please make sure that it is loaded in php.ini or install it if it is not installed.';
 $string['gdfreetypenotloaded'] = 'Your server configuration of the gd extension does not include Freetype support. Please make sure that gd is configured with it.';
-$string['sessionextensionnotloaded'] = 'Your server configuration does not include the session extension. Mahara requires this in order to support people logging in. Please make sure that it is loaded in php.ini or install it if it is not installed.';
-$string['curllibrarynotinstalled'] = 'Your server configuration does not include the cURL extension. Mahara requires this for Moodle integration and to retrieve external feeds. Please make sure that cURL is loaded in php.ini or install it if it is not installed.';
-$string['intlextensionnotloaded'] = 'Your server configuration does not include the intl extension for PHP. Mahara requires this extension to parse information related to language locales.';
-$string['registerglobals'] = 'You have dangerous PHP settings: register_globals is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
+$string['sessionextensionnotloaded'] = 'Your server configuration does not include the session extension. ePortfolios requires this in order to support people logging in. Please make sure that it is loaded in php.ini or install it if it is not installed.';
+$string['curllibrarynotinstalled'] = 'Your server configuration does not include the cURL extension. ePortfolios requires this for Moodle integration and to retrieve external feeds. Please make sure that cURL is loaded in php.ini or install it if it is not installed.';
+$string['intlextensionnotloaded'] = 'Your server configuration does not include the intl extension for PHP. ePortfolios requires this extension to parse information related to language locales.';
+$string['registerglobals'] = 'You have dangerous PHP settings: register_globals is on. ePortfolios is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
 php_flag register_globals off';
-$string['magicquotesgpc'] = 'You have dangerous PHP settings: magic_quotes_gpc is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
+$string['magicquotesgpc'] = 'You have dangerous PHP settings: magic_quotes_gpc is on. ePortfolios is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
 php_flag magic_quotes_gpc off';
-$string['magicquotesruntime'] = 'You have dangerous PHP settings: magic_quotes_runtime is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
+$string['magicquotesruntime'] = 'You have dangerous PHP settings: magic_quotes_runtime is on. ePortfolios is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
 php_flag magic_quotes_runtime off';
-$string['magicquotessybase'] = 'You have dangerous PHP settings: magic_quotes_sybase is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
+$string['magicquotessybase'] = 'You have dangerous PHP settings: magic_quotes_sybase is on. ePortfolios is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
 php_flag magic_quotes_sybase off';
 
-$string['safemodeon'] = 'Your server appears to be running safe mode. Mahara does not support running in safe mode. You must turn this off in either the php.ini file or in your apache config for the site.
+$string['safemodeon'] = 'Your server appears to be running safe mode. ePortfolios does not support running in safe mode. You must turn this off in either the php.ini file or in your apache config for the site.
 
 If you are on shared hosting, it is likely that there is little you can do to get safe mode turned off other than ask your hosting provider. Perhaps you could consider moving to a different host.';
-$string['apcstatoff'] = 'Your server appears to be running APC with apc.stat=0. Mahara does not support this configuration. You must set apc.stat=1 in the php.ini file.
+$string['apcstatoff'] = 'Your server appears to be running APC with apc.stat=0. ePortfolios does not support this configuration. You must set apc.stat=1 in the php.ini file.
 
 If you are on shared hosting, it is likely that there is little you can do to get apc.stat turned on other than ask your hosting provider. Perhaps you could consider moving to a different host.';
 $string['datarootinsidedocroot'] = 'You have set up your data root to be inside your document root. This is a large security problem as then anyone can directly request session data (in order to hijack other people\'s sessions) or files that they are not allowed to access that other people have uploaded. Please configure the data root to be outside of the document root.';
@@ -47,23 +48,23 @@ $string['sessionpathnotwritable'] = 'Your session data directory, %s, is not wri
 $string['wwwrootnothttps'] = 'Your defined wwwroot, %s, is not HTTPS. However, other settings (such as sslproxy) for your installation require that your wwwroot is a HTTPS address.
 
 Please update your wwwroot setting to be a HTTPS address or fix the incorrect setting.';
-$string['couldnotmakedatadirectories'] = 'For some reason some of the core data directories could not be created. This should not happen as Mahara previously detected that the dataroot directory was writable. Please check the permissions on the dataroot directory.';
+$string['couldnotmakedatadirectories'] = 'For some reason some of the core data directories could not be created. This should not happen as ePortfolios previously detected that the dataroot directory was writable. Please check the permissions on the dataroot directory.';
 
-$string['dbconnfailed'] = 'Mahara could not connect to the application database.
+$string['dbconnfailed'] = 'ePortfolios could not connect to the application database.
 
- * If you are using Mahara, please wait a minute and try again
+ * If you are using ePortfolios, please wait a minute and try again
  * If you are the administrator, please check your database settings and make sure your database is available
 
 The error received was:
 ';
-$string['dbnotutf8'] = 'You are not using a UTF-8 database. Mahara stores all data as UTF-8 internally. Please drop and re-create your database using UTF-8 encoding.';
-$string['dbnotutf8mb4'] = 'You are not using a utf8mb4 Character Set (4-Byte UTF-8 Unicode Encoding) database. Mahara stores all data as utf8mb4 internally. Please drop and re-create your database using utf8mb4 encoding.';
-$string['dbversioncheckfailed'] = 'Your database server version is not new enough to successfully run Mahara. Your server is %s %s, but Mahara requires at least version %s.';
-$string['plpgsqlnotavailable'] = 'The PL/pgSQL language is not enabled in your Postgres installation, and Mahara cannot enable it. Please install PL/pgSQL in your database manually. For instructions on how to do this, see https://wiki.mahara.org/wiki/System_Administrator\'s_Guide/Enabling_Plpgsql';
-$string['mysqlnotriggerprivilege'] = 'Mahara requires permission to create database triggers, but is unable to do so. Please ensure that the trigger privilege has been granted to the appropriate user in your MySQL installation. For instructions on how to do this, see https://wiki.mahara.org/wiki/System_Administrator\'s_Guide/Granting_Trigger_Privilege';
+$string['dbnotutf8'] = 'You are not using a UTF-8 database. ePortfolios stores all data as UTF-8 internally. Please drop and re-create your database using UTF-8 encoding.';
+$string['dbnotutf8mb4'] = 'You are not using a utf8mb4 Character Set (4-Byte UTF-8 Unicode Encoding) database. ePortfolios stores all data as utf8mb4 internally. Please drop and re-create your database using utf8mb4 encoding.';
+$string['dbversioncheckfailed'] = 'Your database server version is not new enough to successfully run ePortfolios. Your server is %s %s, but ePortfolios requires at least version %s.';
+$string['plpgsqlnotavailable'] = 'The PL/pgSQL language is not enabled in your Postgres installation, and ePortfolios cannot enable it. Please install PL/pgSQL in your database manually. For instructions on how to do this, see https://wiki.mahara.org/wiki/System_Administrator\'s_Guide/Enabling_Plpgsql';
+$string['mysqlnotriggerprivilege'] = 'ePortfolios requires permission to create database triggers, but is unable to do so. Please ensure that the trigger privilege has been granted to the appropriate user in your MySQL installation. For instructions on how to do this, see https://wiki.mahara.org/wiki/System_Administrator\'s_Guide/Granting_Trigger_Privilege';
 $string['mbstringneeded'] = 'Please install the mbstring extension for php. This is needed if you have UTF-8 characters in usernames. Otherwise, people might not be able to log in.';
-$string['cssnotpresent'] = 'CSS files are not present in your htdocs/theme/raw/style directory. If you are running Mahara from a git checkout, run "make css" to build the CSS files. If you are running Mahara from a ZIP download, try downloading and unzipping again.';
-$string['mahararootusermissing'] = 'The "root" account is missing from the database so we cannot continue. This account needs to be present for Mahara to function correctly. To add the root account back in, please make another install of the Mahara version you are using and see what is contained for account id = 0 in the "usr" and "usr_custom_layout" tables and add that data to your instance of Mahara before trying to upgrade again.';
+$string['cssnotpresent'] = 'CSS files are not present in your htdocs/theme/raw/style directory. If you are running ePortfolios from a git checkout, run "make css" to build the CSS files. If you are running ePortfolios from a ZIP download, try downloading and unzipping again.';
+$string['mahararootusermissing'] = 'The "root" account is missing from the database so we cannot continue. This account needs to be present for ePortfolios to function correctly. To add the root account back in, please make another install of the ePortfolios version you are using and see what is contained for account id = 0 in the "usr" and "usr_custom_layout" tables and add that data to your instance of ePortfolios before trying to upgrade again.';
 $string['outdatedcompiledcssbs'] = 'Your compiled CSS is of an older version of Bootstrap. Please run "make clean-css && make css" to update it for the current version.';
 
 // general exception error messages
@@ -140,10 +141,10 @@ $string['timezoneidentifierunusable'] = 'PHP on your website host does not retur
 $string['postmaxlessthanuploadmax'] = 'Your PHP post_max_size setting (%s) is smaller than your upload_max_filesize setting (%s). Uploads larger than %s will fail without displaying an error. Usually, post_max_size should be much larger than upload_max_filesize.';
 $string['smallpostmaxsize'] = 'Your PHP post_max_size setting (%s) is very small. Uploads larger than %s will fail without displaying an error.';
 $string['notenoughsessionentropy'] = 'Your PHP session.entropy_length setting is too small. Set it to at least 16 in your php.ini to ensure that generated session IDs are random and unpredictable enough.';
-$string['switchtomysqli'] = 'The <strong>mysqli</strong> PHP extension is not installed on your server. Thus, Mahara is falling back to the deprecated original <strong>mysql</strong> PHP extension. We recommend installing <a href="http://php.net/manual/en/book.mysqli.php">mysqli</a>.';
+$string['switchtomysqli'] = 'The <strong>mysqli</strong> PHP extension is not installed on your server. Thus, ePortfolios is falling back to the deprecated original <strong>mysql</strong> PHP extension. We recommend installing <a href="http://php.net/manual/en/book.mysqli.php">mysqli</a>.';
 $string['noreplyaddressmissingorinvalid'] = 'The noreply address setting is either empty or has an invalid email address. Please check the configuration in the <a href="%s">site options in the email settings</a>.';
 $string['openbasedirenabled'] = 'Your server has the php open_basedir restriction enabled.';
-$string['openbasedirpaths'] = 'Mahara can only open files within the following path(s): %s.';
+$string['openbasedirpaths'] = 'ePortfolios can only open files within the following path(s): %s.';
 $string['openbasedirwarning'] = 'Some requests for external sites may fail to complete. This could stop certain feeds from updating among other things.';
 $string['resavecustomthemes'] = 'Your latest upgrade may have stopped your configurable themes from displaying correctly. To update a configurable theme, please go to Administration →  Institution -> Settings, configure the institution\'s settings, and save the form.<br>The following institutions use configurable themes:';
 
@@ -156,7 +157,7 @@ $string['passwordsaltweak'] = 'Your sitewide password salt is not strong enough.
 $string['urlsecretweak'] = 'The $cfg->urlsecret set for this site has not been changed from the default value. Edit your config.php and set the $cgf->urlsecret parameter to a different string (or null if you do not wish to use a urlsecret).';
 $string['notproductionsite'] = 'This site is not in production mode. Some data may not be available and/or may be out of date.';
 $string['badsessionhandle'] = 'The session save handler "%s" is not configured correctly. Please check the settings in your "config.php" file.';
-$string['wrongsessionhandle'] = 'The session save handler "%s" is not supported in Mahara.';
+$string['wrongsessionhandle'] = 'The session save handler "%s" is not supported in ePortfolios.';
 $string['nomemcachedserver'] = 'The memcache server "%s" is not reachable. Please check the $cfg->memcacheservers value to make sure it is correct';
 $string['nophpextension'] = 'The PHP extension "%s" is not enabled. Please enable the extension and restart your webserver or choose a different session option.';
 $string['nomemcacheserversdefined'] = 'The session save handler "%s" has no related servers defined. Please set the $cfg->memcacheservers value, e.g. "localhost:11211".';
