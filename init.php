@@ -1,11 +1,12 @@
 <?php
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage core
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2026 Academe Research, Inc.
  *
  */
 
@@ -351,9 +352,9 @@ if (get_config('installed')) {
         if (get_config('productionmode')) {
             $coreversion = get_config('version');
             $corerelease = get_config('release');
-            throw new ConfigSanityException("Database version of Mahara $corerelease ($coreversion) is newer "
+            throw new ConfigSanityException("Database version of ePortfolios $corerelease ($coreversion) is newer "
                                             . "than files version $config->release ($config->version). "
-                                            . "Please make sure you have the correct Mahara files in place.");
+                                            . "Please make sure you have the correct ePortfolios files in place.");
         }
         else {
             define('SITEOUTOFSYNC', 'core');
@@ -450,7 +451,7 @@ if ($siteclosedforupgrade || (get_config('siteclosedbyadmin') && !$USER->admin))
 if (!get_config('installed')) {
     ensure_install_sanity();
     if (defined('TESTSRUNNING')) {
-        die("Need to have Mahara installed before phpunit tests will run. Please install via 'php htdocs/admin/cli/install.php'");
+        die("Need to have ePortfolios installed before phpunit tests will run. Please install via 'php htdocs/admin/cli/install.php'");
     }
 
     $scriptfilename = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']);
