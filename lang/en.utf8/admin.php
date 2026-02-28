@@ -1,11 +1,12 @@
 <?php
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage lang
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2026 Academe Research, Inc.
  *
  */
 
@@ -16,8 +17,8 @@ $string['administration'] = 'Administration';
 // Installer
 $string['installation'] = 'Installation';
 $string['release'] = 'version %s (%s)';
-$string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="https://wiki.mahara.org/wiki/Contributors">Catalyst IT Limited and others</a>';
-$string['installmahara'] = 'Install Mahara';
+$string['copyright'] = 'Copyright &copy; 2006-2022 Catalyst IT Limited. &copy; 2026 <a href="https://github.com/academeio/eportfolios">Academe Research, Inc.</a>';
+$string['installmahara'] = 'Install ePortfolios';
 $string['component'] = 'Component or plugin';
 $string['componentdeprecated'] = 'Component "%s" deprecated';
 $string['plugindeprecated'] = 'Plugin is deprecated';
@@ -36,10 +37,10 @@ $string['performinginstallation'] = 'Performing installation...';
 $string['performingupgrades'] = 'Performing upgrades...';
 $string['runupgrade'] = 'Run upgrade';
 $string['gotoinstallpage'] = 'Install via extensions page';
-$string['successfullyinstalled'] = 'Successfully installed Mahara.';
+$string['successfullyinstalled'] = 'Successfully installed ePortfolios.';
 $string['thefollowingupgradesareready'] = 'The following upgrades are ready:';
 $string['thefollowingpluginsareready'] = 'The following new plugins are available:';
-$string['registerthismaharasite'] = 'Register this Mahara site';
+$string['registerthismaharasite'] = 'Register this ePortfolios site';
 $string['upgradeloading'] = 'Loading...';
 $string['upgrades'] = 'Upgrades';
 $string['newplugins'] = 'New plugins';
@@ -48,38 +49,38 @@ $string['upgradesuccess'] = 'Successfully upgraded';
 $string['upgradesuccesstoversion'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade.';
 $string['noupgrades'] = 'Nothing to upgrade. You are fully up to date.';
-$string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s).';
+$string['youcanupgrade'] = 'You can upgrade ePortfolios from %s (%s) to %s (%s).';
 $string['upgradeinprogress'] = 'An upgrade began at %s and did not complete. <a href="?rerun=1">Run this upgrade anyway.</a>';
 $string['Plugin'] = 'Plugin';
 $string['jsrequiredforupgrade'] = 'You must enable JavaScript to perform an install or upgrade.';
-$string['dbnotutf8warning'] = 'You are not using a UTF-8 database. Mahara stores all data as UTF-8 internally. You may still attempt this upgrade, but it is recommended that you convert your database to UTF-8.';
-$string['dbnotutf8mb4warning'] = 'You are not using a utf8mb4 Character Set (4-Byte UTF-8 Unicode Encoding) database. Mahara stores all data as utf8mb4 internally. You may still attempt this upgrade, but it is recommended that you convert your database to utf8mb4.';
+$string['dbnotutf8warning'] = 'You are not using a UTF-8 database. ePortfolios stores all data as UTF-8 internally. You may still attempt this upgrade, but it is recommended that you convert your database to UTF-8.';
+$string['dbnotutf8mb4warning'] = 'You are not using a utf8mb4 Character Set (4-Byte UTF-8 Unicode Encoding) database. ePortfolios stores all data as utf8mb4 internally. You may still attempt this upgrade, but it is recommended that you convert your database to utf8mb4.';
 $string['dbcollationmismatch'] = 'A column of your database is using a collation that is not the same as the database default. Please ensure all columns use the same collation as the database.';
-$string['maharainstalled'] = 'Mahara is already installed.';
+$string['maharainstalled'] = 'ePortfolios is already installed.';
 $string['cliadminpassword1'] = 'The password for the administration account';
 $string['cliadminemail1'] = 'The email address for the administration account';
 $string['clisitename'] = 'The site name';
 $string['cliupdatesitenamefailed'] = 'Updating site name failed.';
-$string['cliinstallerdescription'] = 'Install Mahara and create required data directories';
-$string['cliinstallingmahara'] = 'Installing Mahara';
+$string['cliinstallerdescription'] = 'Install ePortfolios and create required data directories';
+$string['cliinstallingmahara'] = 'Installing ePortfolios';
 $string['versionnumber'] = 'Version: %s';
 $string['plugintype'] = 'Plugin: %s';
 $string['updateeventlogconfigoption'] = 'The value for $cfg->eventloglevel may need to be updated from "masq" to "masquerade" in your config.php file.';
 $string['registrationisoptout'] = 'Anonymous registration data is now opt-out';
 
 // CLI upgrade script
-$string['cli_upgrade_description'] = 'Upgrade the Mahara database and data to the version of Mahara installed.';
-$string['cli_upgrade_title'] = 'Upgrading Mahara';
+$string['cli_upgrade_description'] = 'Upgrade the ePortfolios database and data to the version of ePortfolios installed.';
+$string['cli_upgrade_title'] = 'Upgrading ePortfolios';
 $string['cli_upgrade_force'] = 'Force the upgrade to rerun';
 $string['cli_upgrade_flag'] = 'An unfinished upgrade was detected. To try upgrading again, add the "-f" option to the command.';
 
-$string['cliclearingcaches'] = 'Clearing Mahara caches.';
+$string['cliclearingcaches'] = 'Clearing ePortfolios caches.';
 $string['cliclearcachesdescription'] = 'Clearing caches will delete cached data from the server. There is no danger in clearing caches, but your site may appear slower for a while until the server and clients calculate new information and cache it.';
 $string['clearcachesheading'] = 'Clear caches';
 $string['clearcachessubmit'] = 'Clear caches';
 $string['clearingcachessucceed'] = 'All caches were cleared.';
 $string['clearingcacheserror'] = 'Error while clearing caches. Please check logs to get more information about this error.';
-$string['maharanotinstalled'] = 'Mahara is not currently installed. Please install Mahara before trying to upgrade.';
+$string['maharanotinstalled'] = 'ePortfolios is not currently installed. Please install ePortfolios before trying to upgrade.';
 
 // Admin navigation menu
 $string['adminhome']      = 'Admin home';
@@ -205,12 +206,12 @@ $string['iframeiconhostdescription'] = 'If you wish, you may specify a different
 $string['cleanurls'] = 'Clean URLs';
 $string['cleanurlsdescription'] = "
 <p>You can configure your site to use human-readable URLs for profiles, group homepages, and portfolio pages. For example,
-<ul><li>http://mahara.example.com/user/bob</li>
-<li>http://mahara.example.com/group/bobs-group</li>
-<li>http://mahara.example.com/user/bob/bobs-portfolio-page</li>
+<ul><li>http://eportfolios.example.com/user/bob</li>
+<li>http://eportfolios.example.com/group/bobs-group</li>
+<li>http://eportfolios.example.com/user/bob/bobs-portfolio-page</li>
 </ul>
 Before enabling this option, your server administrator must configure your web server so that incoming requests have their URLs rewritten.</p>
-<p>See <a href=\"https://wiki.mahara.org/wiki/System_Administrator's_Guide/Clean_URL_Configuration\">Clean URL Configuration</a> on the Mahara wiki for instructions on how to do this.</p>
+<p>See <a href=\"https://github.com/academeio/eportfolios/wiki/Clean-URL-Configuration\">Clean URL Configuration</a> on the ePortfolios wiki for instructions on how to do this.</p>
 ";
 $string['cleanurlsdisabled'] = 'Clean URLs are disabled.';
 $string['cleanurlsettings'] = 'Clean URL settings';
@@ -298,14 +299,14 @@ $string['archivedon'] = 'Archived on';
 $string['filemissing'] = '%s (file missing)';
 $string['filemissingdesc'] = 'File %s%s is missing from server';
 
-// Register your Mahara
+// Site registration
 $string['Field'] = 'Field';
 $string['Value'] = 'Value';
 $string['sendweeklyupdates'] = 'Send weekly updates';
-$string['sendweeklyupdatesdescription'] = 'Allow your site to send weekly updates to <a href="https://mahara.org/">mahara.org</a> with some statistics about your site.';
-$string['newregistrationpolicyinfo1'] = '<ul><li>We have updated our registration data policy to require sites to opt out of providing weekly updates of anonymous data to gain better insight into how Mahara is used.</li><li>We have altered what anonymous data we collect.</li></ul>';
+$string['sendweeklyupdatesdescription'] = 'Allow your site to send weekly updates with some statistics about your site.';
+$string['newregistrationpolicyinfo1'] = '<ul><li>We have updated our registration data policy to require sites to opt out of providing weekly updates of anonymous data to gain better insight into how ePortfolios is used.</li><li>We have altered what anonymous data we collect.</li></ul>';
 $string['registerwithmahara1'] = 'Opt out from the data collection';
-$string['registerwithmaharadescription1'] = 'You can opt out from sending anonymised data to the Mahara project for your site. We encourage you to keep your site registered though to assist the Mahara project team in the product development.';
+$string['registerwithmaharadescription1'] = 'You can opt out from sending anonymised data for your site. We encourage you to keep your site registered though to assist in the product development.';
 $string['Register'] = 'Register';
 $string['Registration'] = 'Registration';
 $string['registrationcancelled'] = 'You can choose to register at any time by going to the <a href="%sadmin/registersite.php">site registration page</a>.';
@@ -314,18 +315,18 @@ $string['registrationoptoutsuccessful'] = 'Registration opt-out successful. No m
 $string['registrationsuccessfulthanksforregistering'] = 'Registration successful - thanks for registering.';
 $string['registermaharasite'] = 'Site registration';
 $string['registeryoursitesummary'] = '
-<p>Registering your Mahara site with <a href="https://mahara.org/">mahara.org</a> helps us to get a picture of the Mahara installations around the world.</p>';
+<p>Registering your ePortfolios site helps us to get a picture of ePortfolios installations around the world.</p>';
 $string['registeryourmaharasitedetail1'] = '
-<p>Sites are registered with the Mahara project automatically. Registration is free and helps us get a picture of the Mahara installations around the world and how they are used.</p>
-<p>The Mahara project does not collect personal nor person-identifiable data. Most data is collected in aggregated form to allow the project to identify trends. Below you can see what data is collected and sent on a weekly basis.</p>
-<p>If you have any questions for the data collection, please <a href="mailto:info@mahara.org?subject=Site registration data collection">get in touch</a>.</p>';
+<p>Sites are registered automatically. Registration is free and helps us get a picture of ePortfolios installations around the world and how they are used.</p>
+<p>No personal nor person-identifiable data is collected. Most data is collected in aggregated form to identify trends. Below you can see what data is collected and sent on a weekly basis.</p>
+<p>If you have any questions about data collection, please <a href="https://github.com/academeio/eportfolios/issues">open an issue on GitHub</a>.</p>';
 $string['sendingweeklyupdates1'] = 'You are sending weekly updates.';
 $string['notsendingweeklyupdates'] = 'You are not sending weekly updates.';
-$string['siteisregisteredsince1'] = 'Your site has been registered with <a href="https://mahara.org/">mahara.org</a> since %s.';
-$string['sitenotregistered'] = 'Currently, your site is not registered with the Mahara project. Opt in below to help us learn more about your usage.';
-$string['siteisregistered1'] = 'Your site is registered with <a href="https://mahara.org/">mahara.org</a> and is sending weekly data.';
+$string['siteisregisteredsince1'] = 'Your site has been registered since %s.';
+$string['sitenotregistered'] = 'Currently, your site is not registered. Opt in below to help us learn more about your usage.';
+$string['siteisregistered1'] = 'Your site is registered and is sending weekly data.';
 $string['siteregistrationpolicy1'] = 'The registration policy has changed in the following ways';
-$string['startsendingdata'] = 'Your site is sending weekly updates to <a href="https://mahara.org/">mahara.org</a>';
+$string['startsendingdata'] = 'Your site is sending weekly updates.';
 
 // Close site
 $string['Close'] = 'Close';
@@ -341,14 +342,14 @@ $string['viewfullsitestatistics'] = 'View full site statistics';
 $string['institutioncreated_all'] = 'Site installed';
 $string['databasesize'] = 'Database size';
 $string['diskusage'] = 'Disk usage';
-$string['maharaversion'] = 'Mahara version';
+$string['maharaversion'] = 'ePortfolios version';
 $string['activeusers'] = 'Active people';
 $string['loggedinsince'] = '%s today, %s since %s, %s all time';
 $string['groupmemberaverage'] = 'On average, each person is in %s groups';
 $string['viewsperuser'] = 'People who author portfolios have about %s pages each';
 $string['Cron'] = 'Cron';
 $string['runningnormally'] = 'Running normally';
-$string['cronnotrunning2'] = '<strong class="error text-danger">Cron is not running.</strong><br>See the <a href="https://wiki.mahara.org/wiki/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up. If you have already set up cron, one or more of its activities have failed to run recently.';
+$string['cronnotrunning2'] = '<strong class="error text-danger">Cron is not running.</strong><br>See the <a href="https://github.com/academeio/eportfolios/wiki/Installation-Guide">installation guide</a> for instructions on how to set it up. If you have already set up cron, one or more of its activities have failed to run recently.';
 $string['cronnotrunningsiteclosed1'] = '<strong class="error text-danger">Cron is not running.</strong><br>The site is currently closed. Please re-open the site for the cron to run.';
 $string['Loggedin'] = 'Logged in';
 $string['youraverageuser'] = 'Your average person...';
@@ -372,7 +373,7 @@ $string['statsmaxquotaused1'] = 'Has used about %s of disk quota<br>(<a href="%s
 $string['groupcountsbytype'] = 'Number of groups by group type';
 $string['groupcountsbyjointype'] = 'Number of groups by access type';
 $string['blockcountsbytype'] = 'Most frequently used blocks in portfolio pages';
-$string['uptodate'] = 'Your local codebase is up to date with Mahara core.';
+$string['uptodate'] = 'Your local codebase is up to date with ePortfolios core.';
 $string['latestversionis'] = 'Most recent major release: <a href="%s">%s</a>';
 $string['latestbranchversionis'] = 'Latest minor version of this release: <a href="%s">%s</a>';
 $string['versionnotinsupport'] = '%s is out of support.';
@@ -428,7 +429,7 @@ $string['loggedinprofileviewaccessdescription1'] = 'A profile page will be viewa
 $string['antispam'] = 'Anti-spam';
 $string['antispamdescription'] = 'The type of anti-spam measures used on publicly visible forms';
 $string['dropdownmenu'] = 'Drop-down navigation';
-$string['dropdownmenudescription2'] = 'The main Mahara navigation will use a drop-down format for the sub-navigation.';
+$string['dropdownmenudescription2'] = 'The main ePortfolios navigation will use a drop-down format for the sub-navigation.';
 $string['dropdownmenudescriptioninstitution2'] = 'The main navigation will use a drop-down menu.';
 $string['commentsortorder'] = 'Comment sort order';
 $string['commentsortorderdescription'] = 'Set the sort order for artefact comments when viewed on a page.';
@@ -451,7 +452,7 @@ $string['passwordpolicy'] = 'Password policy';
 $string['passwordpolicydesc'] = 'Password policy for people whose account is set to use the built-in internal authentication method. Select the number of minimum characters and the complexity of the password.';
 $string['passwordpolicylength'] = 'Minimum password length';
 $string['passwordpolicytype'] = 'Password complexity';
-$string['deprecatedmobileapp'] = "Sorry, this mobile application has been superseded. You need to use Mahara Mobile instead. Download for Android devices https://play.google.com/store/apps/details?id=org.mahara.mobile or for Apple devices https://itunes.apple.com/us/app/mahara-mobile/id1172638950";
+$string['deprecatedmobileapp'] = "Sorry, this mobile application has been superseded. You need to use ePortfolios Mobile instead.";
 $string['embeddedcontent'] = 'Embedded content';
 $string['embeddedcontentdescription'] = 'If you would like people to be able to embed videos or other outside content into their portfolios, you can choose which sites to trust below.';
 $string['Everyone'] = 'Everyone';
@@ -663,22 +664,22 @@ $string['licenseurldup'] = 'The URLs must be unique; %s is repeated here.';
 $string['licenseurlnone'] = 'Please specify a URL for %s.';
 
 // Networking options
-$string['networkingextensionsmissing'] = 'Sorry, you cannot configure Mahara networking because your PHP installation is missing one or more required extensions:';
+$string['networkingextensionsmissing'] = 'Sorry, you cannot configure ePortfolios networking because your PHP installation is missing one or more required extensions:';
 $string['publickey'] = 'Public key';
 $string['publickeydescription2'] = 'This public key is automatically generated and rotated every %s days.';
 $string['publickeyexpires'] = 'Public key expires';
-$string['enablenetworkingdescription'] = 'Allow your Mahara server to communicate with servers running Moodle and other applications.';
+$string['enablenetworkingdescription'] = 'Allow your ePortfolios server to communicate with servers running Moodle and other applications.';
 $string['enablenetworking'] = 'Enable networking';
 $string['networkingenabled'] = 'Networking has been enabled. ';
 $string['networkingdisabled'] = 'Networking has been disabled. ';
-$string['networkingpagedescription'] = 'Mahara\'s networking features allow it to communicate with Mahara or Moodle sites running on the same or another machine. If networking is enabled, you can use it to configure single sign-on for people who log in at either Moodle or Mahara.';
+$string['networkingpagedescription'] = 'ePortfolios networking features allow it to communicate with ePortfolios or Moodle sites running on the same or another machine. If networking is enabled, you can use it to configure single sign-on for people who log in at either Moodle or ePortfolios.';
 $string['networkingunchanged'] = 'Network settings were not changed';
 $string['promiscuousmode'] = 'Auto-register all hosts';
 $string['promiscuousmodedisabled'] = 'Auto-register has been disabled. ';
 $string['promiscuousmodeenabled'] = 'Auto-register has been enabled. ';
-$string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you and allow its account holders to log on to Mahara.';
+$string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you and allow its account holders to log on to ePortfolios.';
 $string['wwwroot'] = 'WWW root';
-$string['wwwrootdescription1'] = 'This is the URL for this Mahara installation for which the SSL keys are generated.';
+$string['wwwrootdescription1'] = 'This is the URL for this ePortfolios installation for which the SSL keys are generated.';
 $string['deletekey'] = 'Delete this key';
 $string['keydeleted'] = 'Public key has been deleted and regenerated.';
 $string['proxysettings'] = 'Proxy settings';
@@ -729,7 +730,7 @@ $string['invalidfilenameformatforcsv'] = 'The file format for "%s" is not valid.
 $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid, or you have more fields than your header row specifies.';
 $string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line.';
 $string['uploadcsverrornorecords'] = 'The file appears to contain no records (although the header is fine).';
-$string['uploadcsverrorunspecifiedproblem1'] = 'The records in your CSV file could not be inserted for some reason. If your file is in the correct format, then this is a bug and you should <a href="https://bugs.launchpad.net/mahara/+filebug">create a bug report</a>, attaching the CSV file (remember to blank out passwords!) and, if possible, the error log file.';
+$string['uploadcsverrorunspecifiedproblem1'] = 'The records in your CSV file could not be inserted for some reason. If your file is in the correct format, then this is a bug and you should <a href="https://github.com/academeio/eportfolios/issues">create a bug report</a>, attaching the CSV file (remember to blank out passwords!) and, if possible, the error log file.';
 $string['uploadcsverrorwrongnumberoffields'] = 'Error on line %s of your file: Incorrect number of fields.';
 $string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The email address for this person is not in the correct format.';
 $string['uploadcsverrorincorrectnumberoffields'] = 'Error on line %s of your file: This line does not have the correct number of fields.';
@@ -815,7 +816,7 @@ $string['uploadgroupmemberscsvpagedescription3'] = '<p>You may use this facility
 <p>The role field can have any of the following, depending on the type of group: <tt>admin</tt>, <tt>member</tt>, or <tt>tutor</tt>.</p>
 
 <div class="warning"> Every CSV file upload removes all existing group members, including group administrators, completely. Ensure that you have at least one administrator for each group in your CSV file.</div>';
-$string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some people could not be emailed. Their email addresses may be invalid, or the server Mahara is running on might not be configured to send email properly. The server error log has more details. For now, you may want to contact these people manually:';
+$string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some people could not be emailed. Their email addresses may be invalid, or the server ePortfolios is running on might not be configured to send email properly. The server error log has more details. For now, you may want to contact these people manually:';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'Nobody has been added because there are too many people in your file. The number of members in the institution would have exceeded the maximum number allowed.';
 $string['updateusers'] = 'Update accounts';
 $string['updateusersdescription1'] = 'If your CSV file contains the usernames of people who already exist, their details will be overwritten with the data from the CSV file. You must select this option if you wish to move accounts to a different institution as selected above.';
@@ -850,11 +851,11 @@ import.zip<br>
     <span class="icon icon-file icon-regular"></span> mahara-export-leap-user8-1265165366.zip<br>
     <span class="icon icon-file icon-regular"></span> mahara-export-leap-user1-1266458159.zip<br>
 </pre>
-<p>This ZIP file should normally be generated using the bulk export built into Mahara.</p>
+<p>This ZIP file should normally be generated using the bulk export built into ePortfolios.</p>
 <p>If you are importing a lot of accounts, please be patient. The import process can take a long time.</p>';
 $string['importfile'] = 'Bulk export file';
 $string['emailimportedusersaboutnewaccountdescription'] = 'Send an email to people informing them of their new account details.';
-$string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the Mahara bulk exporter to export these accounts?';
+$string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the ePortfolios bulk exporter to export these accounts?';
 $string['importfilenotafile'] = 'Error during form submission: file was not recognised.';
 $string['importfilenotreadable'] = 'Error during form submission: file was not readable.';
 $string['bulkleap2aimportfiledescription1'] = 'Enter the path to the ZIP file on your server that contains all exported accounts (in Leap2A format) along with a CSV listing of usernames, e.g. "/home/example/data/import.zip"';
@@ -866,7 +867,7 @@ $string['unabletoreadcsvfile'] = 'Unable to read CSV file %s.';
 $string['importfileisnotazipfile'] = 'Import file %s was not detected as a ZIP file.';
 $string['unzipfailed'] = 'Failed to unzip the Leap2A file %s. See the error log for more information.';
 $string['importfailedfornusers'] = 'Import failed for %d of %d accounts.';
-$string['invalidlistingfile'] = 'Invalid username listing. Did you use the Mahara bulk exporter to export these accounts?';
+$string['invalidlistingfile'] = 'Invalid username listing. Did you use the ePortfolios bulk exporter to export these accounts?';
 $string['importing'] = 'Importing';
 
 // Admin Users
@@ -1006,7 +1007,7 @@ $string['failedtoobtainuploadedleapfile'] = 'Failed to obtain the uploaded Leap2
 $string['failedtounzipleap2afile'] = 'Failed to unzip the Leap2A file. Check the error log for more information.';
 $string['fileisnotaziporxmlfile'] = 'This file has not been detected to be a ZIP file or XML file.';
 $string['howdoyouwanttocreatethisuser'] = 'How do you want to create this account?';
-$string['leap2aimportfailed'] = '<p><strong>Sorry, importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your Leap2A file is not supported by this Mahara version. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="https://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file.</p>';
+$string['leap2aimportfailed'] = '<p><strong>Sorry, importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your Leap2A file is not supported by this ePortfolios version. Alternatively, there may be a bug in ePortfolios causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to <a href="https://github.com/academeio/eportfolios/issues">open an issue on GitHub</a> to ask for help. Be prepared to be asked for a copy of your file.</p>';
 $string['newuseremailnotsent'] = 'Failed to send welcome email.';
 $string['newusercreated'] = 'New account created successfully';
 $string['noleap2axmlfiledetected'] = 'No leap2a.xml file detected - please check your export file again.';
@@ -1102,7 +1103,7 @@ $string['resetcolours'] = 'Reset colours';
 $string['resetcoloursdesc2'] = 'Restore the default colours.';
 
 $string['authenticatedby'] = 'Authentication method';
-$string['authenticatedbydescription'] = 'How this person authenticates to Mahara';
+$string['authenticatedbydescription'] = 'How this person authenticates to ePortfolios';
 $string['remoteusername'] = 'Username for external authentication';
 $string['remoteusernamedescription1'] = 'If this person signs in to %s from a remote site using an external authentication plugin, this is the username which identifies them on the remote site.';
 $string['institutionsettings'] = 'Institution settings';
@@ -1454,7 +1455,7 @@ $string['cli_langpack'] = 'List by language code, e.g. "de,pt_BR,fr".';
 $string['cli_langpack_backup'] = 'Optional: Back up the language directory before updating.';
 $string['cli_langpack_backup_done'] = 'Backup of language "%s" done';
 $string['cli_langpack_backup_failed'] = '*** WARNING *** Unable to make backup of "%s"';
-$string['cli_langpack_en'] = 'You do not need to update the English langpack as the strings are defined in Mahara itself. You can set special lang strings in local/lang/.';
+$string['cli_langpack_en'] = 'You do not need to update the English langpack as the strings are defined in ePortfolios itself. You can set special lang strings in local/lang/.';
 $string['cli_langpack_extract_done'] = 'Copied new "%s" langpack into place';
 $string['cli_langpack_extract_failed'] = '*** WARNING *** Unable to extract files from "%s". Reason: %s';
 $string['cli_langpack_ignore'] = 'The language pack "%s" is already current so will skip updating';
@@ -1471,7 +1472,7 @@ This will make a backup of the existing language (if it already exists) into the
 3) If you need to rollback the backups, you can use the -r=true flag:
    sudo -u www-data php admin/cli/sync_langpacks.php -l=de,fr -r=true
 
-It will ignore trying to update the \'en\' language as that is set within Mahara itself.';
+It will ignore trying to update the \'en\' language as that is set within ePortfolios itself.';
 $string['cli_langpack_missing'] = 'No langpacks specified';
 $string['cli_langpack_revert'] = 'Revert to last backed up version of the language.';
 $string['cli_langdir_notwritable'] = 'The language directory "%s" is not writable.';
@@ -1483,7 +1484,7 @@ $string['cli_langpack_upload'] = 'Saving language pack "%s" to temp directory';
 $string['cli_restore_done'] = 'Restored backup of "%s" done';
 $string['cli_restore_warning'] = '*** WARNING *** Unable to restore backup of "%s"';
 $string['cli_tmpdir_notwritable'] = 'The temporary upload directory "%s" is not writable.';
-$string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for series "%s"';
+$string['cli_lang_branch'] = 'ePortfolios series version to fetch langpacks for series "%s"';
 
 // Fast index for Elasticsearch
 $string['cli_fast_index'] = 'Elasticsearch fast indexer allows quicker indexing of sites by avoiding waiting for the next cron run. Instead, it begins the next run immediately after first finishes.';
@@ -1570,7 +1571,7 @@ $string['behatvariables'] = 'Behat steps';
 $string['behatvariablesdesc'] = 'Tool to find available Behat steps quickly';
 $string['nobehatfeaturefiles'] = 'No Behat feature files found';
 $string['behatmatchingrows'] = '%s in ';
-$string['behatnocoresteps'] = '<p>Unable to read Behat steps from the behat.yml file. To see them, <a href="https://wiki.mahara.org/wiki/Testing_Area/Behat_Testing/Setup#chown">make the www-data the owner of your Behat dataroot directory</a>.</p>';
+$string['behatnocoresteps'] = '<p>Unable to read Behat steps from the behat.yml file. To see them, <a href="https://github.com/academeio/eportfolios/wiki/Behat-Testing-Setup">make the www-data the owner of your Behat dataroot directory</a>.</p>';
 $string['behatstepnotused'] = 'Currently, this Behat step is not used.';
 
 // Privacy Statement section
@@ -1650,7 +1651,7 @@ $string['defaultreset'] = 'Reset to default';
 $string['defaultresetlabel'] = 'Reset';
 $string['defaultresetdesc'] = 'Reset all of the above options to their default values.';
 
-// Mahara map / component library
+// Component library
 $string['componentmap'] = 'Components library';
 $string['development'] = 'Development';
 $string['exportthirdpartycsv'] = 'Export plugin information in CSV format';
