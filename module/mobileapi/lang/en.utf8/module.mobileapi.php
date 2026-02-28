@@ -15,13 +15,13 @@ $string['autoconfiguredesc'] = 'Automatically enable settings and configurations
 $string['autoconfiguretitle'] = 'Auto-configure mobile apps API';
 $string['configstep'] = 'Configuration item';
 $string['configstepstatus'] = 'Status';
-$string['maharamobile'] = 'Mahara Mobile API';
+$string['maharamobile'] = 'ePortfolios Mobile API';
 $string['manualtokensdesc'] = 'people can generate web service access tokens manually in order to copy and paste them into an app. Normally, an app should be able to generate the tokens automatically. However, some authentication plugins may not allow for that.';
 $string['manualtokenstitle'] = 'Manual token generation';
 $string['mobileapiserviceexists'] = 'Mobile API service group is registered';
 $string['mobileapiserviceconfigured'] = 'Mobile API service enabled, "%s" disabled, "%s" enabled';
-$string['noticeenabled'] = 'The Mahara mobile apps API is enabled.';
-$string['noticenotenabled'] = 'The Mahara mobile apps API is <strong>not</strong> enabled.';
+$string['noticeenabled'] = 'The ePortfolios mobile apps API is enabled.';
+$string['noticenotenabled'] = 'The ePortfolios mobile apps API is <strong>not</strong> enabled.';
 $string['notreadylabel'] = 'Not ready';
 $string['readylabel'] = 'Ready';
 $string['restprotocolenabled'] = 'REST protocol enabled';
@@ -29,8 +29,8 @@ $string['servicenotallowed'] = 'The credentials you have provided are not author
 $string['webserviceproviderenabled'] = 'Incoming web service requests allowed';
 
 // User management of webservice access tokens
-$string['mytokensmenutitle1'] = 'Mahara Mobile';
-$string['mytokenspagetitle1'] = 'Mahara Mobile tokens';
+$string['mytokensmenutitle1'] = 'ePortfolios Mobile';
+$string['mytokenspagetitle1'] = 'ePortfolios Mobile tokens';
 $string['mytokenspagedesc'] = 'These applications can access your account.';
 $string['nopersonaltokens'] = 'You have not granted access to any applications.';
 $string['clientinfo'] = 'App';

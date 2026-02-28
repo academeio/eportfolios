@@ -23,7 +23,7 @@ $string['atoz'] = 'A to Z';
 $string['blog'] = 'Journal';
 $string['blogpost'] = 'Journal entry';
 $string['bypassindexname'] = 'Bypass index';
-$string['bypassindexnamedescription'] = '(Optional) If provided, Mahara will load index data into this index name instead of the main index name.';
+$string['bypassindexnamedescription'] = '(Optional) If provided, ePortfolios will load index data into this index name instead of the main index name.';
 $string['clusterstatus'] = 'There is a problem with the Elasticsearch cluster. The status is "%s" and unallocated shards are "%s".';
 $string['collection'] = 'Collection';
 $string['confignotset'] = '(not set)';
@@ -61,7 +61,7 @@ $string['indexstatusunknown'] = 'The current index "%s" has status unknown due t
 $string['license'] = 'License';
 $string['Media'] = 'Media';
 $string['newindextype'] = 'A new index type "%s" has been added to your elasticsearch settings. For this to take effect you will need to reindex your site';
-$string['newversion'] = 'A new Elasticsearch PHP version %s has been added to Mahara that is compatible with Elasticsearch server %s and above. For this to take effect, you will need to reindex your site.';
+$string['newversion'] = 'A new Elasticsearch PHP version %s has been added to ePortfolios that is compatible with Elasticsearch server %s and above. For this to take effect, you will need to reindex your site.';
 $string['none'] = 'none';
 $string['noticeenabled'] = 'The Elasticsearch plugin is currently active. To deactivate it, deselect it in the <a href="%s" class="elasticsearch-status">"Search settings"</a>.';
 $string['noticenotactive'] = 'The Elasticsearch server is unreachable on host %s and port %s. Please make sure it is running.';

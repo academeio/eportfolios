@@ -128,6 +128,6 @@ $string['ProceedWithoutFlashbackFunctionality'] = 'A submitted portfolio is alre
 $string['shownameaslastnamefirstname'] = 'Show name as "lastname, firstname"';
 $string['shownameaslastnamefirstnamedescription'] = 'Show all appearances of names in the submission table in the format "lastname, firstname"';
 $string['showportfoliobuttons'] = 'Show portfolio links as buttons';
-$string['showportfoliobuttonsdescription'] = 'Change standard Mahara display of portfolio links to buttons for a better optical differentiation to the "Download as archive functionality" in the "Submissions" table .';
+$string['showportfoliobuttonsdescription'] = 'Change standard display of portfolio links to buttons for a better optical differentiation to the "Download as archive functionality" in the "Submissions" table .';
 $string['retentionperiod'] = 'Retention period for submissions and archived portfolios';
 $string['retentionperioddescription'] = 'The period in years beginning with the next year after the release of a portfolio and related archived portfolios are deleted. If this value is set to zero, all submissions and related portfolios will be deleted once the portfolio author account is deleted.';

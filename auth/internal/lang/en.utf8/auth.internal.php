@@ -13,7 +13,7 @@ defined('INTERNAL') || die();
 
 $string['internal'] = 'Internal';
 $string['title'] = 'Internal';
-$string['description'] = 'Authenticate against Mahara\'s database';
+$string['description'] = 'Authenticate against ePortfolios\'s database';
 
 $string['completeregistration'] = 'Complete registration';
 $string['emailalreadytaken'] = 'This email address has already been registered here.';

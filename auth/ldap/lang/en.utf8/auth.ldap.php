@@ -24,7 +24,7 @@ Missing groups will be created and named as \'institution name : LDAP group name
 $string['cli_info_sync_groups_attribute']='This command line PHP script will attempt to synchronize an institution list of groups with an LDAP directory
 based on the different values of an LDAP attribute.
 Missing groups will be created and named as \'institution name : LDAP attribute value\'';
-$string['cli_info_sync_users']='This command line PHP script will attempt to synchronize an institution list of Mahara accounts with an LDAP directory.';
+$string['cli_info_sync_users']='This command line PHP script will attempt to synchronize an institution list of ePortfolios accounts with an LDAP directory.';
 $string['contexts'] = 'Contexts';
 $string['distinguishedname'] = 'Distinguished name';
 $string['dodelete']= 'Delete accounts not anymore in LDAP' ;
@@ -33,7 +33,7 @@ $string['doupdate']= 'Update existing accounts with LDAP data (long)';
 $string['dryrun']= 'Dummy execution. Do not perform any database operations';
 $string['excludelist']='Exclude LDAP groups matching these regular expressions in their names';
 $string['extrafilterattribute']='Additional LDAP filter to restrict account searching';
-$string['grouptype']='Type of Mahara group to create; default is "standard"';
+$string['grouptype']='Type of ePortfolios group to create; default is "standard"';
 $string['hosturl'] = 'Host URL';
 $string['includelist']='Process only LDAP groups matching these regular expressions in their names';
 $string['institutionname'] = 'Name of the institution to process (required)';
