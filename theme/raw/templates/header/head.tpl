@@ -1,5 +1,5 @@
 <head data-basehref="{$WWWROOT}">
-    <meta name="generator" content="Mahara {$SERIES} (https://mahara.org)" />
+    <meta name="generator" content="ePortfolios {$SERIES} (https://eportfolios.in)" />
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta property="og:title" content="{$PAGETITLE}" />

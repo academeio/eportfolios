@@ -23,16 +23,13 @@
 <footer class="{if $editing == true}editcontent {/if}footer">
     <div class="footer-inner container">
         <div id="powered-by" class="float-start mahara-logo">
-            <a href="https://mahara.org/">
-                <img src="{theme_image_url filename='powered_by_mahara'}?v={$CACHEVERSION}" alt="Powered by Mahara" class="mahara-footer-logo">
+            <a href="https://eportfolios.in">
+                <img src="{theme_image_url filename='powered_by_eportfolios'}?v={$CACHEVERSION}" alt="Powered by ePortfolios" class="mahara-footer-logo">
             </a>
         </div>
-        <!-- This site is powered by Mahara, an Open Source
-        ePortfolio system. See https://mahara.org/ for more
-        details.
-        NOTE: this image and link are a way that you can
-        support the Mahara project. Please consider
-        displaying them on your site to spread the word! -->
+        <!-- This site is powered by ePortfolios, an open-source
+        ePortfolio & Competency Platform. See https://eportfolios.in
+        for more details. -->
         <ul class="nav nav-pills footer-nav float-start">
         {foreach from=$FOOTERMENU item=item name=footermenu}
             <li>
