@@ -1,26 +1,27 @@
 <?php
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage core
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @author     Academe Research, Inc
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) 2006-2022 Catalyst IT Limited. (C) 2026 Academe Research, Inc.
  *
  */
 
 /**
- * MAHARA CONFIGURATION FILE
+ * EPORTFOLIOS CONFIGURATION FILE
  *
  * INSTRUCTIONS:
  * 1. Copy this file from config-dist.php to config.php
  * 2. Change the values in it to suit your environment.
  *
- * Information about this file is available on the Mahara wiki:
- *     https://wiki.mahara.org/wiki/System_Administrator's_Guide/Installing_Mahara#Create_Mahara.27s_config.php
+ * Information about this file is available on the ePortfolios wiki:
+ *     https://github.com/academeio/eportfolios/wiki
  *
- * This file includes only the most commonly used Mahara configuration directives. For more options
- * that can be placed in this file, see the Mahara lib file:
+ * This file includes only the most commonly used ePortfolios configuration directives. For more options
+ * that can be placed in this file, see the ePortfolios lib file:
  *
  *     htdocs/lib/config-defaults.php
  */
@@ -35,7 +36,7 @@ $cfg = new stdClass();
 $cfg->dbtype   = 'postgres';
 $cfg->dbhost   = 'localhost';
 $cfg->dbport   = null; // Change if you are using a non-standard port number for your database
-$cfg->dbname   = '';
+$cfg->dbname   = 'eportfolios';
 $cfg->dbuser   = '';
 $cfg->dbpass   = '';
 
@@ -44,27 +45,27 @@ $cfg->dbpass   = '';
  *
  * This is an ABSOLUTE FILESYSTEM PATH. This is NOT a URL.
  * For example, valid paths are:
- *  * /home/user/maharadata
- *  * /var/lib/mahara
- *  * c:\maharadata
+ *  * /home/user/eportfoliosdata
+ *  * /var/lib/eportfolios
+ *  * c:\eportfoliosdata
  * INVALID paths:
  *  * http://yoursite/files
  *  * ~/files
  *  * ../data
  *
  * This path must be writable by the webserver and outside the document root (the
- * place where the Mahara files like index.php have been installed).
- * For security purposes, Mahara will NOT RUN if this is inside your document root.
+ * place where the ePortfolios files like index.php have been installed).
+ * For security purposes, ePortfolios will NOT RUN if this is inside your document root.
  */
 $cfg->dataroot = '/path/to/uploaddir';
 
 /**
- * wwwroot: The base URL of your Mahara installation.
+ * wwwroot: The base URL of your ePortfolios installation.
  *
  * (Normally, this is automatically detected. If it doesn't work for you then try specifying it here.)
  */
 // Example:
-// $cfg->wwwroot = 'https://myhost.com/mahara/';
+// $cfg->wwwroot = 'https://myhost.com/eportfolios/';
 
 /**
  * urlsecret A secret you need to add to the lib/cron.php or admin/upgrade.php
