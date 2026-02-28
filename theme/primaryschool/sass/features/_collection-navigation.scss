@@ -1,0 +1,13 @@
+.collection-nav {
+    .prevpage,
+    .nextpage {
+        color: $btn-primary-color;
+        background-color: $btn-primary-bg;
+        border-color: $btn-primary-border;
+
+        &:focus,
+        &:hover {
+            background-color: scale-color($btn-primary-bg, $lightness: 5%);
+        }
+    }
+}

@@ -1,0 +1,40 @@
+.expand-indicator,
+.move-indicator {
+    .card-secondary & {
+        color: $white;
+    }
+}
+
+// if indicators are in colour block titles then make it white
+.card.card-secondary {
+    .card-header {
+        .move-indicator {
+            color: $white !important;
+        }
+        [data-bs-toggle="collapse"].outer-link:focus ~ .collapse-indicator,
+        [data-bs-toggle="collapse"].outer-link:hover ~ .collapse-indicator  {
+            color: $white;
+            &.collapsed {
+                ~ .collapse-indicator {
+                    color: $white;
+                }
+            }
+            a:hover,
+            a:focus {
+                .collapse-indicator {
+                    color: $white;
+                }
+            }
+        }
+        .collapse-indicator {
+            color: $white;
+            .collapsed & {
+                color: $white;
+            }
+            a:hover &,
+            a:focus & {
+                color: $white;
+            }
+        }
+    }
+}

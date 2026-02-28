@@ -1,0 +1,129 @@
+/*
+ * Modification to bootstraps default navbar components
+ */
+// Login link and language form
+.topright-menu {
+    float: right;
+    padding-top: $spacing-base;
+
+    li {
+        display: inline-block;
+        float: right;
+    }
+
+    .login-link a {
+        display: inline-block;
+        margin: 0 $spacing-lg;
+        padding: $navbar-toggler-padding-y $navbar-toggler-padding-x;
+        color: $navbar-toggle-color;
+        border-radius: $btn-border-radius;
+        font-weight: $font-weight-bold;
+
+        &:focus,
+        &:hover {
+          color: $navbar-toggle-hover-color;
+          background-color: $navbar-toggle-hover-bg;
+          text-decoration: none;
+        }
+    }
+}
+
+// Header search form
+.navbar-form.navbar-collapse {
+    padding: $spacing-lg 0;
+    margin-bottom: 0;
+    border: 0;
+    height: 65px;
+    overflow: visible;
+    @include media-breakpoint-up(md) {
+        position: relative;
+        display: inline-block;
+        max-width: none;
+        visibility: visible;
+        top: auto;
+        right: auto;
+        margin: 0.8125rem $spacing-xl 0 0; // 13px 20px 0 0;
+        padding: 0;
+        box-shadow: none;
+        height: auto !important;
+        float: right;
+        clear: none;
+    }
+
+    .header-search-form {
+        @include media-breakpoint-down(lg) {
+            width: 100%;
+        }
+        input[type=text] {
+            width: calc(100% - 4.6875rem); // calc(100% - 75px)
+            float: left;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            margin-left: $spacing-lg;
+            @include media-breakpoint-up(md) {
+              width: 12rem;
+            }
+            @include media-breakpoint-up(lg) {
+                width: auto;
+                margin-left: 0;
+            }
+        }
+        .input-group-append {
+            display: block !important;
+            float: left;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-top-right-radius: $input-border-radius;
+            border-bottom-right-radius: $input-border-radius;
+            border-left: $btn-border-width solid $btn-secondary-border;
+            margin-left: -$btn-border-width;
+            @include media-breakpoint-up(md) {
+                float: right;
+            }
+        }
+    }
+}
+
+.navbar {
+    border: 1px solid transparent;
+    padding: 0;
+    > .container {
+        display: block;
+    }
+}
+
+.navbar-default {
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    background-color: $navbar-default-bg;
+    border-color: $navbar-default-border;
+}
+
+// Header messagebox form
+.navbar-messages {
+    &:hover,
+    &:focus {
+        color: $navbar-default-link-hover-color;
+        text-decoration: none;
+    }
+
+    .navbar-messages-count {
+      position: absolute;
+      top: 0.125rem; // 2px;
+      right: 0.125rem;
+      background-color: $navbar-messages-count-bg;
+      border-radius: $border-radius-sm;
+      padding: 0.125rem;
+      color: $navbar-messages-count-color;
+      font-size: $font-size-base * 0.75;
+      line-height: 1;
+    }
+}
+
+// Header language toggle
+.navbar-toggle.lang-toggle {
+    span.icon-language {
+        font-size: $font-size-base * 1.5;
+    }
+}

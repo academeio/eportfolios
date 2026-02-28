@@ -1,0 +1,249 @@
+<?php
+/**
+ *
+ * @package    mahara
+ * @subpackage export
+ * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
+
+define('INTERNAL', 1);
+define('MENUITEM', 'manage/export');
+require(dirname(dirname(__FILE__)) . '/init.php');
+require_once('view.php');
+require_once('collection.php');
+define('TITLE', get_string('exportyourportfolio', 'export'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'export');
+define('SECTION_PAGE', 'index');
+
+
+$SESSION->set('exportdata', '');
+$SESSION->set('exportfile', '');
+
+$exportoptions = array();
+$exportplugins = plugins_installed('export');
+
+if (!$exportplugins) {
+    die_info(get_string('noexportpluginsenabled', 'export'));
+}
+
+foreach ($exportplugins as $plugin) {
+    safe_require('export', $plugin->name);
+    $exportoptions[$plugin->name] = array(
+        'text' => call_static_method(generate_class_name('export', $plugin->name), 'get_title'),
+        'description' => call_static_method(generate_class_name('export', $plugin->name), 'get_description'),
+    );
+}
+
+$elements = array(
+    'what' => array(
+        'type' => 'radio',
+        'options' => array(
+            'all' => get_string('allmydata', 'export'),
+            'views' => get_string('justsomeviews', 'export'),
+        ),
+        'defaultvalue' => 'all',
+    ),
+    'includefeedback' => array(
+        'type' => 'switchbox',
+        'title' => get_string('includecomments', 'export'),
+        'description' => get_string('includecommentsdescription', 'export'),
+        'defaultvalue' => 1,
+    ),
+    'includeprivatefeedback' => array(
+        'type' => 'switchbox',
+        'class' => 'last',
+        'title' => get_string('includeprivatefeedback', 'export'),
+        'description' => get_string('includeprivatefeedbackdesc1', 'export'),
+        'defaultvalue' => 0,
+    ),
+);
+
+$inlinejs = <<<EOF
+jQuery(function($) {
+    $("#export_includefeedback").on("click", function() {
+        if (this.checked) {
+            $("#export_includeprivatefeedback").prop("disabled", false);
+        }
+        else {
+            $("#export_includeprivatefeedback").prop("disabled", true);
+        }
+    });
+});
+EOF;
+
+if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = ? ORDER BY title', array($USER->get('id'), 'portfolio'))) {
+    foreach ($viewids as $viewid) {
+        $view = new View($viewid);
+        $elements['view_' . $viewid] = array(
+            'type' => 'checkbox',
+            'class' => 'checkbox',
+            'title' => $view->get('title'),
+            'description' => $view->get('description'),
+            'viewlink' => $view->get_url(true, true),
+        );
+    }
+    $jsfiles = array(
+        'paginator',
+        'js/preview.js',
+        'js/export.js',
+        'js/gridstack/gridstack_modules/gridstack-h5.js',
+        'js/gridlayout.js',
+        'js/collection-navigation.js',
+    );
+
+    $collections = get_records_sql_array('
+        SELECT c.id, c.name, c.description, cv.view
+        FROM {collection} c
+        JOIN {collection_view} cv ON c.id = cv.collection
+        WHERE c.owner = ?
+        AND cv.view IS NOT NULL
+        AND cv.displayorder = 0',
+        array($USER->get('id'))
+    );
+    if ($collections) {
+        $elements['what']['options']['collections'] = get_string('justsomecollections', 'export');
+        foreach ($collections as $collection) {
+            $view = new View($collection->view);
+            $elements['collection_' . $collection->id] = array(
+                'type' => 'checkbox',
+                'class' => 'checkbox',
+                'title' => $collection->name,
+                'viewlink' => $view ? $view->get_url(true, true) : '',
+                'description' => $collection->description,
+            );
+        }
+    }
+    // Select one by default if needed
+    if ($collid = param_integer('collection', null)) {
+        $elements['what']['defaultvalue'] = 'collections';
+        if (isset($elements['collection_' . $collid])) {
+            $elements['collection_' . $collid]['defaultvalue'] = true;
+        }
+    }
+    else if ($viewid = param_integer('view', null)) {
+        $elements['what']['defaultvalue'] = 'views';
+        if (isset($elements['view_' . $viewid])) {
+            $elements['view_' . $viewid]['defaultvalue'] = true;
+        }
+    }
+}
+else {
+    $elements['what']['disabled'] = true;
+    $jsfiles = array();
+}
+
+$elements['submit'] = array(
+    'type' => 'submit',
+    'class' => 'btn-primary',
+    'value' => get_string('generateexport', 'export'),
+);
+
+$form = pieform(array(
+    'name' => 'export',
+    'class' => 'portfolio-export',
+    'checkdirtychange' => false,
+    'template' => 'export.php',
+    'templatedir' => pieform_template_dir('export.php'),
+    'autofocus' => false,
+    'elements' => $elements
+));
+
+
+function export_validate(Pieform $form, $values) {
+    global $SESSION;
+    if ($values['what'] == 'views') {
+        $viewchosen = false;
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 5) == 'view_' && $value) {
+                $viewchosen = true;
+            }
+        }
+        if (!$viewchosen) {
+            $form->set_error('what', '');
+            $SESSION->add_error_msg(get_string('youmustselectatleastoneviewtoexport', 'export'));
+        }
+    }
+    else if ($values['what'] == 'collections') {
+        $viewchosen = false;
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 11) == 'collection_' && $value) {
+                $viewchosen = true;
+            }
+        }
+        if (!$viewchosen) {
+            $form->set_error('what', '');
+            $SESSION->add_error_msg(get_string('youmustselectatleastonecollectiontoexport', 'export'));
+        }
+    }
+}
+
+function export_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+    $views = array();
+    $collections = array();
+    if ($values['what'] == 'views') {
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 5) == 'view_' && $value) {
+                $views[] = intval(substr($key, 5));
+            }
+        }
+    }
+    else if ($values['what'] == 'collections') {
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 11) == 'collection_' && $value) {
+                $collection = intval(substr($key, 11));
+                $collections[] = $collection;
+                $views = array_merge($views, get_column('collection_view', 'view', 'collection', $collection));
+            }
+        }
+    }
+
+    if (get_config('exporttoqueue') == 1) {
+        // insert into the export_queue;
+        require_once(get_config('docroot') . 'export/lib.php');
+        $objectarray = array();
+        if ($values['what'] == 'collections') {
+            foreach ($collections as $collectionid) {
+                $collection = new Collection($collectionid);
+                $objectarray[] = $collection;
+            }
+        }
+        else if ($values['what'] == 'views') {
+            foreach ($views as $viewid) {
+                $view = new View($viewid);
+                $objectarray[] = $view;
+            }
+        }
+        export_add_to_queue($objectarray, null, $USER, $values['what']);
+        $SESSION->add_ok_msg(get_string('addedleap2atoexportqueue' . $values['what'], 'export'));
+        redirect(get_config('wwwroot') . 'export/index.php');
+    }
+    else {
+        $exportdata = array(
+            'what'            => $values['what'],
+            'views'           => $views,
+            'includefeedback' => $values['includefeedback'],
+            'includeprivatefeedback' => $values['includeprivatefeedback'],
+        );
+        $SESSION->set('exportdata', $exportdata);
+        $SESSION->set('exportprogress', false);
+
+        $smarty = smarty();
+        $smarty->assign('heading', '');
+        $smarty->display('export/export.tpl');
+        exit;
+    }
+}
+
+$smarty = smarty(
+    $jsfiles
+);
+setpageicon($smarty, 'icon-upload');
+$smarty->assign('pagedescriptionhtml', get_string('exportportfoliodescription1', 'export'));
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('form', $form);
+$smarty->display('form.tpl');

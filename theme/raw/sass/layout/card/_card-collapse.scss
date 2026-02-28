@@ -1,0 +1,336 @@
+@use "sass:math";
+
+// This file handles/modifies both real collapsible cards,
+// and collapsible pieform fieldsets (which are styled to look like cards)
+
+.card.collapsible {
+    margin-bottom: 0;
+    border-radius: 0;
+    .card-header {
+        padding: $card-spacer-y math.div($card-spacer-x, 2);
+        a {
+            text-decoration: none;
+            border-radius: 0;
+        }
+    }
+    &.form-group {
+        display:block;
+    }
+    .card {
+        border-radius: 0;
+        &.has-attachment {
+          border-radius: $card-border-radius;
+          margin-top: $spacing-base;
+          margin-bottom: 0;
+        }
+    }
+}
+
+
+.pieform-fieldset,
+.card {
+    &.collapsible {
+        @include box-shadow(none);
+
+        legend + .fieldset-body,
+        legend + .fieldset-body {
+          border-top-width: 0;
+
+          // exception for instructions
+          &.viewinstructions,
+          .blockinstructions &,
+          .peerinstructions & {
+            border-top-width: $card-border-width;
+
+            > :last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+
+        &.last {
+            .card-header {
+                @include border-bottom-radius($card-border-radius);
+                a {
+                    &.collapsed {
+                        @include border-bottom-radius($card-border-radius);
+                    }
+                }
+            }
+            legend {
+                a,
+                button {
+                    border-bottom: $card-border-width solid $card-border-color;
+                    &.collapsed {
+                        @include border-bottom-radius($card-border-radius);
+                    }
+                }
+            }
+
+            .fieldset-body {
+                border-top:0;
+                @include border-bottom-radius($card-border-radius);
+            }
+        }
+        &.first .card-header a,
+        &.first legend a,
+        &.first legend button {
+            @include border-top-radius($card-border-radius);
+        }
+
+        .section-import & {
+            &:last-child {
+                @extend .last;
+            }
+        }
+
+        .type-icon {
+            display:inline-block;
+            width: 2rem; // 32px;
+            padding: 0 $spacing-xxl;
+        }
+
+        &.has-attachment .card-header,
+        .collapsible-group & .card-header,
+        legend {
+            margin: 0;
+            font-size: $font-size-lg;
+            padding: 0;
+
+            .pieform > .collapsible-group:first-child & {
+                border-top-left-radius: $card-border-radius;
+                border-top-right-radius: $card-border-radius;
+            }
+
+            a {
+                text-decoration: none;
+            }
+        }
+
+        // cancel for filelist
+        .filelist-wrapper .card-header {
+            padding: $card-spacer-y $card-spacer-x;
+            margin-top: $spacing-base;
+            margin-bottom: 0;
+        }
+
+        .fieldset-body {
+            border: $card-border-width solid $card-border-color;
+            padding: $card-spacer-y $card-spacer-x;
+            background: $card-bg;
+            margin-top: -$card-border-width; //remove double border
+            margin-bottom: -$card-border-width; //remove double border
+            .jstabs & {
+                border: 0;
+            }
+            :last-child & {
+              border-bottom-left-radius: $card-border-radius;
+              border-bottom-right-radius: $card-border-radius;
+            }
+        }
+        .collapsible-group & {
+            .form-group {
+                margin: 0;
+                position: relative;
+                padding: $spacing-xl 0;
+                border-bottom: $list-group-border-width solid $list-group-border-color;
+                &.alert {
+                    padding: $spacing-base $spacing-xxxl;
+                }
+                &:last-child,
+                &.last {
+                    border-bottom: 0;
+                }
+            }
+            &.with-formgroup {
+                margin-top: $spacing-lg;
+            }
+            td .form-group {
+              padding: 0;
+            }
+        }
+        .html {
+            &:not(.heading) {
+                @include clearfix;
+            }
+        }
+        &.collapsible-small {
+            legend {
+                width: auto;
+                border: none;
+
+                a {
+                    padding: $spacing-sm $spacing-sm $spacing-sm 0 !important;
+                    border: 0;
+                    background-color: $card-bg !important;
+                    color: $link-color;
+                    font-size: $font-size-base !important;
+                    font-weight: $font-weight-normal !important;
+                    &:hover,
+                    &:focus {
+                        text-decoration: underline !important;
+                    }
+                    span {
+                        margin: $spacing-sm 0 0 $spacing-sm;
+                    }
+                }
+            }
+        }
+    }
+
+    &.as-link {
+       @include card-as-link();
+       &.link-expand-right legend {
+           border-bottom: 0;
+       }
+    }
+}
+
+.link-expand-right.form-group {
+    position: static;
+    margin: $spacing-xl 0;
+
+    .link-expand-right {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    legend {
+        position:absolute;
+        top: 0;
+        right: 0;
+        width: auto;
+        font-weight: $font-weight-normal;
+        font-size: $font-size-base;
+
+        @include media-breakpoint-down(md) {
+            position: static;
+            text-align: right;
+        }
+
+        button[data-bs-toggle="collapse"] {
+            margin-top: -$btn-border-width;
+            border-bottom-left-radius: $btn-border-radius;
+            border-bottom-right-radius: $btn-border-radius;
+            padding: $btn-padding-y $btn-padding-x !important;
+
+            color: $btn-secondary-color;
+            background-color: $btn-secondary-bg;
+            border-color: $btn-secondary-border;
+            box-shadow: none;
+            text-decoration: none;
+
+            .collapse-indicator {
+                color: $btn-secondary-color;
+                margin-left: $spacing-sm;
+            }
+
+            &:hover,
+            &:focus,
+            &:active {
+                color: $btn-secondary-color;
+                background-color: scale-color($btn-secondary-bg, $lightness: -10%);
+                border-color: scale-color($btn-secondary-border, $lightness: -10%);
+            }
+        }
+    }
+}
+
+// @todo: Rethink this, it's too complex
+.card.collapsible:not(.card-secondary) {
+    border-width: 0;
+
+    // Remove border from heading - add to link tag.
+    // In this case we have a nested a tag that takes up the whole of the heading space
+    // rather than applying the card-header to the link
+    .card-header {
+        border: 0;
+        a {
+            text-shadow: 1px 0 0 $text-shadow;
+        }
+    }
+
+    &.card-primary {
+        .card-header a {
+            font-weight: $font-weight-bold;
+        }
+    }
+
+    &.notification {
+        .card-footer {
+            margin-bottom: $spacing-xl;
+        }
+        .no-footer {
+            padding-bottom: $spacing-base;
+            margin-bottom: $spacing-xl;
+        }
+    }
+
+    .card-body,
+    .card-footer,
+    .card-header a {
+        border: $card-border-width solid $card-border-color;
+    }
+
+    .card-header a,
+    .card-body:not(.no-footer) {
+        border-bottom-width: 0;
+    }
+
+    // last class will add bottom border to collapsible element(s)
+    // Except has-attachment, it doesn't need one.
+    &.last .card-header a.collapsed {
+        border-bottom-width: $card-border-width;
+    }
+
+    // For attachment collapsible
+    &.has-attachment {
+        border-radius: $card-border-radius;
+        border-width: $card-border-width;
+        margin-top: $spacing-base;
+    }
+
+    // pseudofieldset
+    &.pseudofieldset:only-of-type .card-header a,
+    &.pseudofieldset:first-of-type .card-header a, {
+      border-top-left-radius: $card-border-radius;
+      border-top-right-radius: $card-border-radius;
+    }
+    &.pseudofieldset:only-of-type .card-body,
+    &.pseudofieldset:last-of-type .card-body {
+      border-bottom-left-radius: $card-border-radius;
+      border-bottom-right-radius: $card-border-radius;
+    }
+}
+
+.collapse > .collapse {
+    display: block ; // fix for not being able to put a class just on the wrapper
+    visibility: visible;
+}
+
+// custom for Share | Edit access advance options in smaller widths
+@include media-breakpoint-down(lg) {
+  #editaccess_more_container {
+    margin-top: -1rem;
+  }
+}
+
+// custom for collapsible card in a collapsible fieldset on skins
+.skins.collapsible-group .card.collapsible:not(.card-secondary) {
+  .card-header a {
+    border-radius: 0;
+    border-width: $card-border-width solid $card-border-color;
+  }
+  &.first .card-header a {
+    border-top-left-radius: $card-border-radius;
+    border-top-right-radius: $card-border-radius;
+  }
+  &.last .card-header a[aria-expanded="false"] {
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+  }
+  &.last .card-body {
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+  }
+}

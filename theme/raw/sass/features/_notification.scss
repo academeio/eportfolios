@@ -1,0 +1,90 @@
+// Fix the compose button positioning in the inbox/sent notifications pages.
+.notifications + #messages + h1 {
+    border-bottom-width: 0;
+    @include media-breakpoint-up(md) {
+        display: inline-block;
+    }
+    + .btn-with-heading {
+        @include media-breakpoint-up(md) {
+            margin-top: $spacing-lg;
+            float: right;
+        }
+    }
+}
+
+.form-notificationlist {
+    .notification-list {
+        padding-top: $spacing-base;
+        clear: both;
+    }
+}
+.notification-parent {
+    .form-select-filter {
+        margin-top: $spacing-base;
+        @include media-breakpoint-up(md) {
+            margin-top: 0;
+            float: right;
+        }
+    }
+}
+.notification {
+    // giving each message heading more visual breathing space
+    .card-header a:not(.secondary-link),
+    .card-header a:not(.secondary-link).collapsed {
+        padding-top: $spacing-lg;
+        padding-bottom: $spacing-lg;
+    }
+    .card-control {
+        padding-top: $spacing-lg + 0.125rem;
+        padding-bottom: $spacing-lg;
+        + a[data-bs-toggle="collapse"] {
+            padding-left: 4rem; // 64px
+            padding-right: 2rem; // 32px
+        }
+    }
+    .details-group {
+        display: block;
+        position: relative;
+        margin: 0;
+        font-size: $font-size-lg;
+        font-family: $font-family-base;
+
+        > .icon:not(.collapse-indicator) {
+            position: absolute;
+            left: -3.5rem; // -56px;
+            top: 0.125rem; // 2px;
+        }
+        .collapse-indicator {
+            position: absolute;
+            right: -1.25rem; // -20px;
+        }
+        .username,
+        .sentdate {
+            font-weight: $font-weight-normal;
+        }
+    }
+    .details-group span {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .fromusers {
+        margin-bottom: 0;
+    }
+    .tousers {
+        margin-bottom: $spacing-lg;
+    }
+    .action {
+        padding-right: $spacing-base;
+    }
+    .subject {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+    &.text-weight-bold {
+        .subject {
+          font-weight: $font-weight-bold;
+        }
+    }
+}

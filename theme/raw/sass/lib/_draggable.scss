@@ -1,0 +1,116 @@
+.drag-default-button {
+    color: $theme-text-color;
+    box-shadow: none;
+    background-color: $white;
+    border-color: $list-group-border-color;
+}
+
+.drag-default-button:not(.ui-draggable-dragging) {
+    border-left: none; // Don't need side borders because the elements are inside card
+    border-right: none;
+}
+.btn-draggable .btn-group-vertical > .ui-draggable {
+    margin-left: 0;
+}
+
+.btn-draggable .btn-group-vertical > .btn,
+.list-group.ui-sortable .ui-draggable-dragging {
+    @extend .icon;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    padding: $card-spacer-y $card-spacer-x $card-spacer-y 2.25rem; // 35px;
+    text-align: left;
+    border-radius: 0;
+
+    &:before {
+        @include fonttype(solid);
+        content: fa-content($fa-var-arrows-alt);
+        box-sizing: border-box;
+        color: $theme-text-midtone-color;
+        opacity: 0.7;
+        text-rendering: auto;
+        display: block;
+        height: 100%;
+        left: 0;
+        line-height: 1.5;
+        padding: $card-spacer-y $card-spacer-x $spacing-sm;
+        position: absolute;
+        top: 0;
+        width: $font-size-base * 1.25; // 20px
+    }
+    &.checkbox {
+        margin-top: -1px;
+        margin-bottom: 0;
+    }
+    .checkbox {
+        right: $card-spacer-x;
+        top: 0.875rem; // 14px;
+    }
+    label {
+        font-size: $font-size-base;
+        white-space: normal;
+    }
+}
+.draggable {
+    z-index: 1;
+    position: relative;
+}
+
+.droppable {
+    z-index: 0;
+    position: relative;
+}
+
+// This is a different case where we can use the icon itself
+.icon-drag:before {
+    display: block;
+    float: left;
+    margin-right: $card-spacer-x;
+    height: 100%;
+    color: $theme-text-midtone-color;
+}
+
+.icon-drag-current {
+    border: 1px dashed scale-color($card-border-color, $lightness: -6%);
+    min-width: 200px;
+}
+
+#addviews {
+    .btn-group {
+        margin-left: 0;
+    }
+    .ui-draggable-dragging {
+        width: 100% !important;
+    }
+}
+
+// Edit page sortable - hide everything but title
+.ui-sortable-helper .blockinstance-content,
+.ui-sortable-helper .blockinstance-controls {
+    display: none;
+}
+.ui-sortable-helper.card-secondary.blockinstance > .card-header > .blockinstance-header {
+    padding-right: 0;
+}
+
+.drag-handle,
+.ui-draggable {
+  cursor: move;
+}
+
+.ui-sortable-helper {
+    overflow: hidden;
+}
+
+.ui-sortable {
+    list-style-type: none;
+}
+
+// edit page drag new block to page, the button should not inherit btn border radius 
+footer.editcontent {
+    + .ui-draggable-dragging {
+        .btn-primary {
+            border-radius: 0;
+        }
+    }
+}

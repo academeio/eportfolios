@@ -1,0 +1,29 @@
+.artefactchooser-item {
+    input {
+        display: inline-block;
+    }
+    label {
+        min-width: auto;
+        display: inline-block;
+    }
+    .detail {
+        margin-left: 1.1875rem; // 19px;
+    }
+}
+
+.artefactchooser-tabs {
+    margin-bottom: $spacing-xl;
+    width: 100%;
+}
+
+.artefactchooser-search {
+    padding: $spacing-base 0;
+    > input {
+        float: left;
+    }
+}
+
+.artefactchooser-subtabs-selected {
+    display: inline-block;
+    padding: 0.4375rem; // 7px;
+}

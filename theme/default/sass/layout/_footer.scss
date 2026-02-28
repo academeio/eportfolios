@@ -1,0 +1,20 @@
+.footer {
+    .footer-nav {
+      .nav-link {
+          font-weight: $font-weight-bold;
+      }
+    }
+    .footer-inner {
+        padding: $spacing-xl $spacing-base;
+    }
+    &.upgrade-footer a {
+        font-weight: $font-weight-bold;
+    }
+}
+
+// viewfooter
+.viewfooter {
+    padding: $spacing-lg;
+    background-color: #f7f7f7;
+    border-radius: $spacing-base;
+}

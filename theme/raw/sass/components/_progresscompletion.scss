@@ -1,0 +1,50 @@
+table.progresscompletion {
+    td {
+      .icon {
+        text-align: center;
+        vertical-align: middle;
+        display: block;
+        font-size: $font-size-base * 1.25;
+        &.completed {
+          color: $progresscompletion-verified-color;
+        }
+        &.dot.disabled {
+          color: scale-color($gray-300, $lightness: 28%);
+          cursor: $cursor-disabled;
+          // Override dot icon with minus icon
+          &:before {
+            content: "\f068";
+          }
+        }
+        a {
+            cursor: pointer;
+        }
+      }
+      &.progresstitle .icon {
+        display: inline;
+        color: $help-icon-color;
+        &.iconhelp:hover {
+          cursor: pointer;
+        }
+      }
+      &.progresstitle .help-dismiss .icon {
+        color: $modal-header-color;
+        font-size: $font-size-base;
+      }
+    }
+
+    .userrole {
+      text-align: center;
+      vertical-align: middle;
+    }
+}
+
+.card.progresscompletion {
+    width: 45%;
+}
+
+@media (max-width: 992px) {
+    .card.progresscompletion {
+        width: 100%;
+    }
+}

@@ -1,0 +1,52 @@
+@use "sass:math";
+
+// Custom styles for edit collection pages
+// See views.tpl and views.json.tpl
+.manage-collection-pages {
+    .pagelist {
+        .select-pages {
+            float: right;
+            a {
+                padding: $btn-padding-y-sm $btn-padding-x-sm;
+            }
+        }
+        .add-pages {
+            margin: $spacing-sm;
+        }
+        .error.ui-draggable {
+            padding: $spacing-base $spacing-lg;
+            color: $state-danger-text;
+        }
+    }
+
+    .collection-pages .list-group .highlight {
+        padding: $spacing-xl;
+    }
+
+    .list-group-item {
+
+        .text-link {
+            display: block;
+            padding-left: 3.75rem; // 60px;
+            padding-right: $spacing-xxl;
+        }
+        .order-sort-control {
+            float: left;
+            border: 0;
+        }
+        .single-arrow-up {
+            padding-right: 2rem; // 32px;
+        }
+        .single-arrow-down {
+            padding-left: 2rem; // 32px;
+            .icon-long-arrow-alt-down {
+                padding-left: $spacing-xs !important;
+            }
+        }
+        form[name^="removeview"] {
+            position: absolute;
+            top: $list-group-item-padding-y - math.div($btn-padding-y-sm, 2);
+            right: $list-group-item-padding-x - math.div($btn-padding-x-sm, 2);
+        }
+    }
+}

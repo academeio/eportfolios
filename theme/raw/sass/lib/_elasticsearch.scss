@@ -1,0 +1,75 @@
+.elasticsearch-form.pieform {
+    .no-label {
+        margin-top: 0.875rem; // 14px
+    }
+}
+
+.elasticsearch-filters {
+    background-color: scale-color($card-bg, $lightness: -1.40%);
+    + .no-results {
+        border-top: $card-border-width solid $card-border-color;
+    }
+    .filter {
+        padding: 0 15px;
+        .filter-wrapper {
+            float: none;
+            @include media-breakpoint-up(md) {
+                float: right;
+            }
+        }
+    }
+    .search-filter-content {
+        padding: 10px 0;
+        @include media-breakpoint-up(md) {
+            float: left;
+        }
+        &.btn-group > .btn:not(:last-child) {
+            border-radius: $input-border-radius;
+        }
+    }
+    .search-results-sort,
+    .search-filter-owner {
+        @include media-breakpoint-up(sm) {
+            display: inline-block;
+        }
+    }
+    .search-filter-owner {
+        @include media-breakpoint-up(md) {
+            margin-left: 15px;
+        }
+    }
+    .pieform.form-condensed {
+        .picker {
+            width: 200px;
+            max-width: 100%;
+        }
+        .form-control {
+            width: 100% !important; // Override form-control width
+        }
+        .form-group {
+            padding: 10px 0;
+        }
+    }
+}
+
+.universalsearch {
+    &.card {
+        border-top: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .list-group-item:last-child {
+      border-bottom: 0;
+    }
+    .list-group-item ul:not(.list-group) {
+        padding-left: 25px;
+    }
+    .search-highlight {
+        font-weight: $font-weight-bold;
+    }
+}
+
+.elasticsearch-status {
+    color: scale-color($link-color, $lightness: -31.75%);
+    font-weight: $font-weight-bold;
+}

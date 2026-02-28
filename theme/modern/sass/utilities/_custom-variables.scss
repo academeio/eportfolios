@@ -1,0 +1,85 @@
+//Arrow component variables
+$arrow-color:                               scale-color($theme-secondary-color, $lightness: 5%);
+$arrow-bar-bg:                              $theme-secondary-color;
+$arrow-text-color:                          $white;
+$arrow-link-color:                          $white;
+$arrow-link-hover-color:                    $theme-secondary-color;
+$arrow-link-active-color:                   $theme-text-color;
+$arrow-link-background-color:               $white;
+
+// color for the secondary title in sections (cf. groups)
+$section-heading-color:                     #999;
+
+$admin-title-color:                         $white;
+$admin-title-bg:                            $theme-primary-color;
+
+$dashboard-widget-border-radius:            10px;
+$dashboard-widget-bg:                       $body-bg;
+$dashboard-widget-hover-bg:                 scale-color($theme-primary-color, $lightness: 80%);
+$dashboard-widget-title-color:              #333333;
+$dashboard-widget-circle-bg:                $theme-primary-color;
+$dashboard-widget-cirlce-icon-color:        $white;
+
+$help-icon-color:                           scale-color(#22C49C, $lightness: -5%);
+$rss-icon-color:                            #FE6500;
+
+// LEGACY BOOTSTRAP 3 VARIABLES
+
+// Header navbar
+$navbar-default-bg:                         $theme-primary-color;
+$navbar-default-border:                     transparent;
+
+// Navbar toggle
+$navbar-toggle-color:                       $white;
+$navbar-toggle-bg:                          transparent;
+$navbar-toggle-hover-color:                 $white;
+$navbar-toggle-hover-bg:                    $theme-secondary-color;
+$navbar-toggle-active-color:                $white;
+$navbar-toggle-active-bg:                   $theme-secondary-color;
+
+// Navbar menu
+$navbar-default-link-border:                scale-color($navbar-default-bg, $lightness: -6.5%);
+$navbar-default-link-color:                 $white;
+$navbar-default-link-hover-color:           $navbar-default-link-color;
+$navbar-default-link-bg:                    $navbar-default-bg;
+$navbar-default-link-hover-bg:              scale-color($theme-primary-color, $lightness: -15%);
+$navbar-default-active-color:               $navbar-default-link-color;
+$navbar-default-active-bg:                  scale-color($theme-primary-color, $lightness: -15%);
+
+// Navbar menus children
+$navbar-inverse-bg:                         $theme-secondary-color;
+$navbar-inverse-link-color:                 $white;
+$navbar-inverse-link-hover-color:           $white;
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -10%);
+$navbar-inverse-link-active-color:          $white;
+$navbar-inverse-link-active-bg:             $navbar-inverse-link-hover-bg;
+
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               #959595;
+$navbar-inverse-toggle-bg:                  transparent;
+$navbar-inverse-toggle-hover-color:         $white;
+$navbar-inverse-toggle-hover-bg:            $theme-secondary-color;
+$navbar-inverse-toggle-active-color:        $white;
+$navbar-inverse-toggle-active-bg:           $theme-secondary-color;
+
+// Buttons + Forms
+$btn-secondary-color:              $theme-text-color;
+$btn-secondary-bg:                 #e8eaec;
+$btn-secondary-border:             #caced3;
+
+$btn-primary-color:              $white;
+$btn-primary-bg:                 $theme-primary-color;
+$btn-primary-border:             scale-color($btn-primary-bg, $lightness: -8%);
+
+// Popovers
+$popover-fallback-border-color:       #ccc;
+
+// Cards
+$card-border-color:          #ccc;
+$card-header-bg:             #f9f9f9;
+$card-footer-bg:             #f5f5f5;
+
+$card-secondary-border-color:       $theme-primary-color;
+
+// User icon border radius
+$user-icon-border-radius:                   50%;

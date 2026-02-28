@@ -1,0 +1,99 @@
+JSONeditor in Mahara
+=================
+
+Website: https://github.com/json-editor/json-editor/
+Version: 2.6.1
+
+This library is used by SmartEvidence, to provide a user-friendly way
+of editing a framework, without relying on a json upload.
+@ http://mahara/module/framework/frameworks.php?upload=1
+
+In order to work, the JSONeditor needs a dist folder with jsoneditor.js and
+jsoneditor.js.map in it.
+It's not in the github repo for some reason, but can be found here:
+https://cdnjs.com/libraries/json-editor
+
+
+Customisations: 9aba1681dad74a10e61c07d3e0a60d3ad18e98e1
+To allow changing of the text on the Edit JSON button:
+    in src/defaults.js, added:
+        /**
+        * Title on Edit JSON buttons
+        */
+        button_edit : "Edit raw"
+
+    in src/dist/jsoneditor.js
+        replaced this.editjson_button = this.getButton('JSON','edit','Edit JSON');
+        with this.editjson_button = this.getButton('','edit', this.translate('button_edit'));
+
+        added  button_edit: "Edit raw", to the JSONEditor.defualts.languages.en JSON
+
+To stop the editor displaying undefined in the Standard Elements header when the parent
+id is undefined:
+    in src/dist/jsoneditor.js - added the asterisked line to the following:
+          // The compiled function
+          return function(vars) {
+            var ret = template+"";
+            var r;
+            for(i=0; i<l; i++) {
+              r = replacements[i];
+              ret = ret.replace(r.s, r.r(vars));
+            }
+ *          ret = ret.replace(/undefined\./gi, '');
+            return ret;
+
+Because Mahara requires just an initial capital letter on titles, added the asterisked
+lines to the JSONEditor.defaults.translate function:
+
+     if(variables) {
+        for(var i=0; i<variables.length; i++) {
+          string = string.replace(new RegExp('\\{\\{'+i+'}}','g'),variables[i]);
+ *         string = string.toLowerCase();
+ *        string = string.charAt(0).toUpperCase() + string.slice(1);
+        }
+      }
+
+Added a check for the word 'SmartEvidence' to capitalise part way through string, because it is a proper noun/brand name (js/jsoneditor/src/dist/jsoneditor.js line 10614):
+
+     if(variables) {
+        for(var i=0; i<variables.length; i++) {
+          string = string.replace(new RegExp('\\{\\{'+i+'}}','g'),variables[i]);
+          string = string.toLowerCase();
+          string = string.charAt(0).toUpperCase() + string.slice(1);
+ *       string = string.replace(/smartevidence/i, 'SmartEvidence');
+        }
+      }
+
+* Customized alert message in askConfirmation function
+js/jsoneditor/src/dist/jsoneditor.js line 4028 (b8d26c1fe073b7dc4c0f9f7c8ea8489308b879b8)
+
+
+Changes from Ib273c972fdd2f607eede0e097e69f6f409d5e8c0:
+* Included specific titles in collapse/expand buttons to indicate which section would be collapsed/expanded, by including [self.getTitle()] for each string instance. This is passed to the button function and set as an aria-label for screenreaders.
+
+* Included aria-expanded state for expand/collapsed buttons e.g. line 3583
+
+* Removed title attribute from expand/collapse buttons to improve accessibility (avoid repetition, function is clear to sighted users from context)
+
+* Line 4558: Remove 'inline-block' styling to fix alignment between 'add' and 'collapse' buttons
+
+* Created a header_container element to hold heading tag and control buttons (line 3574 and 4182) and separated h tags from control buttons. Made adjustments in editor.js to account for this change.
+
+* Added level parameter to getHeader function on line 7807 to allow us to select h1-6
+
+* Applied minor styling as a fix for DOM structural changes e.g. 4182, 4188, 3586
+
+
+Doris's patch from last upgrade: https://reviews.mahara.org/#/c/11591/9/htdocs/js/jsoneditor/src/dist/jsoneditor.js
+
+* Customisations from upgrade to 2.6.1: Change-Id: I62b921d3bcde0d3bfe8c0d01e05a5a601932677e
+  - Replaced removed postBuild function for select editor
+  - Adjusted button titles/aria labels
+  - Adjusted html for accessibility
+
+For compatibility in styling with core Mahara
+    in src/dist/jsoneditor.js - added the css class 'with-tabs'
+        el.classList.add('card');
+      - el.innerHTML = "<div class='card-header'><ul class='nav nav-tabs card-header-tabs' id='".concat(pName, "'></ul></div><div class='card-body'><div class='tab-content' id='").concat(pName, "'></div></div>");
+      + el.innerHTML = "<div class='card-header with-tabs'><ul class='nav nav-tabs card-header-tabs' id='".concat(pName, "'></ul></div><div class='card-body'><div class='tab-content' id='").concat(pName, "'></div></div>");
+        return el;

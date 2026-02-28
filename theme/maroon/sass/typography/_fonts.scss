@@ -1,0 +1,56 @@
+$font-path: '../../maroon/fonts';
+
+$light: 300, normal;
+$lightItalic: 300, italic;
+$regular: normal, normal;
+$italic: normal, italic;
+$bold: 700, normal;
+$boldItalic: 700, italic;
+$black: 900, normal;
+$blackItalic: 900, italic;
+
+$alegreyasans: (
+    alegreya-sans-v10-latin-ext_latin-300: $light,
+    alegreya-sans-v10-latin-ext_latin-300italic: $lightItalic,
+    alegreya-sans-v10-latin-ext_latin-regular: $regular,
+    alegreya-sans-v10-latin-ext_latin-italic: $italic,
+    alegreya-sans-v10-latin-ext_latin-700: $bold,
+    alegreya-sans-v10-latin-ext_latin-700italic: $boldItalic,
+    alegreya-sans-v10-latin-ext_latin-900: $black,
+    alegreya-sans-v10-latin-ext_latin-900italic: $blackItalic
+);
+
+$alegreya: (
+    alegreya-v13-latin-ext_latin-700: $bold,
+    alegreya-v13-latin-ext_latin-900: $black
+);
+
+@each $fontname, $style in $alegreyasans {
+    @font-face {
+        font-family: 'Alegreya Sans';
+        src: url('#{$font-path}/alegreyasans/#{$fontname}.eot');
+        src: url('#{$font-path}/alegreyasans/#{$fontname}.eot?#iefix') format('embedded-opentype'),
+             url('#{$font-path}/alegreyasans/#{$fontname}.woff2') format('woff2'),
+             url('#{$font-path}/alegreyasans/#{$fontname}.svg##{$fontname}') format('svg'),
+             url('#{$font-path}/alegreyasans/#{$fontname}.otf') format('opentype'),
+             url('#{$font-path}/alegreyasans/#{$fontname}.ttf') format('truetype'),
+             url('#{$font-path}/alegreyasans/#{$fontname}.woff') format('woff');
+        font-weight: nth($style, 1);
+        font-style:  nth($style, 2);
+    }
+}
+
+@each $fontname, $style in $alegreya {
+    @font-face {
+        font-family: 'Alegreya';
+        src: url('#{$font-path}/alegreya/#{$fontname}.eot');
+        src: url('#{$font-path}/alegreya/#{$fontname}.eot?#iefix') format('embedded-opentype'),
+             url('#{$font-path}/alegreya/#{$fontname}.woff2') format('woff2'),
+             url('#{$font-path}/alegreya/#{$fontname}.svg##{$fontname}') format('svg'),
+             url('#{$font-path}/alegreya/#{$fontname}.otf') format('opentype'),
+             url('#{$font-path}/alegreya/#{$fontname}.ttf') format('truetype'),
+             url('#{$font-path}/alegreya/#{$fontname}.woff') format('woff');
+        font-weight: nth($style, 1);
+        font-style:  nth($style, 2);
+    }
+}

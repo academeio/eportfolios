@@ -1,0 +1,461 @@
+// Modifications and extra use cases for bootstrap  buttons
+.btn {
+    vertical-align: baseline; // to align with submit buttons with cancels
+    text-decoration: none;
+
+    &.focus,
+    &:focus {
+        outline: medium solid $input-focus-border-color;
+    }
+
+    &.text-start {
+        text-align: left;
+    }
+
+    &.text-end {
+        text-align: right;
+    }
+
+    &.checkbox input.checkbox {
+        width: auto;
+        display: inline-block;
+        float: right;
+    }
+
+    &.btn-link {
+        display: block;
+        width: 100%;
+        &:hover,
+        &:focus {
+            background: $dropdown-link-hover-bg;
+            text-decoration: none;
+        }
+    }
+
+    input {
+        margin-top: 0;
+    }
+
+    label {
+        min-width: 0;
+    }
+
+    // with chevron
+    .icon-chevron-down {
+        opacity: 0.5;
+    }
+    &:hover {
+        .icon-chevron-down {
+            opacity: 1;
+        }
+    }
+
+    &:disabled {
+        .icon {
+            opacity:0.3;
+        }
+    }
+}
+
+.btn-secondary {
+    color: $btn-secondary-color;
+    background-color: $btn-secondary-bg;
+    border-color: $btn-secondary-border;
+    box-shadow: none;
+    text-decoration: none !important;
+    &:hover,
+    &:focus,
+    &:active {
+        color: $btn-secondary-color;
+        background-color: scale-color($btn-secondary-bg, $lightness: -10%);
+        border-color: scale-color($btn-secondary-border, $lightness: -10%);
+    }
+    &.disabled {
+        color: $btn-disabled-color;
+        border-color: $btn-disabled-border;
+        background: $btn-disabled-bg;
+        &:hover,
+        &:focus,
+        &:active {
+            color: $btn-disabled-color;
+            border-color: $btn-disabled-border;
+            background: $btn-disabled-bg;
+        }
+    }
+}
+
+.btn-primary {
+    color: $btn-primary-color;
+    background-color: $btn-primary-bg;
+    border-color: $btn-primary-border;
+    box-shadow: none;
+    &:hover,
+    &:focus,
+    &:active {
+        color: $btn-primary-color;
+        background-color: scale-color($btn-primary-bg, $lightness: -10%);
+        border-color: scale-color($btn-primary-border, $lightness: -10%);
+    }
+    &.btn-sm {
+        color: $btn-primary-color;
+        background-color: $btn-primary-bg;
+        border-color: $btn-primary-border;
+        &:hover,
+        &:focus,
+        &:active {
+            color: $btn-primary-color;
+            background-color: scale-color($btn-primary-bg, $lightness: -10%);
+            border-color: scale-color($btn-primary-border, $lightness: -10%);
+        }
+    }
+}
+
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+    color: $btn-primary-color;
+    border-color: $btn-primary-border;
+    box-shadow: none;
+}
+
+.btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show > .btn-secondary.dropdown-toggle {
+    color: $btn-secondary-color;
+    background-color: $btn-secondary-bg;
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}
+
+.btn-link-danger {
+    color: $danger;
+    &:hover,
+    &:focus {
+      color: scale-color($danger, $lightness: -10%);
+    }
+}
+
+.btn-text {
+    color: inherit;
+    padding:0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    &:hover,
+    &:focus {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+}
+
+// Block button (from Bootstrap 4)
+//
+
+.btn-block {
+    display: block;
+    width: 100%;
+
+    // Vertically space out multiple block buttons
+    + .btn-block {
+      margin-top: $btn-block-spacing-y;
+    }
+}
+
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}
+
+.btn-close {
+    width: auto;
+    height: auto;
+    float: right;
+    background: transparent;
+    @include font-size($btn-close-font-size);
+    font-weight: $btn-close-font-weight;
+    line-height: 1;
+    color: $btn-close-color;
+    text-shadow: $btn-close-text-shadow;
+    opacity: .5;
+
+    // Override <a>'s hover style
+    &:hover {
+      color: $btn-close-color;
+      text-decoration: none;
+    }
+
+    &:not(:disabled):not(.disabled) {
+        &:hover,
+        &:focus {
+            opacity: .75;
+        }
+    }
+}
+
+// like the Compose button on Inbox page
+h1 + div > .btn-top-left,
+.page-header + div.btn-top-left {
+    float: none;
+    margin-bottom: 0;
+    @include media-breakpoint-up(sm) {
+        margin-top: -53px;
+        .page-header + & {
+            margin-top: -43px;
+        }
+    }
+    form {
+        margin: 0 !important;
+        display: inline-block;
+        .form-group-inline {
+            padding: 0;
+        }
+    }
+}
+
+.card-footer {
+    &.force-pointer {
+        cursor: pointer;
+    }
+}
+
+// Hack to fix the inline script tags that keep getting in places they don't belong
+.btn-group .form-as-button.last + script + .btn {
+    margin-left: -$btn-border-width;
+}
+
+.collapsible-group + .button {
+    margin-top: $spacing-xxl;
+}
+
+.socialbtn {
+    margin-bottom: $spacing-base;
+}
+
+#rownew {
+    // For groupcategories.php
+    .add {
+        vertical-align: bottom;
+    }
+    // for menus
+    .btn-secondary {
+        margin-top: $spacing-sm;
+        border-radius: $btn-border-radius-sm;
+    }
+}
+
+.reportsettings .btn.filter {
+    line-height: 1;
+    padding: 0.0625rem 0.25rem; // 1px 4px;
+}
+
+// Tinymce primary button
+.mce-container,
+.mce-widget,
+.mce-reset {
+    .mce-primary {
+        background-color: $btn-primary-bg;
+        border-color: $btn-primary-border;
+        font-family: $btn-font-family;
+        color: $btn-primary-color;
+
+        &:hover,
+        &:focus {
+            background-color: scale-color($btn-primary-bg, $lightness: -32%);
+            border-color: scale-color($btn-primary-border, $lightness: -32%);
+            color: $btn-primary-color;
+        }
+
+        .mce-txt {
+            color: $btn-primary-color;
+        }
+    }
+}
+.modal-tinymce {
+    .pieform {
+        button.submit {
+            background-color: $btn-primary-bg;
+            border-color: $btn-primary-border;
+            font-family: $btn-font-family;
+            color: $btn-primary-color;
+
+            &:hover,
+            &:focus {
+                background-color: scale-color($btn-primary-bg, $lightness: -32%);
+                border-color: scale-color($btn-primary-border, $lightness: -32%);
+                color: $btn-primary-color;
+            }
+        }
+    }
+}
+
+.card.first .card-header {
+    a.btn-sm {
+        border-radius: $btn-border-radius-sm;
+
+        &:last-child {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        &:first-child {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    }
+}
+
+// Portfolios pageactions btns
+.pageactions {
+    margin-right: -$btn-border-width;
+
+    .content-toolbar {
+        width: 100%;
+        .btn {
+            width: 100%;
+        }
+    }
+
+    .btn-group-vertical .btn {
+        border-radius: 0;
+
+        &:last-child {
+            border-bottom-left-radius: $btn-border-radius-sm;
+        }
+        &:first-child {
+            border-top-left-radius: $btn-border-radius-sm;
+        }
+
+        &.dropdown-toggle {
+            border-radius: $btn-border-radius-sm;
+            border-bottom-right-radius: 0;
+        }
+        &.addaction {
+            border-radius: $btn-border-radius-sm;
+            border-top-left-radius: 0;
+            margin-top: -0.0625rem; // -1px;
+        }
+    }
+}
+
+// Profile page accept friends form
+.pendingfriendscard {
+    .acceptfriendbutton {
+        form {
+            display: inline-block;
+            font-size: $btn-font-size-sm;
+
+            button {
+                padding: 0;
+                border: 0;
+                font-size: $btn-font-size-sm;
+
+                &:hover,
+                &:focus {
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}
+
+// Admin close site button
+#close_site_submit {
+    &.btn {
+        border-color: $danger;
+        color: $white;
+        background-color: $danger;
+        &:hover,
+        &:focus {
+          color: $white;
+          background-color: scale-color($danger, $lightness: -10%);
+          border-color: scale-color($danger, $lightness: -10%);
+        }
+    }
+}
+
+// Networking delete btn
+.secondary #networkingform_submit {
+    background-color: $state-danger-bg;
+    color: $state-danger-text;
+    border-color: $state-danger-border;
+    margin-left: 0.5rem; // 8px;
+    &:hover,
+    &:focus {
+      background-color: scale-color($state-danger-bg, $lightness: -5%);
+      border-color: scale-color($state-danger-border, $lightness: -5%);
+    }
+}
+
+// Web services add service groups btn
+#webservices_function_groups_add_submit,
+#webservices_token_generate_submit {
+    width: auto;
+}
+
+#forums-list .button {
+    white-space: nowrap;
+}
+
+// Manage collections
+.collection-pages {
+    button.btn-sm {
+        border: 0;
+    }
+}
+
+// Find people results approve request alignment
+.approvefriend .pieform {
+    display: inline-block;
+    margin-left: $spacing-xs;
+    button {
+        font-size: $font-size-sm;
+    }
+}
+
+// Stop btn links displaying as buttons
+[type="button"].btn-link,
+a[type="submit"],
+.card-header a[type="button"] {
+    -webkit-appearance: none;
+}
+
+.assessment-item-buttons {
+    .assessbtn + .assessbtn {
+        button {
+            @include border-start-radius
+        }
+    }
+}
+
+.connections button {
+    margin-top: $spacing-base;
+}
+
+// left/right vertical buttons
+.lrbuttons .btn-group-vertical {
+  > .btn:not(:last-child):not(.dropdown-toggle).rightarrow {
+    border-top-right-radius: $btn-border-radius-sm;
+  }
+  > .btn:not(:first-child).leftarrow {
+    border-bottom-left-radius: $btn-border-radius-sm;
+    margin-left: 0;
+  }
+}
+
+// admin people search button alignment
+.form-inline .admin-user-search .form-group.no-label {
+  vertical-align: text-bottom;
+  top: -$spacing-sm;
+}
+
+// order sorting arrows
+.authIcons {
+  .order-sort-control {
+      border: 0;
+  }
+  .order-sort-control.arrow-down + .btn-sm {
+      margin-left: 2rem; // 32px;
+  }
+  .order-sort-control.arrow-up:first-child {
+      padding-left: 2.8125rem; // 45px;
+  }
+}

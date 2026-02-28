@@ -1,0 +1,21 @@
+/**
+ * CSS rules for the externalvideo blocktype plugin
+ *
+ * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+
+ * This file is distributed under the same terms as Mahara itself
+ */
+
+.embedservice_content {
+    padding: $spacing-base 0;
+}
+.embedservice_content table#embedservice_table {
+    width: 100%;
+}
+.embedservice_content table#embedservice_table td {
+    border: 1px solid transparent;
+    padding: 0 $spacing-base;
+    font-size: larger;
+}

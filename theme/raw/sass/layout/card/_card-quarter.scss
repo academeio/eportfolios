@@ -1,0 +1,256 @@
+@use "sass:math";
+
+// Styles for the new portfolio layout
+
+.card-collection,
+.card-view {
+    width: 100%;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: $spacing-xxl;
+    height: 12.5rem; // 200px;
+    @include media-breakpoint-up(sm) {
+        width: 50%;
+    }
+    @include media-breakpoint-up(md) {
+        width: 25%;
+    }
+
+    .site-template {
+        background: repeating-linear-gradient(
+            -45deg,
+            $gray-100,
+            $gray-100 10px,
+            scale-color($gray-100, $lightness: 30%) 10px,
+            scale-color($gray-100, $lightness: 30%) 20px
+            ) !important;
+    }
+
+    .card {
+        position: relative;
+        height: 100%;
+        border: $card-border-width solid $card-border-color;
+        box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        .card-header {
+            background-color: transparent;
+            border: none;
+            font-family: $font-family-base !important;
+            font-weight: $font-weight-base !important;
+            a.title-link {
+              padding: $spacing-sm $spacing-base;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              &:hover,
+              &:focus {
+                  background-color: $card-cap-bg;
+              }
+            }
+        }
+        .card-body {
+            padding: $spacing-sm $spacing-base;
+            .detail.text-small {
+              max-height: 7.1875rem; // 115px;
+              overflow-y: auto;
+            }
+        }
+    }
+
+    .card-footer {
+        width: 100%;
+        padding: 0;
+        border-top: 0;
+        position: absolute;
+        bottom: 0;
+
+        .dropdown-toggle {
+            min-width: 2.5rem; // 40px;
+            text-decoration: none;
+            color: $theme-text-color;
+            .open-indicator {
+                display: none;
+            }
+            &[aria-expanded="true"] {
+                .open-indicator {
+                    display: inline-block;
+                }
+                .page-count,
+                .icon-stack,
+                .close-indicator {
+                    display: none;
+                }
+            }
+        }
+
+        .dropdown-menu {
+            top: 100%;
+            max-height: 12.5rem; // 200px;
+            overflow: auto;
+            padding: 0;
+            margin: 0;
+            min-width: auto;
+
+            .seperator {
+                border-bottom: $dropdown-border-width solid $dropdown-border-color;
+            }
+        }
+    }
+
+    .page-controls {
+        float: right;
+        .dropdown-menu-end {
+            right: 0;
+            width: auto;
+            max-height: none;
+            > li > a {
+                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+            }
+            .view-details {
+                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+                font-size: $font-size-sm;
+                border-top: $dropdown-border-width solid $dropdown-border-color;
+
+                &:hover,
+                &:focus {
+                  background: transparent;
+                }
+            }
+        }
+    }
+    .page-access {
+        float: left;
+        .dropdown-menu {
+            .view-details {
+                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+                background-color: $state-danger-bg;
+            }
+        }
+    }
+    .collection-list {
+        float: right;
+
+        .dropdown-toggle {
+            position: relative;
+        }
+        .icon-file {
+            position: relative;
+        }
+        .collection-indicator {
+            position: absolute;
+            border-right: 1px solid $theme-text-color;
+            border-bottom: 1px solid $theme-text-color;
+            width: 0.75rem; // 12px;
+            height: 0.75rem; // 12px;
+
+            &.few {
+                top: 0.25rem; // 4px;
+                left: 0.0625rem; // 1px;
+            }
+
+            &.many {
+                top: 0.375rem; // 6px;
+                left: 0.25rem; // 4px;
+            }
+        }
+    }
+
+    .card-warning {
+        background-color: $state-warning-bg;
+        color: $state-warning-text;
+        border-color: $state-warning-border;
+        a {
+            color: $state-warning-link;
+            &:hover,
+            &:focus {
+              text-decoration-color: $state-warning-link;
+            }
+        }
+    }
+    .card-danger {
+        background-color: $state-danger-bg;
+        color: $state-danger-text;
+        border-color: $state-danger-border;
+    }
+}
+
+.card-collection {
+    position: relative;
+    .card.bg-warning {
+        .card-body {
+            background-color: $state-warning-bg;
+        }
+    }
+    .collection-stack.bg-warning {
+        &:before,
+        &:after {
+            background-color: $state-warning-bg;
+        }
+    }
+    .collection-stack {
+        &:before,
+        &:after {
+            content: "";
+            display: block;
+            height: 12.5rem; // 200px;
+            width: calc(100% - #{$spacing-xxl});
+            margin: $spacing-lg;
+            position: absolute;
+            border-radius: $card-border-radius;
+            border: $card-border-width solid $card-border-color;
+        }
+        &:before {
+            top: -0.8125rem; // -13px;
+            left: $spacing-xs;
+            z-index: -1;
+        }
+        &:after {
+            top: -0.6875rem; // -11px;
+            left: 0.375rem; // 6px;
+            z-index: -2;
+            box-shadow: 4px 4px 3px rgba(0,0,0,.25);
+        }
+    }
+}
+
+.card-option {
+    width: 47%;
+    display: inline-block;
+    margin-right: $spacing-sm;
+    margin-bottom: $spacing-lg;
+    @include media-breakpoint-up(md) {
+        width: 23%;
+    }
+    .card.placeholder {
+        padding: $spacing-base;
+        margin-bottom: 0;
+        cursor: pointer;
+        width: 100%;
+        div {
+            text-align: center;
+            &.icon {
+                padding-bottom: $spacing-sm;
+            }
+        }
+    }
+}
+
+// Make collection list dropdown align right on the right most card
+.card-quarter {
+    &:nth-child(even) .collection-list .dropdown-menu,
+    &:nth-child(even) .page-access .dropdown-menu {
+        right: 0;
+        left: auto;
+        @include media-breakpoint-up(md) {
+            left: 0;
+            right: auto;
+        }
+    }
+    &:nth-child(4n) .collection-list .dropdown-menu,
+    &:nth-child(4n) .page-access .dropdown-menu {
+        @include media-breakpoint-up(md) {
+            right: 0;
+            left: auto;
+        }
+    }
+}

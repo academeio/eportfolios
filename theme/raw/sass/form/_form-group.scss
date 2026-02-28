@@ -1,0 +1,630 @@
+// remove styles on outer element as class is duplicated to form element
+.form-group.btn:not(.checkbox),
+.form-group-inline.btn {
+    background: none;
+    border: none;
+    padding-left: 0;
+    &:hover {
+        background: none;
+        border: none;
+    }
+}
+
+.stacked .with-heading > .form-group {
+    &.select {
+        label {
+            display: block;
+            font-weight: $font-weight-bold;
+        }
+    }
+}
+
+.form-group {
+    margin: 0;
+    padding: $spacing-xl 0;
+    position: relative;
+    border-bottom: $list-group-border-width solid $list-group-border-color;
+
+    // exceptions that don't need border-bottom
+    &.form-group-no-border {
+      border-bottom: 0;
+    }
+
+    @include media-breakpoint-up(md) {
+        &.input-pair {
+            max-width: 48%;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        &.input-pair ~ .input-pair {
+            border-left: $list-group-border-width solid $list-group-border-color;
+            padding-left: $spacing-xl;
+            margin-left: $spacing-lg;
+            padding-top: 0;
+        }
+    }
+
+    // Reset form-group for btn-group-top
+    &.group-request {
+        border-bottom: 0;
+        padding: 0;
+    }
+
+    &.input-pair {
+        padding-top: $spacing-base;
+        .select2 {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+
+    .form-group {
+        padding: 0;
+        &.color {
+            border-bottom: 0;
+            padding-bottom: $spacing-lg;
+        }
+    }
+    &.nojs-hidden-block {
+        .js & {
+            display: none
+        }
+    }
+    &.fieldset,
+    .form-group-nested & {
+        .form-group {
+           padding: $spacing-xl 0;
+        }
+    }
+
+    .form-simple & {
+        border: 0;
+        label {
+            min-width: 6.25rem; // 100px;
+        }
+        .form-switch label {
+            min-width: auto;
+        }
+    }
+
+    .form-condensed & {
+        padding: 0.4375rem 0; // 7px 0;
+        border: 0;
+         .form-group { //nested form groups
+            padding: 0;
+        }
+        &.fieldset {
+            .form-group {
+               padding: $spacing-xl 0;
+            }
+        }
+    }
+
+    &.bytes {
+        .pseudolabel {
+            display: none;
+        }
+    }
+
+    &.file {
+        input {
+            @include box-shadow(none);
+            border: 0;
+            line-height: 0.875; // 14px;
+        }
+    }
+
+    &.fake-form {
+        border: 0;
+        padding: 0;
+        .collapsible-group .card.collapsible & {
+            border: 0;
+            padding: 0;
+        }
+    }
+
+    // this is a weird and somewhat broken case where form renderers are being use to render regular html
+    &.html form {
+        display: block;
+        .collapsible-group .card.collapsible & .form-group {
+            border: 0;
+            padding: 0;
+        }
+    }
+
+    &.button,
+    &.submit {
+        background: transparent;
+        padding: 0;
+        padding-top: 2rem;
+        border: 0;
+        .form-inline & {
+            padding: 0;
+        }
+    }
+
+    //used when adding email addresses to profiles (anywhere else?)
+    .message {
+        font-size: $font-size-sm;
+        color: $gray-500;
+    }
+
+    .form-inline & {
+        padding: 0;
+    }
+
+    .modal-body & {
+        position: static;
+        padding: $spacing-xl 0;
+    }
+
+    &.hide-label,
+    .hide-label & {
+        padding: 0;
+        label {
+            @include visually-hidden;
+        }
+    }
+
+    &.last {
+        border:0;
+    }
+
+    &.with-text-input {
+        padding-bottom: 0;
+    }
+
+    &.login {
+        input {
+            &[type=text],
+            &[type=password] {
+                max-width:100%;
+            }
+        }
+    }
+
+    &.input-small,
+    &.input-group,
+    &:last-child {
+        border: 0;
+    }
+
+    &.tab-pane,
+    &.collapsible-group {
+        border: 0;
+        padding: 0;
+    }
+
+    &.collapsible-group {
+        margin-bottom: -$card-border-width;
+    }
+
+    &.with-padding {
+        .form-group {
+            padding: $spacing-xl 0;
+        }
+    }
+
+    &.checkboxes {
+        .btn-group {
+            margin: $spacing-base 0;
+            display: block;
+        }
+         input[type=checkbox] {
+            top: $spacing-xs;
+            margin-left: 0;
+            width: auto;
+        }
+        &.stacked {
+            .checkboxes-option {
+                margin-left: 0;
+                label {
+                    padding-left: $spacing-xl;
+                    padding-right: $spacing-base;
+                    margin-top: 0.125rem; // 2px;
+                }
+            }
+        }
+        .checkboxes-option {
+            margin-left: 16.5625rem; // 265px;
+            display: inline-block;
+        }
+    }
+
+    &.checkbox {
+        label {
+            padding-left: 0;
+        }
+        .checkbox {
+            display: inline-block;
+            position: relative;
+        }
+        input[type=checkbox] {
+            margin-left: 0;
+        }
+    }
+
+    &.calendar {
+        .calendar {
+            margin-left: 0;
+            width: 10.3125rem; // 165px;
+        }
+    }
+    .modal-docked &.calendar {
+        position: relative;
+    }
+
+    &.submit {
+        border-bottom: none;
+    }
+
+    // reset bootstrap button style for cancel button
+    &.submitcancel,
+    &.multisubmit {
+        border-bottom: none;
+        .cancel {
+            background-color: transparent;
+            border: none;
+            color: $link-color;
+            text-decoration: underline;
+            &:hover,
+            &:focus {
+                color: $link-hover-color;
+                text-decoration: $link-hover-decoration;
+            }
+            &:focus {
+                outline: medium solid $input-focus-border-color;
+            }
+        }
+    }
+
+    &.filebrowser {
+        border-bottom-width: 0;
+        label {
+            vertical-align: top;
+        }
+    }
+
+     &.checkbox {
+         .description {
+            margin-left:0;
+            max-width: 43.75rem; // 700px;
+         }
+    }
+
+     &.tags {
+        .tag-wrapper {
+            display: block;
+            @include media-breakpoint-up(md) {
+                display: inline-block;
+            }
+            input {
+                max-width: 85%;
+                display: inline-block;
+                @include media-breakpoint-up(md) {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+
+    &.color {
+        label {
+            &:first-child {
+                display: block;
+                @include media-breakpoint-up(md) {
+                    display: inline-block;
+                }
+            }
+            &:not(:first-child) {
+                min-width: inherit;
+            }
+        }
+        input {
+            &.color {
+                max-width: 15rem; // 240px;
+            }
+        }
+    }
+    &.html {
+        border-bottom: none;
+        h3 {
+            margin: 0;
+        }
+        &.htmldescription {
+            border-bottom: $list-group-border-width solid $list-group-border-color;
+        }
+    }
+    &.double {
+        .description {
+            margin-left: 0;
+            max-width:90%;
+        }
+        input[type=text],
+        input[type=password],
+        select {
+            max-width: 45%;
+            display: inline-block;
+            @include media-breakpoint-up(md) {
+                width: 9.375rem; // 150px;
+            }
+            @include media-breakpoint-up(xl) {
+                width: 9.375rem; // 150px;
+            }
+        }
+    }
+
+    // c.f edit group
+   &.five-across {
+        label {
+            clear:both;
+            width:100%;
+        }
+        input[type=text],
+        input[type=password],
+        select {
+            @include media-breakpoint-up(md) {
+                width: 9.6875rem; // 155px;
+            }
+            @include media-breakpoint-up(xl) {
+                width: 9.375rem; // 150px;
+            }
+        }
+        select {
+            margin-left: $spacing-sm;
+        }
+        label + select {
+            margin-left: 0; // padding provided by label instead
+        }
+        &.multi-label {
+
+             > .field {
+                width: 10.4375rem; // 167px;
+
+                select {
+                    max-width: 90%;
+                }
+
+                label {
+                    font-size: $font-size-base * 0.75;
+                    color: $theme-text-midtone-color;
+                }
+            }
+        }
+    }
+
+    h3,
+    h2 {
+        &.filter-result-heading {
+            margin-bottom: 0;
+            padding-bottom: $spacing-base;
+            margin-top: $spacing-xl;
+            font-family: $font-family-base;
+            font-size: $font-size-base * 1.25;
+        }
+    }
+
+
+    .form-control {
+        display: inline-block;
+        max-width: calc(100% - 1.875rem); //calc(100% - 30px);
+        width: 100%;
+        @include media-breakpoint-up(md) {
+            width: 23.125rem; // 370px;
+            .columns3 &,
+            .form-inline & {
+                max-width:100%;
+            }
+            .form-inline & {
+                width: 100%;
+            }
+        }
+        @include media-breakpoint-up(xl) {
+            width: 31.25rem; // 500px;
+        }
+    }
+
+    .form-condensed & {
+        .form-control:not(.with-dropdown):not(.dropdown-connect) {
+            width: auto;
+            &.fullwidth {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    }
+
+    .modal .fieldset & {
+        border-bottom: $list-group-border-width solid $list-group-border-color;
+    }
+
+    &.wysiwyg {
+
+        .has-help &,
+        .tab-content & {
+             > .mce-container {
+                max-width: 90%
+            }
+        }
+    }
+    .mce-tinymce {
+        @include media-breakpoint-up(md) {
+            width: 26.25rem; // 420px;
+            max-width: 100%;
+            .columns3 & {
+                max-width: 100%;
+            }
+        }
+        @include media-breakpoint-up(xl) {
+            width: 31.25rem; // 500px;
+        }
+    }
+
+    &.radio {
+        .pseudolabel,
+        .radio-wrapper {
+            max-width: calc(100% - 1.875rem); // calc(100% - 30px);
+            display: inline-block;
+        }
+        .pseudolabel {
+            @include media-breakpoint-down(lg) {
+                display: block;
+                min-width: auto;
+                max-width: none;
+            }
+        }
+        .modal-docked & {
+            .pseudolabel,
+            .radio-wrapper {
+                @include media-breakpoint-down(xl) {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .help {
+        margin-top: $spacing-sm;
+        float:right; // can't use absolute because it messes up the pop out
+        z-index: 1;
+        position: relative;
+    }
+
+    .wysiwyg + .help {
+        transform: translate(0px, -180px);
+    }
+
+    .help-inline {
+        .help {
+            top: auto;
+            margin-top: 0;
+            right:auto;
+        }
+    }
+
+    .errmsg {
+        @extend .align-with-input;
+        color: $danger;
+        display: block;
+        padding-top: $spacing-base;
+        font-size: $font-size-sm;
+
+        &:before {
+          @include fonttype(solid);
+          content: fa-content($fa-var-times);
+          color: scale-color($danger, $lightness: -30%);
+          padding-right: $spacing-sm;
+        }
+
+        @include media-breakpoint-up(lg) {
+            margin-left: 16.5625rem; // 265px;
+        }
+    }
+
+    label.visually-hidden ~ .errmsg {
+        margin-left: 0px; // No margin if the label is hidden
+    }
+
+    .description:not(.html) {
+        color: $theme-text-midtone-color;
+        font-style: italic;
+        font-size: $font-size-sm;
+        max-width: 90%;
+        display: block;
+        padding-top: $spacing-base;
+    }
+    .requiredmarker,
+    .oneofmarker {
+        color: scale-color($danger, $lightness: -8.5%);
+    }
+
+    &.requiredmarkerdesc,
+    &.oneofmarkerdesc {
+        color: scale-color($danger, $lightness: -8.5%);
+        border: 0;
+        font-style: italic;
+        font-size: $font-size-sm;
+        padding-bottom: 0;
+    }
+    &.has-oneof {
+        background-color: $gray-100;
+    }
+
+    @include media-breakpoint-up(md) {
+        &.input-small {
+            max-width: 100%;
+            width: 25%;
+            .input-small {
+                margin:0;
+            }
+        }
+    }
+
+    &.top-line {
+        border-top: $list-group-border-width solid $list-group-border-color;
+    }
+
+    // for when inputs don't have a label on the left but need to visually align with other form elements
+    &.input-push-right {
+        input[type="text"] {
+          @include media-breakpoint-up(md) {
+            margin-left: 16.625rem; // 266px;
+          }
+        }
+    }
+
+    input[type=text].secondary-textbox {
+        margin-top: $spacing-lg;
+        @include media-breakpoint-up(xl) {
+            margin-left: 16.5625rem; // 265px;
+        }
+    }
+}
+
+.card .form-group-nested {
+    padding-bottom: $spacing-xl;
+}
+
+// Style placeholder text
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: $theme-text-midtone-color !important;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color: $theme-text-midtone-color !important;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color: $theme-text-midtone-color !important;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color: $theme-text-midtone-color !important;
+}
+
+// upload forms browse button overlaps on phone
+@include media-breakpoint-down(md) {
+  .form-upload .align-with-input {
+    margin-top: 0;
+  }
+}
+
+// reset the padding when the individual font file is collapsed in font install
+.individualfiles.form-group {
+    padding: 0;
+    border-bottom: 0 none;
+}
+
+div.form-group .form-control-label {
+    vertical-align: top;
+}
+
+// site config > fonts > install fonts
+.individualfiles {
+  label {
+    min-width: 16.5625rem; // 265px;
+  }
+  .align-with-input.file {
+    margin-top: 0;
+    margin-left: 0;
+  }
+}

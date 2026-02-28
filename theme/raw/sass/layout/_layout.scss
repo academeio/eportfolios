@@ -1,0 +1,293 @@
+/*
+ * Base structure
+ */
+body {
+    max-width: 100%;
+
+    .main {
+        position: relative;
+        margin: 0;
+        padding-top: $spacing-xxl;
+        padding-bottom: $spacing-xxl;
+    }
+}
+
+.main {
+    max-width: 100%;
+}
+
+.content-main {
+    @include media-breakpoint-up(md) {
+        margin-left: 250px;
+    }
+}
+
+.sidebar {
+    padding-top: 0;
+    @include media-breakpoint-up(md) {
+        padding-top: $spacing-xxl;
+    }
+}
+
+// Expose a section of the page
+.expose {
+    background-color: $theme-secondary-color;
+    margin-bottom: 2.5rem; // 40px;
+    margin-top: -6.8125rem; // -109px;
+    padding: 2.5rem 0 1.25rem; // 40px 0 20px;
+}
+
+.subpage {
+    clear: both;
+}
+
+.wall {
+    margin-top: $spacing-xl;
+    .lead {
+        background-color: $gray-100;
+        padding: $alert-padding-y $alert-padding-x;
+        font-weight: $font-weight-base;
+    }
+
+    // in editor remove margin-top and border-top as no form
+    .bt-wall-editor & {
+      margin-top: 0;
+      .list-group.list-group-top-border .list-group-item:first-child {
+        border-top: 0;
+      }
+    }
+}
+
+.viewfooter {
+    clear: both;
+    margin-top: $spacing-xxl;
+}
+
+// Needed to clear the float when dropzone is visible
+.blocktype {
+  &.ui-draggable:before {
+    display: none;
+  }
+}
+
+.blockinstance {
+  clear: both;
+  .list-group{
+    margin-bottom: 0;
+  }
+}
+
+iframe {
+    &.pdfiframe {
+        width: 100%;
+        height: 500px;
+    }
+    &.externalvideoiframe {
+        width: 100%;
+    }
+    border: 0;
+}
+// Limit the width of external media
+// to fit the width of the column
+.mediaplayer-container iframe {
+    width: 100%;
+}
+
+.progress-container {
+    padding-top: $spacing-xl;
+}
+
+.section-import {
+    padding-top: $spacing-xxl;
+}
+
+.btn-group-top + .lead,
+.btn-action-list + .view-description,
+.btn-group-top + .view-description,
+.toolbar + .lead {
+    clear: both;
+    margin-top: $spacing-lg;
+    @include media-breakpoint-up(md) {
+        margin-top: 3.75rem; // 60px;
+    }
+}
+
+.btn-action-list + .view-container,
+.btn-group-top + .view-container {
+    @include media-breakpoint-up(md) {
+        margin-top: 3.75rem; // 60px;
+    }
+}
+
+.view-container {
+    margin-top: $spacing-lg;
+    clear: both;
+}
+
+.view-description {
+    margin-bottom: $spacing-xl;
+    &.with-toolbar {
+        margin-right: $spacing-xl;
+    }
+    &.with-addblock {
+        margin-bottom: $spacing-xl;
+    }
+    &.lead {
+        margin-top: $spacing-base;
+    }
+    &.groupdescription {
+        margin-top: 0;
+    }
+}
+
+.postlist {
+    margin-top: $spacing-xl;
+}
+
+.forumfooter {
+    margin: $spacing-lg 0;
+}
+
+body.presentation-iframe {
+    header {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+}
+
+// Portfolios page header
+.pageactions {
+    position: absolute;
+    top: 0px;
+
+    .btn-group-vertical {
+        position: fixed;
+        right: -$btn-border-width;
+        margin-top: $spacing-xxl;
+        z-index: $zindex-fixed;
+        .btn.first-of-group {
+            border-top-left-radius: $border-radius;
+        }
+        .btn-primary {
+          label {
+            padding: 0;
+          }
+        }
+    }
+}
+
+.pageheader {
+    background-color: $pageheader-bg;
+    position: relative;
+
+    .main {
+        padding-top: $spacing-xxxl;
+        padding-bottom: $spacing-xxxl;
+
+        @include media-breakpoint-down(lg) {
+            padding-top: $spacing-base;
+            padding-bottom: $spacing-xxl;
+        }
+    }
+}
+
+// push in the right page margin to allow room for floating menu
+.pageheader-actions {
+    padding-right: 0;
+
+    .pageheader-content {
+        @media (max-width: 1270px) {
+            padding-right: 1.25rem; // 50px;
+        }
+    }
+}
+form#settings,
+.view-instructions {
+    @media (max-width: 1270px) {
+        padding-right: 1.25rem; // 50px;
+    }
+}
+
+// Profile page accept friends form
+.pendingfriendscard {
+    margin-top: $spacing-xxxl + $spacing-xl;
+    margin-bottom: $spacing-xl;
+
+    @include media-breakpoint-down(lg) {
+        margin: 0;
+    }
+}
+
+// make footer colour extend below footer on short pages
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .main-content {
+      flex: 1;
+      -ms-flex: 0 0 auto; // IE11 fix
+    }
+}
+
+// fixes ie11 flex issues making panels go to bottom of page
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .col-lg-3 {
+      flex: 1 0 0%;
+      max-width: 25%;
+
+      @include media-breakpoint-down(lg) {
+          flex: 1 0 0%;
+          max-width: 100%;
+      }
+  }
+}
+
+.last-updated {
+  margin: $spacing-xl 0 0 0;
+  font-weight: $font-weight-light;
+}
+
+// using flex to keep list-group-item btns on top right and not hide title under
+.flex-row {
+    display: flex;
+}
+.flex-title {
+    flex: 1 1 auto;
+    margin-bottom: $spacing-base;
+
+    .list-group-item-heading {
+        margin-bottom: 0;
+    }
+
+    // when there's double flex-title
+    .flex-title {
+        margin-bottom: 0;
+    }
+
+    &.attachment-title {
+        margin-bottom: 0;
+    }
+}
+.flex-controls {
+    text-align: right;
+    padding-left: $spacing-base;
+    @include media-breakpoint-up(md) {
+        white-space: nowrap;
+    }
+    .btn {
+      margin-bottom: 0.0625rem; // 1px;
+    }
+}
+
+// for groups page where statuses in the right column need to display before the left column on md screens and below
+.group-user-status {
+    order: -1;
+    @include media-breakpoint-up(md) {
+        order: 1;
+    }
+}

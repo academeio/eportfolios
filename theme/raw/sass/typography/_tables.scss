@@ -1,0 +1,460 @@
+.table>thead>tr>th {
+    border-bottom: (2 * $table-border-width) solid $table-border-color;
+    border-color: $table-border-color;
+    &.active {
+        background: scale-color($table-active-bg, $lightness: 75%);
+    }
+}
+td.short {
+    width: 11.25rem; // 180px;
+}
+td.tiny {
+    width: 1.25rem; // 20px;
+    &.with-icon {
+        padding: 1.25rem 0 0.5rem 0.5rem; // 20px 0 8px 8px;
+    }
+}
+
+.table {
+    max-width:100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    .icon-cell {
+        min-width: 3.125rem; // 50px; //width of two icons
+    }
+
+    label {
+        min-width: 0;
+        + input {
+          margin-top: $spacing-sm;
+        }
+    }
+
+    thead {
+        text-transform: uppercase;
+        color: $theme-text-midtone-color;
+        font-size: $font-size-base;
+        th, td {
+            font-weight: $font-weight-light;
+        }
+        .allnone-toggles {
+            .btn-sm {
+                font-size: $font-size-sm;
+            }
+        }
+
+        .search-results-sort-column {
+            position: relative;
+
+            &:last-child {
+                min-width: 6.25rem; // 100px;
+            }
+
+            & > a::after {
+                right: 0.25rem; // 4px;
+                text-decoration: none;
+                color: $theme-text-midtone-color;
+            }
+            &:last-child > a::after {
+                right: 0;
+            }
+
+            // need to remove the link decoration from the link and put on just the text, sparing the sort arrow
+            a {
+                text-decoration: none;
+                span {
+                    text-decoration: $link-decoration;
+                }
+                &:hover,
+                &:focus {
+                    text-decoration: none;
+                    span {
+                        text-decoration: $link-hover-decoration;
+                    }
+                }
+            }
+
+            // and take it off the help icon and get rid of margin-top so it doesn't touch text when wrapped
+            span.help  a .icon {
+              text-decoration: none;
+            }
+
+        }
+
+        a::after {
+            @include fonttype(solid);
+            position: relative;
+            top: -$spacing-xs;
+            margin-left: $spacing-xs;
+            color: $theme-text-midtone-color;
+        }
+        .asc > a::after {
+            content: fa-content(\f0d7);
+        }
+        .desc > a::after,
+        .sorted > a::after {
+            content: fa-content(\f0d8);
+            top: 0.125rem; // 2px;
+        }
+    }
+
+    tr.inactive {
+        background: scale-color($warning, $lightness: 70%) !important;
+    }
+
+    tr.submitted {
+        color: $state-submitted-text;
+        background: $state-submitted-bg !important;
+    }
+
+    td input[type=radio],
+    td input[type=checkbox] {
+        margin: 0.375rem auto; // 6px auto;
+        display: block;
+        &.with-label {
+            margin: 0;
+        }
+    }
+
+    td {
+        border-top: $table-border-width solid $table-border-color;
+        border-bottom-width: 0;
+        white-space: normal;
+        &.movebuttons {
+            width: 3.125rem; // 50px;
+            .movedown,
+            .moveup {
+                @extend .text-midtone;
+                font-size: $font-size-base * 1.5;
+            }
+        }
+        &.control-buttons {
+            width: 5.625rem; // 90px;
+            text-align: right;
+            a,
+            .pieform {
+                display: inline-block;
+            }
+            // Allows space for when you also have a unzip button in the control button butn-group
+            &.includes-unzip {
+                width: 6.875rem; // 110px;
+            }
+        }
+        h2 {
+            font-weight: $font-weight-normal !important;
+            font-family: $font-family-base !important;
+            font-size: $font-size-lg;
+            margin: 0;
+        }
+    }
+
+    th {
+        border-top: 0;
+    }
+
+    .narrow {
+        width: 1.25rem; // 20px;
+        .checkbox {
+            margin-top: 1.25rem; // 20px;
+        }
+    }
+
+    .tiny .checkbox {
+        margin-top: $spacing-base;
+    }
+
+    small {
+        font-size: $font-size-base * 0.75; // 12px
+    }
+
+    // admin configure site add link table
+    &.nohead {
+        th:not(:last-child) {
+            min-width: 9.375rem; // 150px;
+            @include media-breakpoint-up(md) {
+                min-width: auto;
+            }
+        }
+    }
+    > tbody > tr {
+        &.active td {
+            background-color: $table-active-bg;
+        }
+        > th {
+            border-top: $table-border-width solid $table-border-color;
+            border-bottom: 0;
+        }
+        &.warning td {
+            background-color: $state-warning-bg;
+        }
+    }
+}
+
+.table-hover {
+    > tbody > tr {
+        &.no-hover {
+            &:hover {
+                background: transparent;
+                cursor: default;
+            }
+        }
+        &:hover {
+            background: scale-color($table-hover-bg, $lightness: 60%);
+
+            cursor: pointer;
+            .filename {
+                color: $link-hover-color;
+            }
+        }
+
+        // folder name needs to be not link color
+        .changefolder {
+            color: $theme-text-color;
+        }
+    }
+}
+
+.table-padded {
+    >tbody>tr>td {
+        padding-top: $spacing-lg;
+        padding-bottom: $spacing-lg;
+    }
+}
+
+
+.table-small{
+    font-size: $font-size-base * 0.75;
+    th {
+        font-size: $font-size-base * 0.75;
+    }
+    >thead>tr>th,
+    >thead>tr>td,
+    >tbody>tr>th,
+    >tbody>tr>td,
+    >tfoot>tr>th,
+    >tfoot>tr>td {
+        padding: $table-cell-padding-sm $spacing-xs;
+        &:first-child {
+            padding-left: 0.5rem; // 8px;
+        }
+        &:last-child {
+            padding-right: 0.5rem; // 8px;
+        }
+    }
+
+    > thead>tr> th {
+        padding: $spacing-base $spacing-xs;
+    }
+
+    .btn-sm {
+        font-size: $btn-font-size-sm;
+    }
+}
+
+.table-short {
+    width: 100%;
+    @include media-breakpoint-up(md) {
+        width: 40%;
+    }
+}
+
+.table-selectedlist {
+    font-size: $font-size-sm;
+    border-top: $table-border-width solid $table-border-color;
+    border-bottom: $table-border-width solid $table-border-color;
+    margin-top: $spacing-base;
+}
+
+table.table tr {
+    .with-checkbox {
+        min-width: 4.625rem; // 74px;
+
+        input {
+            margin-top: 0.375rem; // 6px;
+            margin-right: $spacing-xs;
+            float: left;
+        }
+    }
+    .with-selectall {
+        min-width: 6.875rem; // 110px;
+    }
+}
+
+.table > thead > tr.th-has-shared > th {
+    padding-bottom: $spacing-lg;
+}
+
+.th-shared-wrap {
+    position: relative;
+    padding-top: 0.4375rem; // 7px;
+}
+
+.th-shared-heading {
+    position: absolute;
+    top: -0.5rem; // -8px;
+    left: 0;
+    width: 6.25rem; // 100px;
+    text-align: center;
+}
+
+.th-shared-title {
+    font-size: $font-size-base * 0.75;
+    position: relative;
+    margin-bottom: -0.75rem; // -12px;
+    display: block;
+}
+
+.table-help-text {
+    @extend .text-midtone;
+    float: right;
+    display: block;
+    // line-height: 30px;
+    vertical-align: bottom;
+    margin: $spacing-sm;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-light;
+}
+
+// Unset border top on the first row of the table
+.table>tbody>tr:first-child>th,
+.table>tbody>tr:first-child td {
+    border-top-width: 0;
+}
+
+// Fixing very long words without spaces in the table body.
+.table-group-list>tbody>tr>td,
+.table-group-list>tbody>tr>th {
+    word-break: break-all;
+}
+
+// Specific width for group table.
+.table>thead>tr>th.groupname,
+.table>thead>tr>th.groupshortname,
+.table>thead>tr>th.groupmanagebuttons {
+    width: 8em;
+}
+
+.table.profile-info {
+    table-layout: fixed;
+    td,
+    th {
+        word-break: break-all;
+    }
+    >tbody>tr:first-child>td {
+        border-top-width: $table-border-width;
+    }
+}
+// unless being displayed in a block
+.bt-entireresume,
+.bt-entireresume-editor,
+.bt-resumefield,
+.bt-resumefield-editor {
+    .table.profile-info {
+        >tbody>tr:first-child>th,
+        >tbody>tr:first-child>td {
+            border-top-width: 0;
+        }
+        td, th {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}
+
+// table cells that need to be fixed 70px width
+.width-70 {
+    width: 4.375rem; // 70px;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+// table attachment in resume table, this mimicks the attachment list-group
+.table.attachment-table {
+  border: $card-border-width solid $card-border-color;
+  border-radius: $card-border-radius;
+
+  > thead > tr > th {
+    background-color: $card-header-bg;
+    border-radius: $card-inner-border-radius $card-inner-border-radius 0 0;
+    border-bottom: 0;
+    text-transform: none;
+    font-weight: $font-weight-normal;
+    font-size: $font-size-sm;
+  }
+
+  > tbody > tr > td {
+    font-size: $font-size-sm;
+    padding: $list-group-item-padding-y $list-group-item-padding-x;
+    border-top: 1px solid $list-group-border-color;
+    border-bottom: 0;
+
+    img {
+      vertical-align: top;
+    }
+
+    .title {
+      max-width: calc(100% - 4.5rem);
+      display: inline-block;
+      margin-right: 0;
+      word-wrap: anywhere;
+    }
+  }
+}
+
+// submissions table
+tr.child td.child {
+  border-top: 0;
+  background-color: $table-active-bg !important;
+  padding-left: 30px;
+
+  .text-center {
+    text-align: left !important;
+  }
+  @include media-breakpoint-up(sm) {
+    .dtr-data div {
+      display: inline-block;
+    }
+  }
+  .pt-feedback p:last-child {
+    margin-bottom: 0;
+  }
+}
+table#submissions {
+  border-bottom: $table-border-width solid $table-border-color;
+  width: 100% !important;
+}
+// responsive pagination under submissions table
+@include media-breakpoint-down(md) {
+  .dataTables_length {
+    float: none;
+  }
+  div.dataTables_wrapper div.dataTables_info {
+    float: none;
+    margin-top: $spacing-base;
+  }
+}
+// the width for each submission title in the child row
+table.dataTable > tbody > tr.child span.dtr-title {
+  font-weight: $font-weight-light;
+  text-transform: uppercase;
+  @include media-breakpoint-up(sm) {
+    min-width: 115px;
+  }
+  @include media-breakpoint-down(sm) {
+    display: block;
+  }
+}
+
+// vertical alignment for user list tables
+.userlisttable td.lrfieldlists {
+  vertical-align: top;
+}
+
+// when date picker is in table cell the position is a little off
+table {
+  .hasDatepickerwrapperacl::after {
+    top: calc($spacing-sm + 0.375rem); // margin top of table label + input and hasDatepickerwrapperacl::after top
+  }
+}

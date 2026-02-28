@@ -1,0 +1,16 @@
+.tab-content {
+    padding-top: $spacing-xl;
+    .admin-edit-users & {
+        padding: $spacing-xl 0 $spacing-lg 0;
+    }
+}
+
+.admin {
+    .tab-content {
+        padding: $spacing-base;
+        background-color: $card-bg;
+        .card-secondary {
+            border: none;
+        }
+    }
+}

@@ -1,0 +1,741 @@
+// Generic custom css (anything longer than a screen view should have its own component file)
+
+#export .radio {
+    padding-bottom: 5px;
+    label {
+        padding-top: 3px;
+    }
+    .description {
+        padding-top: 0;
+    }
+}
+
+#preview_submit {
+    margin-top: 1.5rem;
+}
+
+.no-results {
+    font-size: $font-size-base;
+    font-weight: $font-weight-base;
+    margin-bottom: $spacing-lg;
+    clear: both;
+    text-align: center;
+    padding-top: 3.125rem; // 50px;
+    padding-bottom: 3.125rem; // 50px;
+}
+
+.no-results-small {
+    @extend .no-results;
+    padding: $spacing-lg 0;
+}
+
+.toolbar-affix.affix {
+    position: fixed;
+    top: $spacing-xxl; // 30px;
+    z-index: 1;
+}
+
+.blocktype-radio {
+    display: none;
+}
+
+// see emaillist.tpl
+.email-list {
+    display: block;
+    .description:not(.html) {
+        padding: 0 0 0.25rem 1.125rem; // 0 0 4px 18px;
+    }
+    .stacked-label,
+    .pseudolabel {
+        width: auto;
+        margin: 0 $spacing-base 0.25rem 0; // 0 10px 4px 0;
+        vertical-align: middle;
+    }
+    .unvalidated, .unsent, .validated {
+        margin-bottom: 0.5rem; // 8px;
+        + .input-group {
+            margin: 1rem 0;
+        }
+    }
+    @include media-breakpoint-up(md) {
+        display: inline-block;
+        min-width: 400px;
+    }
+    @include media-breakpoint-up(xl) {
+        min-width: 500px;
+    }
+}
+
+// Style label institution selection
+.institutionselector {
+    float: right;
+    margin-top: 1.25rem; // 20px;
+    @include media-breakpoint-down(lg) {
+      margin-top: 1rem; // 20px;
+    }
+    @include media-breakpoint-down(md) {
+      float: none;
+      margin-top: 0;
+    }
+    label {
+        font-weight: $font-weight-bold;
+        width: auto;
+        display: table-cell;
+        vertical-align: middle;
+    }
+    span.pseudolabel {
+        font-weight: $font-weight-bold;
+        width: auto;
+    }
+    .picker {
+        width: auto;
+        display: table-cell;
+    }
+    > form {
+        justify-content: flex-end;
+    }
+}
+
+// Admin user search page (advanced options)
+// limit the size of dynamic to match select box above
+.userserach-filter {
+    margin-bottom: $spacing-lg;
+    .loggedindate-container {
+        margin-top: $spacing-base;
+        max-width: 250px;
+        white-space: nowrap;
+    }
+    .duplicateemail-filter {
+        margin-top: $spacing-base;
+        justify-content: flex-start;
+    }
+
+    input.checkbox {
+      margin-top: 0.375rem !important; // 6px;
+      margin-left: -$spacing-xl;
+    }
+}
+
+// Puts the date picker in form-condensed fields on the next line
+.form-condensed {
+    .picker {
+        &.first {
+            margin-left: 16.875rem; // 270px;
+        }
+    }
+}
+
+//Google apps
+.google-app {
+    font-style: normal;
+    img {
+        height: $spacing-xl;
+    }
+    a {
+        color: #245dc1;
+    }
+}
+
+// Choose skin
+.skin {
+    float: left;
+    margin: 0 $spacing-base $spacing-base 0;
+    img.card {
+        margin-bottom: 0;
+    }
+    .skin-content a {
+      display: block;
+    }
+    .skin-footer {
+        text-align:center;
+        color: $link-color;
+        display: block;
+        padding: 0.375rem; // 6px;
+        border: $card-border-width solid $card-border-color;
+        // width: 180px; /* to match the img width */
+    }
+    a:hover,
+    a:focus {
+      cursor: pointer;
+      .skin-footer {
+        background-color: $card-cap-bg;
+      }
+    }
+}
+
+.objectionable-message {
+    padding: 0 0 $spacing-base 0;
+}
+
+// Other social media input
+#editprofileform_profiletype_other {
+    width: 15.625rem !important; // 250px !important;
+    margin-top: $spacing-base;
+    @include media-breakpoint-up(sm) {
+        margin-left: $spacing-base;
+    }
+    @include media-breakpoint-up(md) {
+        margin-top: 0;
+    }
+}
+
+// Editgroup membership modal
+// see editgroupmemship.tpl
+.editgroup-container {
+    padding-bottom: $spacing-xl;
+    margin-bottom: $spacing-xl;
+    @include media-breakpoint-down(md) {
+        .column-list {
+            column-count: 1;
+            column-gap: 0;
+        }
+    }
+    &:last-child {
+        border-bottom-width: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .heading {
+        margin: 0;
+        font-size: $h4-font-size;
+    }
+    .checkbox {
+        display: inline-block;
+    }
+    .form-check.group-invite {
+        white-space: nowrap;
+        margin-bottom: $spacing-base;
+        padding-left: 0;
+
+        label {
+            white-space: normal;
+        }
+        @include media-breakpoint-up(sm) {
+            label {
+                min-width: 1rem;
+            }
+        }
+    }
+}
+
+// Used to make the forum settings look like it should
+@include media-breakpoint-up(md) {
+    #edit_interaction_weight_container {
+        padding-left: 16.5625rem; // 265px;
+        label, span.description {
+            margin-left: -16.5625rem; // -265px;
+        }
+    }
+}
+
+.containobjectionable {
+    background-color: $state-danger-bg;
+}
+
+.permissions-table {
+    display: inline-block;
+    .editpermissions.table {
+        width: auto;
+        background-color: rgba(255,255,255,0);
+        thead tr th {
+            font-weight: $font-weight-normal;
+            font-size: $font-size-sm;
+            padding: 0.125rem 0.5rem 0.5rem; // 2px 8px 8px;
+        }
+        thead tr,
+        tbody td {
+            min-width: 3.125rem; // 50px;
+        }
+    }
+}
+
+#needprotocolspro {
+    padding-left: $spacing-base;
+}
+
+#needprotocolsreq {
+    padding-left: $spacing-base;
+}
+
+.secreturls .list-group-item {
+    .secret-url {
+        word-wrap: anywhere;
+        font-size: $font-size-base;
+        font-family: $font-family-base;
+        font-weight: $font-weight-bold;
+    }
+}
+.iframesources .buttonscell a {
+    font-size: $font-size-sm;
+}
+
+// Remove the link colour from a comment that has an attachment
+@include media-breakpoint-up(lg) {
+    .viewfooter .comment-item .comment-attachment .card.collapsible h3 a.collapsed {
+        color: $theme-text-color;
+    }
+}
+
+// Preview image in popup modal
+.modal-body .previewimg {
+    display: block;
+    margin: 0 auto;
+}
+
+// Edit/add skin page
+// See templates/skin/index.tpl
+.row.skins {
+    .skin {
+        position: relative;
+        min-height: 1px;
+        padding-left: $spacing-lg;
+        padding-right: $spacing-lg;
+        margin: 0;
+        width: 100%;
+        float: none;
+        @include media-breakpoint-up(sm) {
+            float: left;
+            width: 50%;
+        }
+        @include media-breakpoint-up(md) {
+            width: 33.333333%;
+        }
+    }
+}
+.manage-skins-btn {
+  margin-top: $spacing-base;
+  margin-bottom: $spacing-xl;
+}
+
+.defaultskin {
+    margin-top: $spacing-base;
+    margin-bottom: $spacing-xl;
+}
+
+.authInstance {
+    margin-bottom: $spacing-xs;
+    .authitem {
+        padding: $spacing-sm;
+        &.inactive {
+            background: $state-warning-bg;
+            color: $state-warning-text;
+        }
+    }
+}
+
+.emptybtnspace {
+    display: inline-block;
+    width: 1.875rem; // 30px;
+}
+
+// Make the other license text box align correctly on files page
+.fileuploadlicense input[type=text].secondary-textbox,
+.fileedittable input[type=text].secondary-textbox {
+    @include media-breakpoint-up(xl) {
+        margin-left: 6.25rem; // 100px;
+    }
+}
+
+// fix responsive layout for portfolios grid where sidebar overlaps
+.grouppageswrap.view-container:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.accessurl-button {
+    margin-bottom: $spacing-lg;
+}
+
+#reportconfigform {
+    fieldset {
+        margin-top: $spacing-base;
+    }
+    .checkbox.form-group {
+        padding: $spacing-base 0;
+        label {
+            padding-left: 1.75rem; // 28px;
+            display: block;
+        }
+        input[type=checkbox] {
+            position: absolute;
+            top: 0.5625rem; // 9px;
+        }
+    }
+}
+
+.reportsettings {
+    margin-top: -$spacing-sm; // -5px;
+}
+
+.statinfoblock {
+    h2 {
+        margin-top: 0;
+    }
+    h3 {
+        font-size: $font-size-base;
+        padding: 0 .5rem;
+    }
+    .list-group-item {
+      padding: .5rem;
+    }
+    table {
+      th {
+        white-space: nowrap;
+      }
+    }
+    .card-header {
+      background-color: white;
+      padding-left: 0;
+      padding-right: 0;
+    }
+}
+
+.ownersubtab {
+    padding: 0.25rem 0; // 4px 0;
+}
+
+.deletion-message {
+    float: right;
+    position: relative;
+    padding: $spacing-sm;
+    clear: right;
+}
+
+// Used to remove the second border around the legal information
+#agreetoprivacy .card {
+    border: 0;
+
+    legend a {
+      border-top-left-radius: $card-border-radius;
+      border-top-right-radius: $card-border-radius;
+    }
+
+    p {
+      margin: $spacing-base 0 0 0;
+    }
+}
+
+.image-rotator {
+    height: 6.875rem; // 110px;
+    line-height: 4.6875rem; // 75px;
+
+    .image-rotator-inner {
+        display: inline-block;
+        text-align: center;
+        width: 6.875rem; // 110px;
+    }
+}
+
+#searchviews_matchalltags_container {
+    width: 100%;
+    margin-top: $spacing-sm;
+    label {
+        margin-left: 1.75rem; // 28px;
+    }
+    input {
+        margin-left: $spacing-xs;
+        margin-top: -1.125rem; // -18px;
+        float: left;
+        width: auto;
+        height: auto;
+    }
+    div {
+        margin-left: $spacing-xs;
+        padding-top: 0;
+        span {
+            padding-top: 0;
+        }
+    }
+}
+
+div.toolbarhtml {
+    margin-top: $spacing-sm;
+    clear: both;
+    float: right;
+    div {
+        text-align: right;
+        margin-bottom: $spacing-sm;
+    }
+}
+
+#viewinstructions,
+.peerinstructions,
+.blockinstructions {
+    &.with-toolbar {
+        margin-right: $spacing-xl;
+    }
+    div.fieldset-body {
+        background-color: $accent-bg !important;
+    }
+    // move instructions down to avoid overlap with link
+    div.fieldset-body {
+        margin-top: 1px !important;
+        margin-bottom: 1px !important;
+    }
+
+    // put the link underline option back in the legend link for instructions
+    legend a {
+        text-decoration: $link-decoration !important;
+
+        &:hover,
+        &:focus {
+           text-decoration: $link-hover-decoration !important;
+        }
+    }
+}
+.peerinstructions {
+    div.fieldset-body {
+        margin-bottom: $spacing-base !important;
+    }
+}
+.viewinstruction-export {
+    border: $card-border-width solid $card-border-color;
+    padding: $card-spacer-y $card-spacer-x;
+    margin-bottom: -$card-border-width; //remove double border
+    background-color: $accent-bg !important;
+}
+.releaseviewform {
+    position: relative;
+    top: $spacing-lg;
+    div {
+        padding-right: 5px !important;
+    }
+
+    @include media-breakpoint-down(lg) {
+      .form-inline > .form-group {
+        width: auto;
+      }
+    }
+}
+
+#pendinglist {
+    margin-bottom: 0;
+}
+
+// Used when you really only need flex on an item
+.flexbox {
+    display: flex;
+}
+
+// Add space when there are 2 selects next to each other
+.select {
+    + .select {
+        margin-left: $spacing-sm;
+    }
+    + .submit:not(.input-group-append) {
+        margin-left: $spacing-sm;
+    }
+    #bulkexport & {
+        + .select {
+            margin-left: 0;
+        }
+    }
+}
+
+// Removes weird text node between buttons on admin/users/suspended.php
+.pieform-fieldset.btn-group {
+    font-size: 0;
+}
+
+.elasticsearch-filters {
+    border-bottom: $card-border-width solid $card-border-color;
+    background-color: $card-header-bg;
+}
+
+// Mostly used to make the table matrix popups work
+.d-none.popover {
+    display: none !important;
+}
+
+// Backup for libraries that still need hidden class instead of bootstrap 4s new .d-none
+.hidden {
+    display: none;
+}
+//used for SmartEvidence json-editor
+#editor_holder .bg-light {
+    background-color: $white !important;
+}
+
+// Forum select wrap too close to text
+.forumselectwrap {
+    margin: 0 0 $spacing-base $spacing-base;
+}
+
+.consentbutton div,
+.consentbutton span.description {
+    padding: 0 !important;
+}
+
+// reduce size of uploaded logos appearing instituion settings page
+#institution_logohtml_container img {
+    max-height: $navbar-height;
+}
+#institution_logoxshtml_container img {
+    height: 3rem; // 48px;
+}
+#institution_logohtml_container,
+#institution_deletelogo_container,
+#institution_logoxshtml_container,
+#institution_deletelogoxs_container {
+    padding-left: 17.1875rem; // 275px;
+    @include media-breakpoint-down(md) {
+        padding-left: 0;
+    }
+}
+
+// shared view filter in smaller screens too close to top element
+@include media-breakpoint-down(lg) {
+  #search_inputgroupsort_container {
+    margin-top: $spacing-base;
+  }
+}
+
+#login_login_container fieldset {
+    border-bottom: $card-border-width solid $card-border-color;
+    h3 a {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-normal;
+    }
+}
+
+.validfiletypes {
+    margin: $spacing-lg $spacing-lg 0 $spacing-lg;
+    padding: $card-spacer-y $card-spacer-x;
+    background-color: $accent-bg;
+    border-radius: $border-radius;
+    font-size: $font-size-sm;
+
+    span {
+        padding-right: $spacing-xs;
+        display: inline-block;
+        &.label {
+            font-weight: $font-weight-bold;
+        }
+    }
+}
+
+#migrateinstitution_authinstance {
+    max-width: 420px;
+}
+
+.activegrouplabels {
+    background-color: $form-bg;
+
+    form .form-group {
+        border-bottom: 0;
+        padding: 0;
+    }
+
+    &.noresults form .form-group {
+        padding: $card-spacer-y $card-spacer-x;
+        border-bottom: $input-border-width solid $input-border-color;
+    }
+}
+
+#webservices_function_groups_add {
+    input.text {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    input.submit {
+        border-radius: $input-border-radius;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+.course-detail {
+    margin-top: $paragraph-margin-bottom;
+}
+
+.course-date {
+    margin-bottom: 0;
+}
+
+// Group categories edit buttons alignment
+#editmenus td.edit .btn-group {
+    margin-top: $line-height-base * 1rem;
+}
+
+#sharedviewlist .icon {
+    font-size: 1.25rem; // 20px
+    &.icon-minus {
+        color: scale-color($gray-300, $lightness: 28%);
+    }
+}
+
+#synclanguage .icon.icon-check-circle {
+    color: $theme-color-success;
+}
+#add_language_addlangdesc_container {
+    margin-left: 0.5rem;
+}
+
+.form-inline .form-group.description {
+    padding-left: $spacing-sm;
+}
+
+.plugin-active {
+    color: $progresscompletion-verified-color;
+}
+.plugin-inactive {
+    color: $progresscompletion-notverified-color;
+}
+#register_whatsent_container .fieldset-body {
+    padding-top: 0;
+}
+
+// Registration of external apps | web services config
+@include media-breakpoint-down(lg) {
+  #webservices_token_generate .form-group {
+    margin-bottom: $spacing-base;
+    .select + .submit:not(.input-group-append) {
+      margin-left: 0;
+    }
+  }
+}
+#webservices_token_generate_institution_container {
+  @include media-breakpoint-up(lg) {
+    margin-left: $spacing-base;
+    margin-right: $spacing-base;
+  }
+
+  .pseudolabel {
+    display: block;
+    @include media-breakpoint-up(lg) {
+      margin-bottom: 0.4375rem; // 7px;
+    }
+  }
+}
+#maincontainer_register_server_container .table-responsive {
+  margin-bottom: $spacing-xl;
+}
+
+.bt-signoff {
+    .signoff-title,
+    .verified-title {
+        margin-top: 0.25rem;
+        display: inline-block;
+        padding-right: 1rem;
+    }
+    .progress-help {
+        width: 14rem;
+        clear: right;
+    }
+    .help {
+        clear: right;
+    }
+    .clearright {
+        clear: right;
+    }
+}
+
+#verifyform {
+    div.switchbox {
+        padding: 0;
+        border-bottom: 0;
+        float: right;
+    }
+}
+

@@ -1,0 +1,49 @@
+// Forcing the cell to be as wide as TH
+.task-status {
+  white-space: nowrap;
+  text-align: center;
+}
+
+// Plan blocks
+.list-group .task-item {
+    .plan-task-icon {
+        vertical-align: top;
+        padding-top: 0.3125rem; // 5px;
+        z-index: 3;
+        position: relative;
+        cursor: pointer;
+    }
+    .plan-task-heading {
+        margin-top: -1.5rem;
+        margin-left: 1.5rem; // 24px;
+
+        .list-group-item-heading {
+          max-width: calc(100% - 4.5rem);
+          display: inline-block;
+          margin-right: 0;
+          word-wrap: anywhere;
+          font-family: $font-family-base;
+          font-size: $font-size-lg;
+          font-weight: $font-weight-normal;
+          margin-bottom: 0;
+        }
+
+        a {
+            text-decoration: none;
+            display: block;
+        }
+    }
+    .plan-task-detail {
+        margin-left: 1.5rem; // 24px;
+        > * {
+            margin: $spacing-base 0 0 0;
+        }
+    }
+
+    // when on edit page, chevron needs to move a little to the left to make space for buttons
+    .btn-group-top ~ .task-item-content {
+      .plan-task-heading .collapse-indicator {
+        margin-right: 1rem;
+      }
+    }
+}

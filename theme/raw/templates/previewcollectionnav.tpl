@@ -1,0 +1,52 @@
+<div id="collectionnavwrap" class="collection-nav">
+
+    <span id="collectionbtns" class="collection-nav-btns">
+        <nav aria-label="{str tag="Collection" section="collection"}" class="custom-dropdown dropdown">
+            {foreach from=$collection item=view name=page}
+                {if $viewid && $view->view == $viewid}
+                    {assign var="currentindex" value=$dwoo.foreach.page.index}
+                {/if}
+            {/foreach}
+            <button class="picker form-control" tabindex="0" data-bs-toggle="collapse" data-bs-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag="viewingpage" section="collection"}<span id="currentindex" data-currentindex="{$currentindex}">{$currentindex + 1}</span>/{count($collection)}</button>
+
+            <ul id="pagelist" class="collapse">
+                {foreach from=$collection item=view name=page}
+                <li>
+                    {if $viewid && $view->view == $viewid}
+                        {assign var="currentindex" value=$dwoo.foreach.page.index}
+                        <span data-index="{$dwoo.foreach.page.index}" data-location="{$view->fullurl}">{$view->title}</span>
+                    {else}
+                        <a class="colnav"
+                        data-index="{$dwoo.foreach.page.index}"
+                        data-location="{$view->fullurl}"
+                        onclick="fetch_collection_page({$view->view})" href="{$view->fullurl}">{$view->title|str_shorten_text:30:true}</a>
+                    {/if}
+                </li>
+                {/foreach}
+            </ul>
+        </nav>
+
+      {if count($collection) > 1}
+          <button type="button" class="btn btn-secondary prevpage disabled" title='{str tag="prevpage"}'>
+              <span class="icon left icon-chevron-left" role="presentation" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-secondary nextpage disabled" title='{str tag="nextpage"}'>
+              <span class="icon right icon-chevron-right" role="presentation" aria-hidden="true"></span>
+          </button>
+      {/if}
+    </span>
+</div>
+<script>
+function fetch_collection_page(view) {
+    {literal}var params = {};{/literal}
+    params.id = view;
+    sendjsonrequest(config.wwwroot + 'collection/viewcontent.json.php', params, 'POST', function(data) {
+        showPreview('big', data);
+        collection_nav_init(true);
+    });
+}
+
+jQuery(function($) {
+    collection_nav_init(true);
+});
+</script>

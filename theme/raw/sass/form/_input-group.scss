@@ -1,0 +1,137 @@
+//
+// Extension to input groups so we can use them in pieforms
+// --------------------------------------------------
+.form-inline  {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    // if one item in an input group has a label, push others down
+    .no-label {
+        margin-top: 1.5rem; // 24px;
+    }
+}
+
+.input-group {
+    width: auto;
+}
+
+.input-group-append .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: $input-border-radius;
+    border-bottom-right-radius: $input-border-radius;
+}
+
+.pieform .input-group {
+    max-width:100%;
+
+    // Chrome bug - flex container doesn't work on fieldset tag
+    fieldset.input-group {
+      display: block;
+      .input-group-append {
+        display: inline-block;
+        height: $input-height;
+        width: auto;
+        &.button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-top-right-radius: $input-border-radius;
+            border-bottom-right-radius: $input-border-radius;
+        }
+      }
+    }
+    .pieform-fieldset > .form-group {
+        border: none;
+        padding: 0;
+        box-shadow: none;
+        float: left;
+        .picker {
+            border-top-left-radius: $input-border-radius;
+            border-bottom-left-radius: $input-border-radius;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .form-control {
+            border-top-left-radius: $input-border-radius;
+            border-bottom-left-radius: $input-border-radius;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            &.submitonchange {
+                @include border-end-radius($border-radius); // used to be border-right-radius
+            }
+            max-width: 100%;
+            &.text {
+                height: $input-height;
+            }
+        }
+        ~ .form-group {
+            .form-control {
+                @include border-start-radius(0); // used to be border-left-radius(0);
+                margin-left: -$border-width;
+                @include media-breakpoint-up(sm) {
+                    border-left:0;
+                }
+            }
+            &:last-child {
+                .form-control {
+                    @include border-end-radius($border-radius);// border-right-radius($border-radius);
+                }
+            }
+        }
+    }
+    .pieform-fieldset > .input-group-append.submitonchange {
+        & input[type="submit"],
+        & button[type="submit"] {
+            display: none !important;
+        }
+    }
+    label {
+        display: block;
+        line-height: 1.5;
+    }
+    // if one item in an input group has a label, push others down
+    .no-label {
+        margin-top: 0.75rem; // 12px
+    }
+
+    .form-group,
+    .form-control {
+        display: inline-block;
+        width: auto;
+        flex: 0 1 auto;
+    }
+
+    .input-group-prepend {
+        padding: 0.375rem 0.875rem; // 6px 14px;
+        text-align: center;
+        background-color: $input-bg;
+        border: $input-border-width solid $input-border-color;
+        border-radius: $input-border-radius;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+        border-right: 0;
+        + .select select {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+}
+.pieform .input-group-append {
+    font-size: inherit;
+    float:left;
+    &.form-group {
+        display: block;
+    }
+}
+
+// Fixes the buttons overlapping the input
+button.input-group-append {
+    margin-left: 0;
+}
+
+
+// Group member search option select
+form#search .sortoption .picker {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}

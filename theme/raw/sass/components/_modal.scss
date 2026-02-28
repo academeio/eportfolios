@@ -1,0 +1,274 @@
+$width: 60%;
+$width-sm: 90%;
+
+
+//tinymce modal
+.blockinstance-as-modal {
+    background: $white;
+    padding: $spacing-xl;
+    border: $modal-header-border-width solid $modal-header-border-color;
+}
+
+
+.modal-loading {
+    margin-top: 6.25rem; // 100px;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    @extend .icon-3x;
+    @extend .text-watermark;
+}
+
+.modal-tinymce {
+    z-index: 2000;
+}
+
+.modal-tinymce,
+.modal-docked {
+    background: rgba(0,0,0,0.09);
+    display: block;
+    .modal-content {
+        height: 90%;
+    }
+}
+.modal-docked,
+.page-modal {
+    .modal-content {
+        max-height: 100%;
+    }
+    .modal-body {
+        @include border-bottom-radius($modal-content-border-radius);
+        overflow-y: auto;
+        overflow-x: hidden;
+        &.flush {
+            padding: 0;
+        }
+        .list-group.flush {
+            margin: -$list-group-item-padding-x;
+        }
+        .matrix {
+            .list-group {
+                margin: 0 - $list-group-item-padding-x;
+            }
+        }
+        &.blockinstance-content {
+            padding: $modal-inner-padding;
+        }
+        .file-icon-render-in-modal {
+            margin-left: $spacing-base;
+        }
+    }
+    .modal-dialog {
+        height: 100%;
+    }
+}
+.page-modal {
+    .modal-content {
+        overflow: hidden;
+        max-height: 90%;
+    }
+}
+
+.modal-content {
+    border-radius: $modal-content-border-radius;
+    border: 0;
+    h2.title {
+        margin-top: 0;
+    }
+    .btn.submit {
+        margin-top: $spacing-lg;
+        &.unselect {
+            margin-top: 0;
+        }
+    }
+    .submitcancel.form-group,
+    .artefactchooser-search {
+        .btn.submit {
+            margin-top: 0;
+        }
+    }
+    h2, h3, h4 {
+      font-size: $h4-font-size;
+    }
+}
+
+.modal-dialog.gallery {
+    width: -moz-fit-content;
+    width: fit-content;
+    max-width: calc(100% - 4rem);
+    & .modal-header-title {
+      font-size: $h4-font-size;
+    }
+    & .modal-title button {
+      margin-left: 10px;
+    }
+}
+
+.modal-header,
+.mce-panel .mce-window-head {
+    background: $modal-header-bg;
+    padding: $modal-header-padding-y $modal-header-padding-x;
+    border-radius: $card-inner-border-radius $card-inner-border-radius 0 0;
+    .mce-title,
+    .modal-title {
+      color: $modal-header-color;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-size: $h4-font-size;
+      font-family: $headings-font-family !important;
+      font-weight: $headings-font-weight !important;
+      border-bottom: 0;
+      max-width: calc(100% - 4rem);
+      line-height: 1.5 !important;
+    }
+    .btn-close,
+    .mce-close {
+        order: 1;
+        padding: 0;
+        margin: 0;
+        color: $modal-header-color;
+        opacity: 0.8;
+        line-height: 1.5;
+
+        &:hover,
+        &:focus {
+            opacity: 1;
+            .times {
+                opacity: 1;
+            }
+        }
+        .times {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+    }
+}
+
+.modal-docked {
+    @include transition(visibility 0s 0.3s);
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    &.active,
+    &.in {
+        @include transition(visibility 0s 0.01s);
+        visibility: visible;
+        .modal-dialog {
+            @include transition(right 0.3s ease-in-out);
+            right: 0;
+        }
+
+        .collapse.in {
+            backface-visibility: hidden;
+        }
+    }
+    &.closed {
+        .modal-dialog {
+            @include transition(right 0.5s ease-in-out);
+            right: -($width + 5);
+            @include media-breakpoint-down(lg) {
+                right: -($width-sm + 5);
+            }
+        }
+    }
+
+    .modal-dialog {
+        width: $width;
+        margin: 0;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        @include media-breakpoint-down(lg) {
+            width: ($width-sm + 5);
+        }
+    }
+
+    .modal-header {
+        background: $modal-header-bg;
+        padding: $modal-header-padding-y $modal-header-padding-x;
+        color: $modal-header-color;
+        border-radius: 0;
+        display: block;
+        .modal-title, a {
+          margin: 0;
+          padding: 0;
+          font-size: $h4-font-size;
+          font-family: $headings-font-family;
+          font-weight: $headings-font-weight;
+          &.float-start {
+            width: calc(100% - 45px); // The cog icon plus 5px space
+          }
+        }
+        &.modal-section {
+            margin: 0 0 $spacing-base 0;
+        }
+        .btn-close {
+           @include box-shadow(-2px 0 2px rgba(0,0,0,0.3));
+            border-radius: $modal-content-border-radius 0 0 $modal-content-border-radius;
+            opacity: 1;
+            position: absolute;
+            top: 0px;
+            left: -2.1875rem; // 35px
+            padding: $modal-header-padding-y $modal-header-padding-x;
+            background: $modal-header-bg;
+            border: 0;
+            .times {
+                color: $modal-header-color;
+                opacity: 0.4;
+            }
+            &:hover,
+            &:focus,
+            &:active {
+                outline: none;
+                opacity: 1;
+                .times {
+                    opacity:0.8;
+                }
+            }
+        }
+    }
+    .modal-content {
+        border-radius: 0;
+        border-top: 0;
+        border-bottom: 0;
+        height: 100% !important; //js bug gives a height (@todo track down)
+    }
+
+}
+
+.modal .tags {
+    input {
+        max-width: 15.625rem; // 250px;
+    }
+}
+
+.modal-segment-heading {
+    flex: 1;
+    -ms-flex: 0 0 auto; // IE11 fix
+}
+
+#configureauthinstance-modal {
+    .modal-body textarea.under-label,
+    .modal-body .under-label-help.wysiwyg .tox-tinymce {
+        width: calc(100% - 1.875rem) !important; // calc(100% - 30px)
+    }
+    .modal-body .form-group.text {
+        label {
+            max-width: calc(50% - 1.875rem); // calc(50% - 30px)
+        }
+        input[type="text"] {
+            max-width: 50%;
+        }
+    }
+    .modal-body .form-group.password {
+        label {
+            max-width: calc(50% - 1.875rem); // calc(50% - 30px)
+        }
+        input[type="password"] {
+            max-width: 50%;
+        }
+    }
+}

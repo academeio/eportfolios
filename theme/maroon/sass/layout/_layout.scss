@@ -1,0 +1,15 @@
+body .main-content {
+    padding-top: $spacing-xxl;
+    padding-bottom: $spacing-xxl;
+}
+
+.tag-results .btn-top-right {
+    margin-top: -2.5625rem; // -41px;
+}
+
+.pageheader {
+    background-color: transparent;
+}
+.pageheader-wrap {
+    background-color: $pageheader-bg;
+}

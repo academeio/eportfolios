@@ -1,0 +1,90 @@
+a.card-footer {
+    text-align:center;
+    color: $link-color;
+    display: block;
+    text-decoration: none;
+    .icon {
+        color: $link-color;
+        line-height: $line-height-base;
+    }
+    &:hover,
+    &:focus {
+        color: $link-hover-color;
+        background: scale-color($card-footer-bg, $lightness: 20%);
+        text-decoration: underline;
+        .icon {
+            color: $theme-text-midtone-color;
+        }
+        .icon.float-end { //only apply link color to right aligned icons
+            color: $link-hover-color;
+        }
+    }
+}
+
+.has-attachment {
+    background-color: $card-bg;
+}
+
+// only to get top row of boxes on goals and skills page to not hide under boxes below
+.goals-wrapper,
+.skills {
+  .has-attachment .show {
+      z-index: 1;
+      position: relative;
+      box-shadow: $box-shadow;
+  }
+}
+
+.card-footer {
+    background-color: $card-footer-bg;
+    p {
+        margin:0;
+    }
+    &.has-form {
+        @include clearfix;
+        .control {
+            display: inline-block;
+        }
+    }
+    &.has-link {
+        a {
+            display: block;
+        }
+    }
+
+    .expand-add-button {
+        .show-form {
+            display: none;
+        }
+        .hide-form {
+            display: inline-block;
+        }
+        &.collapsed {
+            .show-form {
+                display: inline-block;
+            }
+            .hide-form {
+                display: none;
+            }
+        }
+    }
+    a:not(.btn) {
+        color: $theme-text-color;
+    }
+}
+
+.fieldset-body .card-footer {
+    margin-top: $spacing-xl;
+    margin-right: -$spacing-lg;
+    margin-bottom: -$spacing-base;
+    margin-left: -$spacing-lg;
+}
+
+.blockinstance .blockinstance-content .card-footer {
+    border-top: 0;
+}
+
+// Online users block
+a.online-users {
+    text-align: left;
+}

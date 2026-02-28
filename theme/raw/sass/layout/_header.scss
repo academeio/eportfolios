@@ -1,0 +1,54 @@
+.header {
+
+    .logo-area,
+    .logo,
+    .logoxs,
+    .admin-title,
+    .loading-box {
+        float: left;
+    }
+
+    .logo {
+        padding: 0.375rem 0.375rem 0.375rem 0; // 6px 6px 6px 0
+        display: inline-block;
+        height: $navbar-height;
+
+        // When small logo is uploaded 'change-to-small' class is added.
+        &.change-to-small {
+          display: none;
+          @include media-breakpoint-up(md) {
+              display: inline-block;
+          }
+        }
+    }
+
+    .logoxs {
+        margin: 0.375rem 0; // 6px 0;
+        height: 3rem; // 48px
+        @include media-breakpoint-up(md) {
+          display: none;
+        }
+    }
+
+    .logo,
+    .logoxs {
+        top: 0;
+        right: 0;
+        position: relative;
+        img {
+            height: 100%;
+            max-width: none;
+        }
+    }
+
+    .admin-title {
+        @extend .visually-hidden;
+    }
+
+    .navbar-main.navbar {
+        min-height: auto;
+        @include media-breakpoint-up(md) {
+            height: $navbar-height;
+        }
+    }
+}

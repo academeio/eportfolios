@@ -1,0 +1,10 @@
+.form-group {
+    //advanced collapsible toggle in form groups
+    &.collapsible-group {
+        .advanced {
+            .fieldset-body {
+                margin-left: $spacing-sm;
+            }
+        }
+    }
+}

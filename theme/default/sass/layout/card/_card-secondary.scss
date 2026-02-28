@@ -1,0 +1,9 @@
+// card-secondary is the style used for the user-editable cards used across Mahara
+
+.card.card-secondary {
+    &.card-warning {
+         > .card-header, .card-header-nested {
+            border-left: 0;
+        }
+    }
+}

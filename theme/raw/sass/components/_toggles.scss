@@ -1,0 +1,88 @@
+// Navigation toggle styles
+.nav-toggle-area {
+    position: relative;
+}
+
+.navbar-toggle {
+    display: block;
+    margin: 0;
+    border-radius: $navbar-toggler-border-radius;
+    min-width: 2.625rem; // 42px;
+    color: $navbar-toggle-color;
+    padding: $navbar-toggler-padding-y $navbar-toggler-padding-x;
+    background-color: $navbar-toggle-bg;
+    position: relative;
+    float: right;
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        color: $navbar-toggle-hover-color;
+        background-color: $navbar-toggle-hover-bg;
+    }
+
+    &.collapsed {
+        background-color: transparent;
+        &:hover,
+        &:focus {
+            color: $navbar-toggle-hover-color;
+            background-color: $navbar-toggle-hover-bg;
+        }
+    }
+
+    &.search-toggle {
+        @include media-breakpoint-up(md) {
+            display: none;
+        }
+        .icon {
+            color: $navbar-toggle-color;
+        }
+        &:hover,
+        &:focus {
+            .icon {
+                color: $navbar-toggle-hover-color;
+            }
+        }
+    }
+
+    &.user-icon-wrap-toggle {
+        padding: 0;
+        border-radius: 0;
+        background-color: transparent;
+        min-width: 4rem; // 64px;
+
+        .user-icon {
+            display: inline-block;
+            position: relative;
+            margin: 0.25rem; // 4px
+            z-index: 3;
+            float: left;
+
+            &:hover,
+            &:focus {
+                color: $navbar-toggle-hover-color;
+                background-color: $navbar-toggle-hover-bg;
+            }
+        }
+        .user-toggle {
+            display: block;
+            margin: 0;
+            border-radius: $navbar-toggler-border-radius;
+            min-width: 2.625rem; // 42px;
+            color: $navbar-toggle-color;
+            padding: $navbar-toggler-padding-y $navbar-toggler-padding-x $navbar-toggler-padding-y 2.5rem; // 40px;
+            position: absolute;
+            border: 0;
+            cursor: pointer;
+            background-color: $navbar-toggle-bg;
+
+            &:hover,
+            &:focus {
+                color: $navbar-toggle-hover-color;
+                background-color: $navbar-toggle-hover-bg;
+            }
+        }
+    }
+}

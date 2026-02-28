@@ -1,0 +1,123 @@
+@use "sass:math";
+
+// card is the style used for the user-editable cards used across Mahara
+
+.card.card-secondary {
+    @include box-shadow(none);
+    padding: 0.2rem;
+    border-color: transparent;
+    .admin & {
+        border-color: $card-border-color;
+    }
+    .admin .user-page-content & {
+        border-color: transparent;
+    }
+    &.blockinstance {
+        background-color: transparent;
+        .card-header {
+            background-color: $card-header-bg;
+            color: $card-header-color;
+
+            > .blockinstance-header {
+                display: block;
+                padding-left: $spacing-base;
+                padding-right: 5rem; // 80px;
+                word-break: normal;
+            }
+        }
+    }
+    > .card-header, .card-header-nested {
+        padding: $card-spacer-y math.div($card-spacer-x, 2) $card-spacer-y 0px;
+        background: transparent;
+        font-family: $headings-font-family !important;
+        font-size: $h3-font-size;
+        color: $card-secondary-header-color !important;
+        font-weight: $headings-font-weight !important;
+        border-bottom: $card-secondary-border-width solid $card-secondary-border-color;
+        margin-top: 0;
+
+        // In page builder we can choose to not have a heading,
+        // but we still need a draggable object.
+        // Use a placeholder for visual help
+        // will appear with the no-heading class in view mode
+        &.card-header-placeholder {
+            border: $card-border-width dashed $card-border-color;
+            background-color: $card-bg;
+            .blockinstance-header {
+                opacity:0.6;
+            }
+        }
+        &.drag-handle {
+            padding-left: math.div($card-spacer-x, 2);
+        }
+    }
+    &.card-warning {
+         > .card-header, .card-header-nested {
+            border-left: ($card-secondary-border-width * 2) solid $card-secondary-border-color;
+            background-color: $state-warning-bg;
+            border-bottom: $card-border-width solid $state-warning-border;
+        }
+        .card-body {
+            background-color: $state-warning-bg;
+        }
+    }
+    .card-header-plain {
+        border: $card-border-width solid $card-border-color;
+    }
+    > .card-body,
+    > .block > .card-body {
+        padding: $spacing-lg 0px;
+        &.flush {
+            padding: $spacing-lg 0 0 0;
+            clear: both;
+        }
+    }
+    // If there is no heading we don't want padding on the card-body
+    > .no-heading {
+        > .card-body {
+            padding: 0;
+        }
+        .has-attachment {
+            margin: 0;
+        }
+    }
+
+
+}
+
+// Gallery thumbnails
+// override bootstrap thumbnails styling
+.thumbnails {
+    padding-top: $spacing-xl;
+    .thumb {
+        margin: $spacing-sm;
+        .title {
+            text-align: center;
+        }
+    }
+}
+.thumbnail {
+    margin: 0 $spacing-lg 0 0;
+    .card-body & {
+        margin-bottom: $spacing-base;
+    }
+}
+.bt-gallery,
+.bt-gallery-editor {
+    img.frame {
+        padding: $thumbnail-padding;
+        margin: 0;
+        border: $thumbnail-border-width solid $thumbnail-border-color;
+        background: $thumbnail-bg;
+        box-shadow: $thumbnail-box-shadow;
+        border-radius: $thumbnail-border-radius;
+    }
+    &.card.card-secondary > .block > .card-body {
+        overflow: hidden;
+    }
+}
+
+//override where card footer links without link won't inherit link color
+a.card-footer:not([href]):not([tabindex]) {
+    color: $link-color;
+}

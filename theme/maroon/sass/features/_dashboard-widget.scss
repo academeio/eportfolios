@@ -1,0 +1,77 @@
+$logged-in-height: 6.875rem; // 110px;
+$logged-in-height-small: 5rem; // 80px;
+
+.dashboard-widget-container {
+    .thumbnail-widget {
+        position: relative;
+
+        .widget {
+            height: $logged-in-height;
+            background-color: scale-color($theme-secondary-color, $lightness: -10%);
+
+            @include media-breakpoint-down(md) {
+              height: $logged-in-height-small;
+            }
+
+            @include media-breakpoint-up(md) {
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    border-style: solid;
+                    border-color: transparent;
+                    border-width: 10px 200px;
+                    border-bottom-color: $body-bg;
+                    border-right-color: $body-bg;
+              	}
+            }
+        }
+
+        .widget-heading {
+            padding: $spacing-base $spacing-lg;
+            height: $logged-in-height;
+            border-top: 0;
+            background-color: transparent;
+
+            @include media-breakpoint-down(md) {
+              height: $logged-in-height-small;
+            }
+
+            .circle-bg {
+              border-radius: 0;
+              margin-top: -$spacing-base;
+              @include media-breakpoint-down(lg) {
+                display: none;
+              }
+            }
+
+            h2 {
+                font-weight: 700;
+                font-size: 1.875rem; // 30px;
+                color: $theme-primary-color !important;
+                margin: 0 !important;
+            }
+
+            p {
+                margin: 0;
+                font-size: $font-size-sm;
+                color: $theme-primary-color;
+            }
+
+            a {
+                color: $theme-primary-color;
+            }
+        }
+
+        &.logged-in {
+            &:focus,
+            &:hover {
+                .widget-heading {
+                    background-color: $dashboard-widget-hover-bg;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,52 @@
+.pagination-wrapper {
+    margin: $spacing-base 0;
+    .table-responsive & {
+        margin: $spacing-lg;
+    }
+    @extend .clearfix;
+    .lead {
+        margin-bottom: 0;
+    }
+    .pagination {
+        margin: 0;
+        padding-left: 0 !important;
+        @include media-breakpoint-down(lg) {
+            padding-top: $spacing-base;
+            .hidden-xs {
+                display: none;
+            }
+        }
+        @include media-breakpoint-down(xl) {
+            max-width: 500px;
+        }
+    }
+    .form-pagination {
+        font-size: $font-size-sm;
+        margin-top: $spacing-base;
+        label {
+            min-width: inherit;
+        }
+    }
+}
+
+.pagination-page-limit {
+    clear: both;
+    float: right;
+    label {
+        display: inline-block;
+    }
+}
+
+// Small
+.pagination-sm {
+    @include pagination-size($pagination-padding-y-sm, $pagination-padding-x-sm, $font-size-sm, $border-radius-sm);
+
+    .page-link {
+        white-space: nowrap;
+    }
+}
+
+.card-pagination {
+    width: 100%;
+    clear: both;
+}

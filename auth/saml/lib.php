@@ -1,0 +1,2463 @@
+<?php
+/**
+ *
+ * @package    mahara
+ * @subpackage auth-saml
+ * @author     Piers Harding <piers@catalyst.net.nz>
+ * @author     Francis Devine <francis@catalyst.net.nz>
+ * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
+ */
+
+defined('INTERNAL') || die();
+require_once(get_config('docroot') . 'auth/lib.php');
+
+// Load local customisations if there are any.
+if (file_exists(get_config('docroot') . 'local/lib/AuthSamlLocal.php')) {
+    // Provides the LocalAuthSamlLib class.
+    include_once(get_config('docroot') . 'local/lib/AuthSamlLocal.php');
+}
+
+/**
+ * Authenticates users with SAML 2.0
+ */
+class AuthSaml extends Auth {
+
+    public static function get_metadata_path() {
+        check_dir_exists(get_config('dataroot') . 'metadata/');
+        return get_config('dataroot') . 'metadata/';
+    }
+
+    public static function prepare_metadata_path($idp) {
+        $path = self::get_metadata_path() . preg_replace('/[\/:\.]/', '_', $idp) . '.xml';
+        return $path;
+    }
+
+    /**
+    * Loads and merges in a file with an attribute map.
+    *
+    * @param string $filepath  Path of attribute map file.
+    * @param array $mapping Array where the attributes from the file should be added
+    */
+    private static function custom_loadmapfile($filepath, $mapping = array()) {
+        if (!is_readable($filepath)) {
+            throw new Exception(get_string('attributemapfilenotfound', 'auth.saml', $filepath));
+        }
+        $attributemap = NULL;
+        include($filepath);
+        if (!is_array($attributemap)) {
+            throw new Exception(get_string('attributemapfilenotamap', 'auth.saml', $filepath));
+        }
+
+        $mapping = array_merge_recursive($mapping, $attributemap);
+        return $mapping;
+    }
+
+/*
+* Loads all mappings in the files into an array with 'class' => 'core:AttributeMap'
+*
+* @param filepaths array Paths to files that contain a mapping array
+*/
+    public static function get_attributemappings($filepaths= array()) {
+
+          $configparameter = array(
+              'class' => 'core:AttributeMap',
+          );
+
+          $attributemap = array();
+          foreach ($filepaths as $key => $filepath) {
+                //get the $attributemap array in the file
+                $attributemap = self::custom_loadmapfile($filepath, $attributemap);
+          }
+
+          return array_merge($attributemap, $configparameter);
+    }
+
+    public static function get_certificate_path() {
+        check_dir_exists(get_config('dataroot') . 'certificate/');
+        return get_config('dataroot') . 'certificate/';
+    }
+
+    public function __construct($id = null) {
+        $this->type = 'saml';
+        $this->has_instance_config = true;
+
+        $this->config['user_attribute'] = '';
+        $this->config['weautocreateusers'] = 1;
+        $this->config['firstnamefield' ] = '';
+        $this->config['surnamefield'] = '';
+        $this->config['emailfield'] = '';
+        $this->config['studentidfield'] = '';
+        $this->config['institutionattribute'] = '';
+        $this->config['institutionregex'] = 0;
+        $this->config['institutionvalue'] = '';
+        $this->config['updateuserinfoonlogin'] = 1;
+        $this->config['remoteuser'] = true;
+        $this->config['loginlink'] = false;
+        $this->config['institutionidp'] = '';
+        $this->config['institutionidpentityid'] = '';
+        $this->config['avatar'] = '';
+        $this->config['authloginmsg'] = '';
+        $this->config['role'] = '';
+        $this->config['roleprefix'] = '';
+        $this->config['idaffiliations'] = '';
+        $this->config['emailaffiliations'] = '';
+        $this->config['roleaffiliations'] = '';
+        $this->config['roleaffiliationdelimiter'] = '';
+        $this->config['rolesiteadmin'] = '';
+        $this->config['rolesitestaff'] = '';
+        $this->config['roleinstadmin'] = '';
+        $this->config['roleinststaff'] = '';
+        $this->config['roleinstsupportadmin'] = '';
+        $this->config['organisationname'] = '';
+        $this->config['roleautogroups'] = '';
+        $this->config['roleautogroupsall'] = false;
+        $this->instanceid = $id;
+
+        if (!empty($id)) {
+            return $this->init($id);
+        }
+        return true;
+    }
+
+    public function init($id = null) {
+        $this->ready = parent::init($id);
+
+        // Check that required fields are set
+        if ( empty($this->config['user_attribute']) ||
+             empty($this->config['institutionattribute'])
+              ) {
+            $this->ready = false;
+        }
+
+        return $this->ready;
+    }
+
+
+    /**
+     * We can autocreate users if the admin has said we can
+     * in weautocreateusers
+     */
+    public function can_auto_create_users() {
+        return (bool)$this->config['weautocreateusers'];
+    }
+
+
+    /**
+     * Grab a delegate object for auth stuff
+     */
+    public function request_user_authorise($attributes) {
+        global $USER, $SESSION;
+        $this->must_be_ready();
+       /**
+         * Save the SAML attributes to "usr_login_attributes" to help with debugging
+         * Note: This should not be left on full time
+         */
+        if (get_config('saml_log_attributes')) {
+            $jsonattributes = json_encode($attributes);
+            $sla_id = insert_record('usr_login_saml', (object) array('ctime' => db_format_timestamp(time()),
+                                                                     'data' => $jsonattributes), 'id', true);
+        }
+
+        if (empty($attributes) or !array_key_exists($this->config['user_attribute'], $attributes)
+                               or !array_key_exists($this->config['institutionattribute'], $attributes)) {
+            throw new AccessDeniedException();
+        }
+
+        $remoteuser      = $attributes[$this->config['user_attribute']][0];
+        $firstname       = isset($attributes[$this->config['firstnamefield']][0]) ? $attributes[$this->config['firstnamefield']][0] : null;
+        $lastname        = isset($attributes[$this->config['surnamefield']][0]) ? $attributes[$this->config['surnamefield']][0] : null;
+        $email           = isset($attributes[$this->config['emailfield']][0]) ? $attributes[$this->config['emailfield']][0] : null;
+        $studentid       = isset($attributes[$this->config['studentidfield']][0]) ? $attributes[$this->config['studentidfield']][0] : null;
+        $avatar          = isset($attributes[$this->config['avatar']][0]) ? $attributes[$this->config['avatar']][0] : null;
+        $roles           = isset($attributes[$this->config['role']]) ? $attributes[$this->config['role']] : array();
+        $roleprefix      = isset($this->config['roleprefix']) ? $this->config['roleprefix'] : null;
+        $idaffiliations = isset($attributes[$this->config['idaffiliations']]) ? $attributes[$this->config['idaffiliations']] : array();
+        $emailaffiliations = isset($attributes[$this->config['emailaffiliations']]) ? $attributes[$this->config['emailaffiliations']] : array();
+        $roleaffiliations = isset($attributes[$this->config['roleaffiliations']]) ? $attributes[$this->config['roleaffiliations']] : array();
+        $roleaffiliationdelimiter = isset($this->config['roleaffiliationdelimiter']) ? $this->config['roleaffiliationdelimiter'] : null;
+        $rolesiteadmin   = isset($this->config['rolesiteadmin']) ? array_map('trim', explode(',', $this->config['rolesiteadmin'])) : array();
+        $rolesitestaff   = isset($this->config['rolesitestaff']) ? array_map('trim', explode(',', $this->config['rolesitestaff'])) : array();
+        $roleinstadmin   = isset($this->config['roleinstadmin']) ? array_map('trim', explode(',', $this->config['roleinstadmin'])) : array();
+        $roleinststaff   = isset($this->config['roleinststaff']) ? array_map('trim', explode(',', $this->config['roleinststaff'])) : array();
+        $roleinstsupportadmin   = isset($this->config['roleinstsupportadmin']) ? array_map('trim', explode(',', $this->config['roleinstsupportadmin'])) : array();
+        $roleautogroups  = isset($this->config['roleautogroups']) ? array_map('trim', explode(',', $this->config['roleautogroups'])) : array();
+        $roleautogroupsall = isset($this->config['roleautogroupsall']) ? $this->config['roleautogroupsall'] : false;
+        if (is_isolated()) {
+            $roleautogroupsall = false;
+        }
+        $institutionname = $this->institution;
+
+        $create = false;
+        $update = false;
+        $hasaffiliations = (
+            !empty($this->config['idaffiliations']) &&
+            !empty($this->config['emailaffiliations']) &&
+            !empty($this->config['roleaffiliations'])
+        );
+        // Check if a user needs a certain role to be allowed to login
+        if (!empty($roleprefix)) {
+            $roleallowed = false;
+            foreach ($roles as $index => $role) {
+                if (preg_match('/^' . $roleprefix . '/', $role)) {
+                    $roleallowed = true;
+                }
+            }
+            if (!$roleallowed) {
+                log_debug('User authorisation request from SAML failed - no roles prefixed with "' . $roleprefix . '"');
+                return false;
+            }
+        }
+
+        $isremote = $this->config['remoteuser'] ? true : false;
+        $affiliations = array();
+        $remoteuserids = array();
+        if ($isremote) {
+            $remoteuserids[] = $remoteuser;
+        }
+        // Check if we have id affiliations
+        if (!empty($idaffiliations)) {
+            foreach ($idaffiliations as $idaffiliation) {
+                if ($roleaffiliationdelimiter) {
+                    list($myid, $myaffiliation) = explode($roleaffiliationdelimiter, $idaffiliation);
+                    $mymap = $this->get_affiliation_from_map($myaffiliation);
+                    if ($mymap) {
+                        $affiliations[$mymap]['id'] = $idaffiliation;
+                        if ($isremote) {
+                            $remoteuserids[] = $idaffiliation;
+                        }
+                    }
+                }
+            }
+        }
+        // Check if we have email affiliations
+        if (!empty($emailaffiliations)) {
+            foreach ($emailaffiliations as $emailaffiliation) {
+                if ($roleaffiliationdelimiter) {
+                    list($myrole, $myaffiliation) = explode($roleaffiliationdelimiter, $emailaffiliation);
+                    $mymap = $this->get_affiliation_from_map($myaffiliation, true);
+                    if ($mymap) {
+                        $affiliations[$mymap]['email'] = $emailaffiliation;
+                    }
+                }
+            }
+        }
+
+        // Check if we have role affiliations
+        if (!empty($roleaffiliations)) {
+            foreach ($roleaffiliations as $roleaffiliation) {
+                if ($roleaffiliationdelimiter) {
+                    list($myrole, $myaffiliation) = explode($roleaffiliationdelimiter, $roleaffiliation);
+                    $mymap = $this->get_affiliation_from_map($myaffiliation);
+                    if ($mymap) {
+                        $affiliations[$mymap]['roles'][] = $myrole;
+                    }
+                }
+            }
+        }
+        // Retrieve a $user object. If that fails, create a blank one.
+        try {
+            $user = new User;
+            if (get_config('usersuniquebyusername')) {
+                // When turned on, this setting means that it doesn't matter
+                // which other application the user SSOs from, they will be
+                // given the same account in Mahara.
+                //
+                // This setting is one that has security implications unless
+                // only turned on by people who know what they're doing. In
+                // particular, every system linked to Mahara should be making
+                // sure that same username == same person.  This happens for
+                // example if two Moodles are using the same LDAP server for
+                // authentication.
+                //
+                // If this setting is on, it must NOT be possible to self
+                // register on the site for ANY institution - otherwise users
+                // could simply pick usernames of people's accounts they wished
+                // to steal.
+                if ($institutions = get_column('institution', 'name', 'registerallowed', '1')) {
+                    log_warn("usersuniquebyusername is turned on but registration is allowed for an institution. "
+                        . "No institution can have registration allowed for it, for security reasons.\n"
+                        . "The following institutions have registration enabled:\n  " . join("\n  ", $institutions));
+                    throw new AccessDeniedException();
+                }
+
+                if (!get_config('usersallowedmultipleinstitutions')) {
+                    log_warn("usersuniquebyusername is turned on but usersallowedmultipleinstitutions is off. "
+                        . "This makes no sense, as users will then change institution every time they log in from "
+                        . "somewhere else. Please turn this setting on in Site Options");
+                    throw new AccessDeniedException();
+                }
+            }
+            else {
+                if (!$isremote){
+                    log_warn("usersuniquebyusername is turned off but remoteuser has not been set on for this institution: $institutionname. "
+                        . "This is a security risk as users from different institutions with different IdPs can hijack "
+                        . "each others accounts.  Fix this in the institution level auth/saml settings.");
+                    throw new AccessDeniedException();
+                }
+            }
+            if ($isremote && !empty($email) && $this->config['loginlink']) {
+                $user->find_by_email_address($email);
+            }
+            else if ($isremote) {
+                $found = false;
+                foreach ($remoteuserids as $remoteuserid) {
+                    try {
+                        $user->find_by_instanceid_username($this->instanceid, $remoteuserid, $isremote);
+                        $found = true;
+                        break;
+                    }
+                    catch (AuthUnknownUserException $e) {
+                        // user not found
+                    }
+                }
+                if (!$found) {
+                    throw new AuthUnknownUserException("User not found by remote username for auth instance " . $this->instanceid);
+                }
+            }
+            else {
+                $found = false;
+                foreach ($remoteuserids as $remoteuserid) {
+                    try {
+                        $user->find_by_username($remoteuserid);
+                        $found = true;
+                        break;
+                    }
+                    catch (AuthUnknownUserException $e) {
+                        // user not found
+                    }
+                }
+                if (!$found) {
+                    throw new AuthUnknownUserException("User not found by remote username for auth instance " . $this->instanceid);
+                }
+            }
+
+            if ($user->get('suspendedcusr')) {
+                die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
+            }
+
+            if ('1' == $this->config['updateuserinfoonlogin']) {
+                $update = true;
+            }
+        } catch (AuthUnknownUserException $e) {
+            if (!empty($this->config['weautocreateusers'])) {
+                $institution = new Institution($this->institution);
+                if ($institution->isFull()) {
+                    $institution->send_admin_institution_is_full_message();
+                    throw new XmlrpcClientException('SSO attempt from ' . $institution->displayname . ' failed - institution is full');
+                }
+                $user = new User;
+                $create = true;
+            }
+            else {
+                log_debug("User authorisation request from SAML failed - "
+                    . "remote user '$remoteuser' is unknown to us and auto creation of users is turned off");
+                return false;
+            }
+        }
+        $roletypes = array(
+            'siteadmin' => $rolesiteadmin,
+            'sitestaff' => $rolesitestaff,
+            'instadmin' => $roleinstadmin,
+            'inststaff' => $roleinststaff,
+            'instsupportadmin' => $roleinstsupportadmin,
+            'autogroups' => $roleautogroups,
+            'autogroupsall' => $roleautogroupsall
+        );
+
+        list ($user, $usr_is_siteadmin, $usr_is_sitestaff, $userroles, $institutionrole) = $this->saml_map_roles($user, $roles, $institutionname, $roletypes);
+        $currentprincipalemail = null;
+        if ($create) {
+
+            $user->passwordchange     = 0;
+            $user->active             = 1;
+            $user->deleted            = 0;
+
+            $user->expiry             = null;
+            $user->expirymailsent     = 0;
+            $user->lastlogin          = time();
+
+            $user->firstname          = $firstname;
+            $user->lastname           = $lastname;
+            $user->email              = $email;
+            $user->studentid          = $studentid;
+
+            // must have these values - unless creating a user with username only
+            if (!get_config('saml_create_minimum_user')) {
+                if (empty($firstname) || empty($lastname) || empty($email)) {
+                    throw new AccessDeniedException(get_string('errormissinguserattributes1', 'auth.saml', get_config('sitename')));
+                }
+            }
+
+            $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
+
+            db_begin();
+            $user->username           = get_new_username($remoteuser, 40);
+
+            $user->id = create_user($user, array(), $institutionname, $this, $remoteuser, array(), false, $institutionrole);
+
+            /*
+             * We need to convert the object to a stdclass with its own
+             * custom method because it uses overloaders in its implementation
+             * and its properties wouldn't be visible to a simple cast operation
+             * like (array)$user
+             */
+            $userobj = $user->to_stdclass();
+            $userarray = (array)$userobj;
+            db_commit();
+
+            // Now we have fired the create event, we need to re-get the data
+            // for this user
+            $user = new User;
+            $user->find_by_id($userobj->id);
+
+            if (get_config('usersuniquebyusername')) {
+                // Add them to the institution they have SSOed in by
+                $user->join_institution($institutionname);
+            }
+            if (!empty($avatar) && base64_encode(base64_decode($avatar, true)) === $avatar) {
+                // Check that we have a base64 string
+                $avataricon = base64_decode($avatar);
+                $source_img = imagecreatefromstring($avataricon);
+                $pathname = get_config('dataroot') . 'temp/' . time() . '.jpg';
+                $img_save = imagejpeg($source_img, $pathname, 100);
+                safe_require('artefact', 'file');
+                $data = (object)array(
+                    'title' => 'saml_avatar',
+                    'owner' => $user->get('id'),
+                    'oldextension' => 'jpg',
+                    'artefacttype' => 'profileicon',
+                );
+                $profileid = ArtefactTypeProfileIcon::save_file($pathname, $data, $user, true);
+                imagedestroy($source_img);
+                $user->profileicon = $profileid;
+            }
+        }
+        else if ($update) {
+            if (! empty($firstname)) {
+                set_profile_field($user->id, 'firstname', $firstname);
+                $user->firstname = $firstname;
+            }
+            if (! empty($lastname)) {
+                set_profile_field($user->id, 'lastname', $lastname);
+                $user->lastname = $lastname;
+            }
+            if (! empty($email)) {
+                $currentprincipalemail = $user->email;
+                set_profile_field($user->id, 'email', $email);
+                $user->email = $email;
+            }
+            if (! empty($studentid)) {
+                set_profile_field($user->id, 'studentid', $studentid);
+                $user->studentid = $studentid;
+            }
+            // Double check that the user is in this institution and add them if allowed
+            $this->saml_set_basic_role($user, $institutionname, $roles, $institutionrole, $roletypes);
+            if (!empty($roles) && empty($usr_is_siteadmin)) {
+                // make sure they are not site admin anymore
+                $user->admin = 0;
+            }
+            if (!empty($roles) && empty($usr_is_sitestaff)) {
+                // make sure they are not site staff anymore
+                $user->staff = 0;
+            }
+            $user->lastlastlogin      = $user->lastlogin;
+            $user->lastlogin          = time();
+        }
+
+        if ($hasaffiliations) {
+            $oldaffiliations = get_records_sql_assoc("SELECT institution, staff, admin FROM {usr_institution} WHERE usr = ? AND institution != ?", array($user->id, $institutionname));
+            if (!empty($affiliations)) {
+                $primaryemail = '';
+                $maxrolevalue = 0;
+                foreach ($affiliations as $affiliation => $affiliationroles) {
+                    list ($aff_user, $aff_usr_is_siteadmin, $aff_usr_is_sitestaff, $aff_userroles, $aff_institutionrole) = $this->saml_map_roles($user, $affiliationroles['roles'], $affiliation, $roletypes);
+                    $this->saml_set_basic_role($aff_user, $affiliation, $affiliationroles['roles'], $aff_institutionrole, $roletypes);
+                    // remove from old affiliations as we've dealt with this one now
+                    if (!empty($affiliationroles['email']) && $create) {
+                        set_profile_field($user->id, 'email', $affiliationroles['email'], true);
+                        $currentrolevalue = $this->get_max_role_value($affiliationroles['roles'], $roletypes);
+                        if ($currentrolevalue > $maxrolevalue) {
+                            $primaryemail = $affiliationroles['email'];
+                            $maxrolevalue = $currentrolevalue;
+                        }
+                    }
+                    else if (!empty($affiliationroles['email']) && !$create) {
+                        if (!get_field('artefact_internal_profile_email', 'artefact', 'email', $affiliationroles['email'], 'owner', $user->id)) {
+                            $newemail = new ArtefactTypeEmail(0, null, TRUE);
+                            $newemail->set('owner', $user->id);
+                            $newemail->set('title', $affiliationroles['email']);
+                            $newemail->commit();
+                        }
+                        if ($currentprincipalemail === $affiliationroles['email']) {
+                            // our principal email was an affiliated one so we want to mark
+                            // as principal again instead of the one passed in on 'email' variable
+                            set_user_primary_email($user->id, $affiliationroles['email']);
+                        }
+                    }
+                    unset($oldaffiliations[$affiliation]);
+                }
+                if (!empty($primaryemail)) {
+                    set_user_primary_email($user->id, $primaryemail);
+                    $user->email = $primaryemail;
+                }
+            }
+            if (!empty($oldaffiliations)) {
+                foreach ($oldaffiliations as $oldaffid => $oldaffiliation) {
+                    // Not affiliated with this institution anymore so need to remove them
+                    $oldinstitution = new Institution($oldaffid);
+                    $oldinstitution->removeMember($user->id);
+                }
+            }
+        }
+
+        if (!empty($userroles)) {
+            if ($create) {
+                $user->set_roles($userroles);
+            }
+            else {
+                $user->get_roles();
+                // Turn off all the roles that are not associated with the SAML user roles anymore
+                foreach ($user->roles as $inst => $roles) {
+                    if (in_array($inst, array_column($userroles, 'institution')) === false) {
+                        // Not in institution anymore so remove institution specific roles
+                        foreach ($roles as $role) {
+                            $user->update_role($role->id, 0);
+                        }
+                        continue;
+                    }
+                    foreach ($roles as $k => $role) {
+                        if (in_array($role->role, array_column($userroles, 'role')) === false) {
+                            // User does not have role any more in IdP so remove role
+                            $user->update_role($role->id, 0);
+                        }
+                    }
+                }
+                // Now check which roles need adding / updating
+                foreach ($userroles as $index => $userrole) {
+                    if (isset($user->roles[$userrole['institution']]) &&
+                        isset($user->roles[$userrole['institution']][$userrole['role']])) {
+                        if ($user->roles[$userrole['institution']][$userrole['role']]->active == 0) {
+                            // Need to activate role
+                            $user->update_role($user->roles[$userrole['institution']][$userrole['role']]->id, 1);
+                        }
+                    }
+                    else {
+                        // Need to add role
+                        $user->set_roles(array($userrole));
+                    }
+                }
+            }
+        }
+        else if (empty($userroles) && !$create) {
+            // User exists but doesn't have any user roles so we need to turn of all existing ones
+            $existingroleids = get_column('usr_roles', 'id', 'usr', $user->get('id'), 'active', 1);
+            foreach ($existingroleids as $roleid) {
+                $user->update_role($roleid, 0);
+            }
+        }
+
+        $user->commit();
+
+        /**
+         * Save the SAML attributes to "usr_login_attributes" to help with debugging
+         * Note: This should not be left on full time
+         */
+        if (get_config('saml_log_attributes') && $sla_id) {
+            set_field('usr_login_saml', 'usr', $user->get('id'), 'id', $sla_id);
+        }
+
+        /*******************************************/
+
+        // We know who our user is now. Bring em back to life.
+        $result = $USER->reanimate($user->id, $this->instanceid);
+        log_debug("remote user '$remoteuser' is now reanimated as '{$USER->username}' ");
+        $SESSION->set('authinstance', $this->instanceid);
+
+        return true;
+    }
+
+    // ensure that a user is logged out of mahara and the SAML 2.0 IdP
+    public function logout() {
+        global $CFG, $USER, $SESSION;
+
+        // logout of mahara
+        $USER->logout();
+
+        // tidy up the session for retries
+        $SESSION->set('messages', array());
+        $SESSION->set('wantsurl', null);
+
+        // redirect for logout of SAML 2.0 IdP
+        redirect($CFG->wwwroot.'auth/saml/index.php?logout=1');
+    }
+
+    public function after_auth_setup_page_hook() {
+        return;
+    }
+
+    public function needs_remote_username() {
+        return $this->config['remoteuser'] || parent::needs_remote_username();
+    }
+
+    private function saml_map_roles($user, $roles, $institutionname, $roletypes) {
+
+        $institutionrole = 'member'; // default role
+        $userroles = array();
+        $usr_is_siteadmin = 0;
+        $usr_is_sitestaff = 0;
+
+        if ($roles && is_array($roles)) {
+            foreach ($roles as $rk => $rv) {
+                if (in_array($rv, $roletypes['siteadmin'])) {
+                    $user->admin = 1;
+                    $usr_is_siteadmin = 1;
+                }
+                if (in_array($rv, $roletypes['sitestaff'])) {
+                    $user->staff = 1;
+                    $usr_is_sitestaff = 1;
+                }
+                if (in_array($rv, $roletypes['instadmin'])) {
+                    $institutionrole = 'admin';
+                }
+                if (in_array($rv, $roletypes['inststaff'])) {
+                    $institutionrole = 'staff';
+                }
+                if (in_array($rv, $roletypes['instsupportadmin'])) {
+                    $institutionrole = 'supportadmin';
+                }
+                if (in_array($rv, $roletypes['autogroups'])) {
+                    $userroles[] = array('role' => 'autogroupadmin',
+                                         'institution' => ($roletypes['autogroupsall'] ? '_site' : $institutionname),
+                                         'active' => 1,
+                                         'provisioner' => 'saml');
+                }
+            }
+        }
+        return array($user, $usr_is_siteadmin, $usr_is_sitestaff, $userroles, $institutionrole);
+    }
+
+    private function saml_set_basic_role($user, $institutionname, $roles, $institutionrole, $roletypes) {
+        if (!get_field('usr_institution', 'ctime', 'usr', $user->id, 'institution', $institutionname)) {
+            require_once('institution.php');
+            $institution = new Institution($institutionname);
+            if (!empty($roles) && $institutionrole == 'admin') {
+                $institution->addUserAsAdmin($user, $user->authinstance);
+            }
+            else if (!empty($roles) && $institutionrole == 'staff') {
+                $institution->addUserAsStaff($user, $user->authinstance);
+            }
+            else if (!empty($roles) && $institutionrole == 'supportadmin') {
+                $institution->addUserAsSupportAdmin($user, $user->authinstance);
+            }
+            else {
+                // if no roles then always add as a normal member
+                $institution->addUserAsMember($user, false, false, false, $user->authinstance);
+            }
+        }
+        else {
+            if (!empty($roles) && $institutionrole == 'admin') {
+                set_field('usr_institution', 'admin', 1, 'usr', $user->id, 'institution', $institutionname);
+                // Only turn off institution staff if we actually have it defined in our saml config
+                if (isset($roletypes['inststaff'][0]) && !empty($roletypes['inststaff'][0])) {
+                    set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                // Only turn off institution support admin if we actually have it defined in our saml config
+                if (isset($roletypes['instsupportadmin'][0]) && !empty($roletypes['instsupportadmin'][0])) {
+                    set_field('usr_institution', 'supportadmin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+            }
+            else if (!empty($roles) && $institutionrole == 'staff') {
+                // Only turn off institution admin if we actually have it defined in our saml config
+                if (isset($roletypes['instadmin'][0]) && !empty($roletypes['instadmin'][0])) {
+                    set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                set_field('usr_institution', 'staff', 1, 'usr', $user->id, 'institution', $institutionname);
+                // Only turn off institution support admin if we actually have it defined in our saml config
+                if (isset($roletypes['instsupportadmin'][0]) && !empty($roletypes['instsupportadmin'][0])) {
+                    set_field('usr_institution', 'supportadmin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+            }
+            else if (!empty($roles) && $institutionrole == 'member') {
+                // Only turn off institution admin if we actually have it defined in our saml config
+                if (isset($roletypes['instadmin'][0]) && !empty($roletypes['instadmin'][0])) {
+                    set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                // Only turn off institution staff if we actually have it defined in our saml config
+                if (isset($roletypes['inststaff'][0]) && !empty($roletypes['inststaff'][0])) {
+                    set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                // Only turn off institution support admin if we actually have it defined in our saml config
+                if (isset($roletypes['instsupportadmin'][0]) && !empty($roletypes['instsupportadmin'][0])) {
+                    set_field('usr_institution', 'supportadmin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+            }
+            else if (!empty($roles) && $institutionrole == 'supportadmin') {
+                // Only turn off institution admin if we actually have it defined in our saml config
+                if (isset($roletypes['instadmin'][0]) && !empty($roletypes['instadmin'][0])) {
+                    set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                // Only turn off institution staff if we actually have it defined in our saml config
+                if (isset($roletypes['inststaff'][0]) && !empty($roletypes['inststaff'][0])) {
+                    set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                set_field('usr_institution', 'supportadmin', 1, 'usr', $user->id, 'institution', $institutionname);
+            }
+        }
+    }
+
+    /**
+     * Maps an external institution name to a Mahara institution name.
+     *
+     * @see local/lib/AuthSamlLocal.api.php
+     * @param string $external The institution name
+     * @param string $partial  Only partial match on the last part of the external institution name.
+     * @return string The Mahara institution name or an empty string if no match
+     */
+    private function get_affiliation_from_map($external, $partial=false) {
+        if (class_exists('AuthSamlLocal')) {
+            // @phpstan-ignore-next-line For local modifications.
+            return AuthSamlLocal::get_affiliation_from_map($external, $partial);
+        }
+        return '';
+    }
+
+    /**
+     * Get a numerical value for the roles
+     *
+     * So we can rank which is more important
+     * @return integer
+     */
+    private function get_max_role_value($roles, $roletypes) {
+        // Base role of member
+        $maxrolevalue = 0;
+        foreach ($roletypes as $rk => $roletype) {
+            $roletypes[$rk] = is_array($roletype) ? $roletype[0] : $roletype;
+        }
+        $myroles = array_intersect($roletypes, $roles);
+        if (isset($myroles['siteadmin'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 5;
+            }
+        }
+        else if (isset($myroles['sitestaff'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 4;
+            }
+        }
+        else if (isset($myroles['instadmin'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 3;
+            }
+        }
+        else if (isset($myroles['instsupportadmin'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 2;
+            }
+        }
+        else if (isset($myroles['inststaff'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 1;
+            }
+        }
+        return $maxrolevalue;
+    }
+}
+
+/**
+ * Plugin configuration class
+ */
+class PluginAuthSaml extends PluginAuth {
+
+    private static $default_config = array(
+        'user_attribute'         => '',
+        'weautocreateusers'      => 0,
+        'firstnamefield'         => '',
+        'surnamefield'           => '',
+        'role'                   => '',
+        'roleprefix'             => '',
+        'idaffiliations'         => '',
+        'emailaffiliations'      => '',
+        'roleaffiliations'       => '',
+        'roleaffiliationdelimiter' => '',
+        'rolesiteadmin'          => '',
+        'rolesitestaff'          => '',
+        'roleinstadmin'          => '',
+        'roleinststaff'          => '',
+        'roleinstsupportadmin'   => '',
+        'organisationname'       => '',
+        'roleautogroups'         => '',
+        'roleautogroupsall'      => 0,
+        'emailfield'             => '',
+        'studentidfield'         => '',
+        'updateuserinfoonlogin'  => 1,
+        'institution'            => '',
+        'institutionattribute'   => '',
+        'institutionvalue'       => '',
+        'institutionregex'       => 0,
+        'remoteuser'             => 1,
+        'loginlink'              => 0,
+        'institutionidpentityid' => '',
+        'active'                 => 1,
+        'avatar'                 => '',
+        'authloginmsg'           => '',
+        'metarefresh_metadata_url'       => '',
+        'metarefresh_metadata_signature' => '',
+    );
+
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('title', 'auth.saml');
+    }
+
+    public static function get_cron() {
+        return array(
+            (object)array(
+                'callfunction' => 'auth_saml_refresh_cron',
+                'minute' => '30',
+                'hour' => '*',
+            ),
+        );
+    }
+
+    /*
+     * This will trigger the simplesamlphp metadata module to do a refresh
+     * in a similar way to as if we had configured a simplesamlphp web cron
+     */
+    public static function auth_saml_refresh_cron() {
+        // we only want to run this if there are any saml instances containing the metarefresh_metadata_url
+        if ($urls = get_records_sql_array("SELECT ai.id FROM {auth_instance} ai
+                                           JOIN {auth_instance_config} aic ON aic.instance = ai.id
+                                           WHERE ai.authname = 'saml'
+                                           AND ai.active = 1
+                                           AND aic.field = 'metarefresh_metadata_url'
+                                           AND (aic.value IS NOT NULL and aic.value != '')", array())) {
+            Metarefresh::metadata_refresh_hook();
+            // Reset timezone back to what it should be
+            $timezone = get_mahara_timezone();
+            date_default_timezone_set($timezone);
+        }
+    }
+
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            return set_config_plugin('auth', 'saml', 'keypass', get_config('sitename'));
+        }
+        return true;
+    }
+
+    public static function can_be_disabled() {
+        return true;
+    }
+
+    public static function is_active() {
+        return get_field('auth_installed', 'active', 'name', 'saml');
+    }
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function install_auth_default() {
+        // Set library version to download
+        set_config_plugin('auth', 'saml', 'version', '1.19.5');
+    }
+
+    private static function delete_old_certificates() {
+        // This is actually rolling new certificate over current one
+        if (!file_exists(AuthSaml::get_certificate_path() . 'server_new.crt')) {
+            // No new cert to replace the old one with
+            return false;
+        }
+        // copy the old ones out of the way in the dataroot temp dir (in case one needs to fetch it back)
+        copy(AuthSaml::get_certificate_path() . 'server.crt', get_config('dataroot') . 'temp/server.crt.' . date('Ymdhis', time()));
+        copy(AuthSaml::get_certificate_path() . 'server.pem', get_config('dataroot') . 'temp/server.pem.' . date('Ymdhis', time()));
+        if (rename(AuthSaml::get_certificate_path() . 'server_new.crt', AuthSaml::get_certificate_path() . 'server.crt')) {
+            // move the new keypass to keypass
+            set_config_plugin('auth', 'saml', 'keypass', get_config_plugin('auth', 'saml', 'newkeypass'));
+            set_config_plugin('auth', 'saml', 'newkeypass', null);
+            return rename(AuthSaml::get_certificate_path() . 'server_new.pem', AuthSaml::get_certificate_path() . 'server.pem');
+        }
+        return false;
+    }
+
+    /**
+     * Create the certs.
+     *
+     * @param int $numberofdays Number of days the certificats are good for.
+     * @param null $privkeypass Never used. Included to allow the method signature to match.
+     * @param bool $altname Current or new certificates.
+     *
+     * @throws Exception Failed to write the keys to disk.
+     *
+     * @return void
+     */
+    public static function create_certificates($numberofdays = 3650, $privkeypass = null, $altname = false) {
+        if ($altname && get_config_plugin('auth', 'saml', 'newkeypass')) {
+            $privkeypass = get_config_plugin('auth', 'saml', 'newkeypass');
+        }
+        else {
+            $privkeypass = get_config_plugin('auth', 'saml', 'keypass');
+        }
+
+        // Fetch the Private and Public keys.
+        list($privatekey, $publickey) = parent::create_certificates($numberofdays, $privkeypass);
+
+        $pemfile = 'server.pem';
+        $crtfile = 'server.crt';
+        if ($altname) {
+            // Save them with '_new' suffix.
+            $pemfile = 'server_new.pem';
+            $crtfile = 'server_new.crt';
+        }
+        if ( !file_put_contents(AuthSaml::get_certificate_path() . $pemfile, $privatekey) ) {
+            throw new Exception(get_string('nullprivatecert', 'auth.saml'), 1);
+        }
+        if ( !file_put_contents(AuthSaml::get_certificate_path() . $crtfile, $publickey) ) {
+            throw new Exception(get_string('nullpubliccert', 'auth.saml'), 1);
+        }
+
+    }
+
+    /*
+     * Return an array of signature algorithms in a form suitable for feeding into a dropdown form
+     */
+    public static function get_valid_saml_signature_algorithms() {
+        $return = array();
+        $return['http://www.w3.org/2001/04/xmldsig-more#rsa-sha256'] = get_string('sha256', 'auth.saml');
+        $return['http://www.w3.org/2001/04/xmldsig-more#rsa-sha384'] = get_string('sha384', 'auth.saml');
+        $return['http://www.w3.org/2001/04/xmldsig-more#rsa-sha512'] = get_string('sha512', 'auth.saml');
+        $return['http://www.w3.org/2000/09/xmldsig#rsa-sha1'] = get_string('sha1', 'auth.saml');
+
+        return $return;
+    }
+
+    /*
+     * Return a sensible default signature algorithm for simplesamlphp config
+     */
+    public static function get_default_saml_signature_algorithm() {
+        //Sha1 is deprecated so we default to something more sensible
+        return 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+    }
+
+    /*
+     * Check if a given value is a valid signature algorithm for configuration
+     * in simplesamlphp
+     */
+    public static function is_valid_saml_signature_algorithm($value) {
+        $valids = self::get_valid_saml_signature_algorithms();
+        return array_key_exists($value, $valids);
+    }
+
+    /*
+     * Get the configured signature algorithm, falling back to the default if
+     * no valid value can be found or no value is set
+     */
+    public static function get_config_saml_signature_algorithm() {
+        $signaturealgo = get_config_plugin('auth', 'saml', 'sigalgo');
+        if (empty($signaturealgo) || !self::is_valid_saml_signature_algorithm($signaturealgo)) {
+                $signaturealgo = self::get_default_saml_signature_algorithm();
+        }
+
+        return $signaturealgo;
+    }
+
+    public static function get_config_options() {
+
+        $spentityid = get_config_plugin('auth', 'saml', 'spentityid');
+        if (empty($spentityid)) {
+            $spentityid = $_SERVER['HTTP_HOST'] . '/mahara';
+        }
+
+        $signaturealgo = self::get_config_saml_signature_algorithm();
+        $possiblealgos = self::get_valid_saml_signature_algorithms();
+
+        // first time - create it
+        if (!file_exists(AuthSaml::get_certificate_path() . 'server.crt')) {
+            error_log("auth/saml: Creating the certificate for the first time");
+            self::create_certificates();
+        }
+        $data = $newdata = null;
+        $cert = file_get_contents(AuthSaml::get_certificate_path() . 'server.crt');
+        $pem = file_get_contents(AuthSaml::get_certificate_path() . 'server.pem');
+        if (empty($cert) || empty($pem)) {
+            // bad cert - get rid of it
+            unlink(AuthSaml::get_certificate_path() . 'server.crt');
+            unlink(AuthSaml::get_certificate_path() . 'server.pem');
+        }
+        else {
+            $privatekey = openssl_pkey_get_private($pem);
+            $publickey  = openssl_pkey_get_public($cert);
+            $data = openssl_pkey_get_details($publickey);
+            // Load data from the current certificate.
+            $data = openssl_x509_parse($cert);
+        }
+        // Calculate date expirey interval.
+        $date1 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $data['validFrom_time_t']));
+        $date2 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $data['validTo_time_t']));
+        $datetime1 = new DateTime($date1);
+        $datetime2 = new DateTime($date2);
+        $interval = $datetime1->diff($datetime2);
+        $expirydays = $interval->format('%a');
+
+        // check if there are two certs in parallel - during the time of rolling SP certs
+        if (file_exists(AuthSaml::get_certificate_path() . 'server_new.crt')) {
+            $newcert = file_get_contents(AuthSaml::get_certificate_path() . 'server_new.crt');
+            $newpem = file_get_contents(AuthSaml::get_certificate_path() . 'server_new.pem');
+            $newprivatekey = openssl_pkey_get_private($newpem);
+            $newpublickey  = openssl_pkey_get_public($newcert);
+            $newdata = openssl_pkey_get_details($newpublickey);
+            // Load data from the new certificate.
+            $newdata = openssl_x509_parse($newcert);
+            // Calculate date expirey interval.
+            $newdate1 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $newdata['validFrom_time_t']));
+            $newdate2 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $newdata['validTo_time_t']));
+            $newdatetime1 = new DateTime($newdate1);
+            $newdatetime2 = new DateTime($newdate2);
+            $newinterval = $newdatetime1->diff($newdatetime2);
+            $newexpirydays = $newinterval->format('%a');
+        }
+
+        $oldcert = ($data && $newdata) ? 'oldcertificate' : 'currentcertificate';
+        $elements = array(
+            'authname' => array(
+                'type'  => 'hidden',
+                'value' => 'saml',
+            ),
+            'authglobalconfig' => array(
+                'type'  => 'hidden',
+                'value' => 'saml',
+            ),
+            'spentityid' => array(
+                'type'  => 'text',
+                'size' => 50,
+                'title' => get_string('spentityid', 'auth.saml'),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'defaultvalue' => $spentityid,
+                'help'  => true,
+            ),
+            'metadata' => array(
+                'type'  => 'html',
+                'class' => 'htmldescription',
+                'title' => get_string('spmetadata', 'auth.saml'),
+                'value' => self::is_usable() ? get_string('metadatavewlink', 'auth.saml', get_config('wwwroot') . 'auth/saml/sp/metadata.php?output=xhtml') : get_string('ssphpnotconfigured', 'auth.saml'),
+            ),
+            'sigalgo' => array(
+                'type' => 'select',
+                'title' => get_string('sigalgo', 'auth.saml'),
+                'options' => $possiblealgos,
+                'defaultvalue' => $signaturealgo,
+                'help' => true,
+            ),
+            'keypass' => array(
+                'type' => 'text',
+                'size' => 50,
+                'title' => get_string('keypass', 'auth.saml'),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'defaultvalue' => get_config_plugin('auth', 'saml', 'keypass'),
+                'description'  => get_string('keypassdesc', 'auth.saml'),
+            ),
+            'newkeypass' => array(
+                'type' => 'text',
+                'size' => 50,
+                'title' => get_string('newkeypass', 'auth.saml'),
+                'defaultvalue' => get_config_plugin('auth', 'saml', 'newkeypass') ? get_config_plugin('auth', 'saml', 'newkeypass') : '',
+                'description'  => get_string('newkeypassdesc', 'auth.saml'),
+            ),
+            'makereallysure' => array(
+                'type'         => 'html',
+                'value'        => "<script>jQuery(function() {     jQuery('#pluginconfig_save').on('click', function() {
+                return confirm('" . get_string('reallyreallysure1', 'auth.saml') . "');
+            });});</script>",
+            ),
+            'certificate' => array(
+                                'type' => 'fieldset',
+                                'legend' => get_string($oldcert, 'auth.saml'),
+                                'elements' =>  array(
+                                                'protos_help' =>  array(
+                                                'type' => 'html',
+                                                'value' => '<div><p>' . get_string('manage_certificate2', 'auth.saml') . '</p></div>',
+                                                ),
+
+                                                'pubkey' => array(
+                                                    'type'         => 'html',
+                                                    'value'        => '<h4 class="title">' . get_string('publickey','admin') . '</h4>' .
+                                                      '<pre style="font-size: 0.75rem; white-space: pre;">' . $cert . '</pre>'
+                                                ),
+                                                'sha1fingerprint' => array(
+                                                    'type'         => 'html',
+                                                    'value'        => '<div><p>' . get_string('sha1fingerprint', 'auth.webservice', auth_saml_openssl_x509_fingerprint($cert, "sha1")) . '</p></div>',
+                                                ),
+                                                'md5fingerprint' => array(
+                                                    'type'         => 'html',
+                                                    'value'        => '<div><p>' . get_string('md5fingerprint', 'auth.webservice', auth_saml_openssl_x509_fingerprint($cert, "md5")) . '</p></div>',
+                                                ),
+                                                'expires' => array(
+                                                    'type'         => 'html',
+                                                    'value'        => '<div><p>' . get_string('publickeyexpireson', 'auth.webservice',
+                                                    format_date($data['validTo_time_t']) . " (" . $expirydays . " days)") . '</p></div>'
+                                                ),
+                                            ),
+                                'collapsible' => false,
+                                'collapsed'   => false,
+                                'name' => 'activate_webservices_networking',
+                            ),
+        );
+        if ($data && $newdata) {
+            $certstatus = 'deleteoldkey';
+            $elements['newcertificate'] = array(
+                'type' => 'fieldset',
+                'legend' => get_string('newcertificate', 'auth.saml'),
+                'elements' =>  array(
+                    'protos_help' =>  array(
+                        'type' => 'html',
+                        'value' => '<div><p>' . get_string('manage_new_certificate', 'auth.saml') . '</p></div>',
+                    ),
+                    'pubkey' => array(
+                        'type'         => 'html',
+                        'value'        => '<h4 class="title">' . get_string('newpublickey','auth.saml') . '</h4>' .
+                        '<pre style="font-size: 0.75rem; white-space: pre;">' . $newcert . '</pre>'
+                    ),
+                    'sha1fingerprint' => array(
+                        'type'         => 'html',
+                        'value'        => '<div><p>' . get_string('sha1fingerprint', 'auth.webservice', auth_saml_openssl_x509_fingerprint($newcert, "sha1")) . '</p></div>',
+                    ),
+                    'md5fingerprint' => array(
+                        'type'         => 'html',
+                        'value'        => '<div><p>' . get_string('md5fingerprint', 'auth.webservice', auth_saml_openssl_x509_fingerprint($newcert, "md5")) . '</p></div>',
+                    ),
+                    'expires' => array(
+                        'type'         => 'html',
+                        'value'        => '<div><p>' . get_string('publickeyexpireson', 'auth.webservice',
+                                            format_date($newdata['validTo_time_t']) . " (" . $newexpirydays . " days)") . '</p></div>'
+                    ),
+                ),
+                'collapsible' => false,
+                'collapsed'   => false,
+                'name' => 'activate_webservices_networking',
+            );
+        }
+        else {
+            $certstatus = 'createnewkey';
+        }
+        $elements['deletesubmit'] = array(
+            'class' => 'btn-secondary',
+            'name' => 'submit', // must be called submit so we can access it's value
+            'type'  => 'button',
+            'usebuttontag' => true,
+            'content' => '<span class="icon icon-sync-alt left text-danger" role="presentation" aria-hidden="true"></span> '. get_string($certstatus . 'text', 'auth.saml'),
+            'value' => $certstatus,
+        );
+
+        // check extensions are loaded
+        $libchecks = '';
+        // Make sure the simplesamlphp files have been installed via 'make ssphp'
+        if (!self::is_simplesamlphp_installed()) {
+            $libchecks .= '<li>' . get_string('errorbadlib', 'auth.saml', get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php') . '</li>';
+        }
+        else {
+            require(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
+            $config = SimpleSAML\Configuration::getInstance();
+
+            //simplesaml version we install with 'make ssphp'
+            $libversion = get_config_plugin('auth', 'saml', 'version');
+
+            if (!empty($libversion) && $config->getVersion() != $libversion) {
+                $libchecks .= '<li>' . get_string('errorupdatelib', 'auth.saml') . '</li>';
+            }
+        }
+        // Make sure we can use a valid session handler with simplesamlphp as 'phpsession' doesn't work correctly in many situations
+        if (!self::is_usable()) {
+            $libchecks .= '<li>' . get_string_php_version('errornovalidsessionhandler', 'auth.saml') . '</li>';
+        }
+        if (!empty($libchecks)) {
+            $libcheckstr = '<div class="alert alert-danger"><ul class="unstyled">' . $libchecks . '</ul></div>';
+            $elements = array_merge(array('libchecks' => array(
+                                                'type' => 'html',
+                                                'value' => $libcheckstr,
+                                     )), $elements);
+        }
+
+        // Show the current metadata installed on the site so we can delete them
+        // We need to handle this outside the current pieform as we don't want to submit that and re-create a new certificate
+        $disco = self::get_raw_disco_list();
+        if (count($disco['list']) > 0) {
+            $discoused = array();
+            if ($discousedtmp  = get_records_sql_array("SELECT i.name, i.displayname, aic.value,
+                                                         CASE WHEN i.name = 'mahara' THEN 1 ELSE 0 END AS site
+                                                        FROM {auth_instance} ai
+                                                        JOIN {auth_instance_config} aic ON aic.instance = ai.id
+                                                        JOIN {institution} i ON i.name = ai.institution
+                                                        WHERE ai.authname = ? and field = ?", array('saml', 'institutionidpentityid'))) {
+                // turn $discoused into useful array structure
+                foreach ($discousedtmp as $used) {
+                    $discoused[$used->value][] = $used;
+                }
+            }
+
+            list($cols, $html) = self::idptable($disco['list'], null, $discoused, true);
+            $smarty = smarty_core();
+            $smarty->assign('html', $html);
+            $smarty->assign('cols', $cols);
+            $out = $smarty->fetch('auth:saml:idptableconfig.tpl');
+            $elements = array_merge($elements , array(
+                                        'idptable' => array(
+                                            'type' => 'html',
+                                            'value' => $out,
+                                        )
+                                    ));
+        }
+
+        return array(
+            'elements' => $elements,
+        );
+    }
+
+    public static function validate_config_options(Pieform $form, $values) {
+        if (empty($values['spentityid'])) {
+            $form->set_error('spentityid', get_string('errorbadspentityid', 'auth.saml', $values['spentityid']));
+        }
+    }
+
+    public static function save_config_options(Pieform $form, $values) {
+        set_config_plugin('auth', 'saml', 'keypass', $values['keypass']);
+        if ($form->get_submitvalue() === 'createnewkey') {
+            global $SESSION;
+            if (!empty($values['newkeypass'])) {
+                set_config_plugin('auth', 'saml', 'newkeypass', $values['newkeypass']);
+            }
+            else {
+                set_config_plugin('auth', 'saml', 'newkeypass', $values['keypass']);
+            }
+            error_log("auth/saml: Creating new certificate");
+            self::create_certificates(3650, null, true);
+            $SESSION->add_ok_msg(get_string('newkeycreated', 'auth.saml'));
+            // Using cancel here as a hack to get it to redirect so it shows the new keys
+            $form->reply(PIEFORM_CANCEL, array(
+                'location'    => get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=auth&pluginname=saml'
+            ));
+        }
+        else if ($form->get_submitvalue() === 'deleteoldkey') {
+            global $SESSION;
+            error_log("auth/saml: Deleting old certificates");
+            $result = self::delete_old_certificates();
+            if ($result) {
+                $SESSION->add_ok_msg(get_string('oldkeydeleted', 'auth.saml'));
+            }
+            else {
+                $SESSION->add_error_msg(get_string('keyrollfailed', 'auth.saml'));
+            }
+            // Using cancel here as a hack to get it to redirect so it shows the new keys
+            $form->reply(PIEFORM_CANCEL, array(
+                'location'    => get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=auth&pluginname=saml'
+            ));
+        }
+
+        delete_records_select('auth_config', 'plugin = ? AND field NOT LIKE ?', array('saml', 'version'));
+        $configs = array('spentityid', 'sigalgo');
+        foreach ($configs as $config) {
+            set_config_plugin('auth', 'saml', $config, $values[$config]);
+        }
+
+        // generate new certificates
+        error_log("auth/saml: Creating new certificate based on form values");
+        self::create_certificates(3650);
+    }
+
+    public static function idptable($list, $preferred = array(), $institutions = array(), $showdelete = false) {
+        if (empty($list)) {
+            return array(0, '');
+        }
+        $idps = array();
+        $lang = current_language();
+        $lang = explode('.', $lang);
+        $lang = strtolower(array_shift($lang));
+        $haslogos = $hasinstitutions = $hasdelete = false;
+        foreach ($list as $entityid => $value) {
+            $candelete = false;
+            $desc = $name = $entityid;
+            if (isset($value['description'][$lang])) {
+                $desc = $value['description'][$lang];
+            }
+            if (isset($value['name'][$lang])) {
+                $name = $value['name'][$lang];
+            }
+            $idplogo = array();
+            if (isset($value['UIInfo']) && isset($value['UIInfo']['Logo'])) {
+                $haslogos = true;
+                // Fetch logo from provider if given
+                $logos = $value['UIInfo']['Logo'];
+                foreach ($logos as $logo) {
+                    if (isset($logo['lang']) && $logo['lang'] == $lang) {
+                        $idplogo = $logo;
+                        break;
+                    }
+                }
+                // None matching the lang wanted so use the first one
+                if (empty($idplogo)) {
+                    $idplogo = $logos[0];
+                }
+            }
+            $insts = array();
+            if (!empty($institutions) && !empty($institutions[$entityid])) {
+                $hasinstitutions = true;
+                $insts = $institutions[$entityid];
+            }
+            else if ($showdelete) {
+                $hasdelete = true;
+                $candelete = true;
+            }
+
+            $idps[]= array('idpentityid' => $entityid, 'name' => $name, 'description' => $desc, 'logo' => $idplogo, 'institutions' => $insts, 'delete' => $candelete);
+        }
+
+        usort($idps, function($a, $b) {
+            return $a['name'] > $b['name'];
+        });
+        $idps = array(
+                      'count'   => count($idps),
+                      'limit'   => count($idps),
+                      'offset'  => 1,
+                      'data'    => $idps,
+                      );
+
+        $cols = array(
+            'logo' => array(
+                'name' => get_string('logo', 'auth.saml'),
+                'template' => 'auth:saml:idplogo.tpl',
+                'class' => 'short',
+                'sort' => false
+            ),
+            'idpentityid' => array(
+                'name' => get_string('idpentityid', 'auth.saml'),
+                'template' => 'auth:saml:idpentityid.tpl',
+                'class' => 'col-sm-3',
+                'sort' => false
+            ),
+            'description' => array(
+                'name' => get_string('idpprovider','auth.saml'),
+                'sort' => false
+            ),
+            'institutions' => array(
+                'name' => get_string('institutions', 'auth.saml'),
+                'template' => 'auth:saml:idpinstitutions.tpl',
+                'sort' => false
+            ),
+            'delete' => array(
+                'template' => 'auth:saml:idpdelete.tpl',
+                'sort' => false
+            ),
+        );
+        if ($haslogos === false) {
+            unset($cols['logo']);
+        }
+        if ($hasinstitutions === false) {
+            unset($cols['institutions']);
+        }
+        if ($hasdelete === false) {
+            unset($cols['delete']);
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('results', $idps);
+        $smarty->assign('cols', $cols);
+        $smarty->assign('pagedescriptionhtml', get_string('selectidp', 'auth.saml'));
+        $html = $smarty->fetch('auth:saml:idptable.tpl');
+
+        return array($cols, $html);
+    }
+
+    public static function has_instance_config() {
+        return true;
+    }
+
+    public static function is_usable() {
+        if (!self::is_simplesamlphp_installed()) {
+            return false;
+        }
+        $ishandler = false;
+
+        switch (get_config('ssphpsessionhandler')) {
+            case 'memcache':
+                //make people use memcached, not memcache
+                throw new ConfigSanityException(get_string('memcacheusememcached', 'error'));
+                break;
+            case 'memcached':
+                if (is_memcache_configured()) {
+                    $ishandler = true;
+                    break;
+                }
+            case 'redis':
+                if (is_redis_configured()) {
+                    $ishandler = true;
+                    break;
+                }
+            case 'sql':
+                if (is_sql_configured()) {
+                    $ishandler = true;
+                    break;
+                }
+            default:
+                // Check Redis
+                $ishandler = is_redis_configured();
+                // And check Memcache if no Redis
+                $ishandler = $ishandler ? $ishandler : is_memcache_configured();
+                // And check Sql if no Memcache
+                $ishandler = $ishandler ? $ishandler : is_sql_configured();
+        }
+
+        return $ishandler;
+    }
+
+    public static function is_simplesamlphp_installed() {
+        return file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
+    }
+
+    public static function init_simplesamlphp() {
+        if (!self::is_simplesamlphp_installed()) {
+            throw new AuthInstanceException(get_string('errorbadlib', 'auth.saml', get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php'));
+        }
+
+        // Tell SSP that we are on 443 if we are terminating SSL elsewhere.
+        if (get_config('sslproxy')) {
+            $_SERVER['SERVER_PORT'] = '443';
+        }
+
+        require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
+        require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
+
+        SimpleSAML\Configuration::init(get_config('docroot') . 'auth/saml/config');
+    }
+
+    public static function get_idps($xml) {
+        if (!preg_match('/\<\?xml.*?\?\>/', $xml)) {
+            $xml = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' . $xml;
+        }
+        // find the namespaces that the xml markup expects
+        $errors = '';
+        if (preg_match_all('/\<\/?(\w+):.*?\>/', $xml, $nsexpected)) {
+            $nsexpected = array_unique($nsexpected[1]);
+            // check that the namespaces are declared
+            if (preg_match_all('/xmlns\:(.*?)=/', $xml, $nsused)) {
+                $nsused = array_unique($nsused[1]);
+                $nsexpected = array_diff($nsexpected, $nsused);
+            }
+            foreach ($nsexpected as $expected) {
+                $errors .= get_string('missingnamespace', 'auth.saml', $expected) . ". ";
+            }
+        }
+        if (!empty($errors)) {
+            return array(null, null, $errors);
+        }
+        $xml = new SimpleXMLElement($xml);
+        $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
+        $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
+        // Find all IDPSSODescriptor elements and then work back up to the entityID.
+        $idps = $xml->xpath('//md:EntityDescriptor[//md:IDPSSODescriptor]');
+        $entityid = null;
+        if ($idps && isset($idps[0])) {
+            $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
+        }
+        return array($entityid, $idps, $errors);
+    }
+
+    public static function get_raw_disco_list() {
+        if (class_exists('PluginAuthSaml_IdPDisco')) {
+            PluginAuthSaml::init_simplesamlphp();
+            $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
+            return $discoHandler->getTheIdPs();
+        }
+        return array('list' => array());
+    }
+
+    public static function get_disco_list($lang = null, $entityidps = array()) {
+        if (empty($lang)) {
+            $lang = current_language();
+        }
+
+        $disco = self::get_raw_disco_list();
+        if (count($disco['list']) > 0) {
+            $lang = explode('.', $lang);
+            $lang = strtolower(array_shift($lang));
+            foreach($disco['list'] as $idp) {
+                $idpname = (isset($idp['name'][$lang])) ? $idp['name'][$lang] : $idp['entityid'];
+                $entityidps[$idp['entityid']] = $idpname;
+            }
+            return $entityidps;
+        }
+        return false;
+    }
+
+    public static function get_instance_config_options($institution, $instance = 0) {
+        if (!class_exists('SimpleSAML\XHTML\IdPDisco')) {
+            return array(
+                'error' => get_string('errorssphpsetup', 'auth.saml')
+            );
+        }
+
+        if ($instance > 0) {
+            $default = get_record('auth_instance', 'id', $instance);
+            if ($default == false) {
+                return array(
+                    'error' => get_string('nodataforinstance1', 'auth', $instance)
+                );
+            }
+            $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
+
+            if ($current_config == false) {
+                $current_config = array();
+            }
+            foreach (self::$default_config as $key => $value) {
+                if (array_key_exists($key, $current_config)) {
+                    self::$default_config[$key] = $current_config[$key];
+                }
+            }
+            if (empty(self::$default_config['institutionvalue'])) {
+                self::$default_config['institutionvalue'] = $institution;
+            }
+            self::$default_config['active'] = $default->active;
+        }
+        else {
+            $default = new stdClass();
+            $default->instancename = '';
+            $default->active = 1;
+        }
+
+        // lookup the institution metadata
+        $entityid = "";
+        self::$default_config['institutionidp'] = "";
+        if (!empty(self::$default_config['institutionidpentityid'])) {
+            $idpfile = AuthSaml::prepare_metadata_path(self::$default_config['institutionidpentityid']);
+            if (file_exists($idpfile)) {
+                $rawxml = file_get_contents($idpfile);
+                if (empty($rawxml)) {
+                    // bad metadata - get rid of it
+                    unlink($idpfile);
+                }
+                else {
+                    list ($entityid, $idps, $errors) = self::get_idps($rawxml);
+                    if ($entityid) {
+                        self::$default_config['institutionidp'] = $rawxml;
+                    }
+                    else {
+                        // bad metadata - get rid of it
+                        unlink($idpfile);
+                    }
+                }
+            }
+            else if ($list = PluginAuthSaml::get_disco_list()) {
+                if (isset($list[self::$default_config['institutionidpentityid']])) {
+                    $entityid = self::$default_config['institutionidpentityid'];
+                }
+            }
+        }
+
+        $idp_title = get_string('institutionidp', 'auth.saml', $institution);
+        if ($entityid) {
+            $idp_title .= " (" . $entityid . ")";
+        }
+        $entityidps = array();
+        $entityidp_hiddenlabel = true;
+        // Fetch the idp info via disco
+        $discolist = self::get_disco_list();
+        if ($discolist) {
+            $entityidps += $discolist;
+            $entityidp_hiddenlabel = false;
+        }
+        asort($entityidps);
+        // add the 'New' option to the top of the list
+        $entityidps = array('new' => get_string('newidpentity', 'auth.saml')) + $entityidps;
+
+        $idpselectjs = <<< EOF
+<script>
+jQuery(function($) {
+
+    function update_idp_label(idp) {
+        var idplabel = $('label[for="auth_config_institutionidp"]').html();
+        // remove the idp entity from string
+        if (idplabel.lastIndexOf('(') != -1) {
+            idplabel = idplabel.substring(0, idplabel.lastIndexOf('('));
+        }
+        // add in new one
+        if (idp) {
+            idplabel = idplabel.trim() + ' (' + idp + ')';
+        }
+        $('label[for="auth_config_institutionidp"]').html(idplabel);
+    }
+
+    function update_idp_info(idp) {
+
+        if (idp == 'new') {
+            // clear the metadata box
+            $('#auth_config_institutionidp').val('');
+            // clear the entity url box
+            $('#auth_config_metarefresh_metadata_url').val('');
+            $('#auth_config_metarefresh_metadata_signature').val('');
+            update_idp_label(false);
+        }
+        else {
+            // fetch the metadata info and update the textarea and url if configured
+            sendjsonrequest(config.wwwroot + 'auth/saml/idpmetadata.json.php', {'idp': idp}, 'POST', function (data) {
+                if (!data.error) {
+                    $('#auth_config_institutionidp').val(data.data.metadata);
+                    $('#auth_config_metarefresh_metadata_url').val(data.data.metarefresh_metadata_url);
+                    $('#auth_config_metarefresh_metadata_signature').val(data.data.metarefresh_metadata_signature);
+                }
+            });
+            update_idp_label(idp);
+        }
+    }
+
+    // On change
+    $('#auth_config_institutionidpentityid').on('change', function() {
+        update_idp_info($(this).val());
+    });
+    // On load
+    update_idp_info($('#auth_config_institutionidpentityid').val());
+});
+</script>
+EOF;
+
+        $elements = array(
+            'instance' => array(
+                'type'  => 'hidden',
+                'value' => $instance,
+            ),
+            'instancename' => array(
+                'type'  => 'hidden',
+                'value' => 'SAML',
+            ),
+            'institution' => array(
+                'type'  => 'hidden',
+                'value' => $institution,
+            ),
+            'authname' => array(
+                'type'  => 'hidden',
+                'value' => 'saml',
+            ),
+            'active' => array(
+                'type'  => 'switchbox',
+                'title' => get_string('active', 'auth'),
+                'defaultvalue' => (int) self::$default_config['active'],
+            ),
+            'institutionidpentityid' => array(
+                'type'  => 'select',
+                'title' => get_string('institutionidpentity', 'auth.saml'),
+                'options' => $entityidps,
+                'defaultvalue' => ($entityid ? $entityid : 'new'),
+                'hiddenlabel' => $entityidp_hiddenlabel,
+            ),
+            'metarefresh_metadata_url' => array(
+                'type'  => 'text',
+                'title' => get_string('metarefresh_metadata_url', 'auth.saml'),
+                'rules' => array(
+                    'required' => false,
+                ),
+                'defaultvalue' => self::$default_config['metarefresh_metadata_url'],
+                'help'  => true,
+            ),
+            'metarefresh_metadata_signature' => array(
+                'type'  => 'text',
+                'title' => get_string('metarefresh_metadata_signature', 'auth.saml'),
+                'rules' => array(
+                    'required' => false,
+                ),
+                'defaultvalue' => self::$default_config['metarefresh_metadata_signature'],
+                'help'  => true,
+            ),
+            'institutionidp' => array(
+                'type'  => 'textarea',
+                'title' => $idp_title,
+                'rows' => 10,
+                'cols' => 80,
+                'defaultvalue' => self::$default_config['institutionidp'],
+                'help' => true,
+                'class' => 'under-label',
+            ),
+            'idpselectjs' => array(
+                'type'         => 'html',
+                'value'        => $idpselectjs,
+            ),
+            'institutionattribute' => array(
+                'type'  => 'text',
+                'title' => get_string('institutionattribute', 'auth.saml', $institution),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'defaultvalue' => self::$default_config['institutionattribute'],
+                'help' => true,
+            ),
+            'institutionvalue' => array(
+                'type'  => 'text',
+                'title' => get_string('institutionvalue', 'auth.saml'),
+                'rules' => array(
+                'required' => true,
+                ),
+                'defaultvalue' => self::$default_config['institutionvalue'],
+                'help' => true,
+            ),
+            'institutionregex' => array(
+                'type'         => 'switchbox',
+                'title' => get_string('institutionregex', 'auth.saml'),
+                'defaultvalue' => self::$default_config['institutionregex'],
+                'help' => true,
+            ),
+            'user_attribute' => array(
+                'type'  => 'text',
+                'title' => get_string('userattribute', 'auth.saml'),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'defaultvalue' => self::$default_config['user_attribute'],
+                'help' => true,
+            ),
+            'remoteuser' => array(
+                'type'         => 'switchbox',
+                'title' => get_string('remoteuser', 'auth.saml'),
+                'defaultvalue' => self::$default_config['remoteuser'],
+                'help'  => true,
+            ),
+            'loginlink' => array(
+                'type'         => 'switchbox',
+                'title' => get_string('loginlink', 'auth.saml'),
+                'defaultvalue' => self::$default_config['loginlink'],
+                'disabled' => (self::$default_config['remoteuser'] ? false : true),
+                'help'  => true,
+            ),
+            'updateuserinfoonlogin' => array(
+                'type'         => 'switchbox',
+                'title' => get_string('updateuserinfoonlogin', 'auth.saml'),
+                'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
+                'help'  => true,
+            ),
+            'weautocreateusers' => array(
+                'type'         => 'switchbox',
+                'title' => get_string('weautocreateusers', 'auth.saml'),
+                'defaultvalue' => self::$default_config['weautocreateusers'],
+                'help'  => true,
+            ),
+            'firstnamefield' => array(
+                'type'  => 'text',
+                'title' => get_string('samlfieldforfirstname', 'auth.saml'),
+                'defaultvalue' => self::$default_config['firstnamefield'],
+                'help'  => true,
+            ),
+            'surnamefield' => array(
+                'type'  => 'text',
+                'title' => get_string('samlfieldforsurname', 'auth.saml'),
+                'defaultvalue' => self::$default_config['surnamefield'],
+                'help'  => true,
+            ),
+            'emailfield' => array(
+                'type'  => 'text',
+                'title' => get_string('samlfieldforemail', 'auth.saml'),
+                'defaultvalue' => self::$default_config['emailfield'],
+                'help' => true,
+            ),
+            'studentidfield' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforstudentid', 'auth.saml'),
+                'defaultvalue' => self::$default_config['studentidfield'],
+                'help' => true,
+            ),
+            'organisationname' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldfororganisationname', 'auth.saml'),
+                'defaultvalue' => self::$default_config['organisationname'],
+                'help' => false,
+            ),
+            'avatar' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforavatar', 'auth.saml'),
+                'defaultvalue' => self::$default_config['avatar'],
+                'description' => get_string('samlfieldforavatardescription', 'auth.saml'),
+            ),
+            'role' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforrole', 'auth.saml'),
+                'defaultvalue' => self::$default_config['role'],
+                'help' => false,
+            ),
+            'roleprefix' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleprefix', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleprefix'],
+                'help' => true,
+            ),
+            'idaffiliations' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforidaffiliations', 'auth.saml'),
+                'defaultvalue' => self::$default_config['idaffiliations'],
+                'help' => true,
+            ),
+            'emailaffiliations' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforemailaffiliations', 'auth.saml'),
+                'defaultvalue' => self::$default_config['emailaffiliations'],
+                'help' => true,
+            ),
+            'roleaffiliations' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleaffiliations', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleaffiliations'],
+                'help' => true,
+            ),
+            'roleaffiliationdelimiter' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleaffiliationdelimiter', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleaffiliationdelimiter'],
+                'help' => true,
+            ),
+            'rolesiteadmin' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforrolesiteadmin', 'auth.saml'),
+                'defaultvalue' => self::$default_config['rolesiteadmin'],
+                'help' => false,
+            ),
+            'rolesitestaff' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforrolesitestaff', 'auth.saml'),
+                'defaultvalue' => self::$default_config['rolesitestaff'],
+                'help' => false,
+            ),
+            'roleinstadmin' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleinstadmin', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleinstadmin'],
+                'help' => false,
+            ),
+            'roleinstsupportadmin' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleinstsupportadmin', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleinstsupportadmin'],
+            ),
+            'roleinststaff' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleinststaff', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleinststaff'],
+            ),
+            'roleautogroups' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforautogroups', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleautogroups'],
+                'help' => false,
+            ),
+            'roleautogroupsall' => array(
+                'type' => 'switchbox',
+                'title' => get_string('samlfieldforautogroupsall', 'auth.saml'),
+                'defaultvalue' => is_isolated() ? false : self::$default_config['roleautogroupsall'],
+                'description' => get_string('samlfieldforautogroupsalldescription', 'auth.saml'),
+                'disabled' => is_isolated(),
+            )
+        );
+        if (get_config('saml_create_institution_default')) {
+            // Show the copy roles option if this is a 'default' one
+            foreach ($defaults = explode(',', get_config('saml_create_institution_default')) as $default) {
+                if ($institution == $default) {
+                    $elements['rolepopulate'] = array(
+                        'type'         => 'switchbox',
+                        'title' => get_string('populaterolestoallsaml', 'auth.saml'),
+                        'defaultvalue' => false,
+                        'description' => get_string('populaterolestoallsamldescription', 'auth.saml'),
+                        'help'  => false,
+                    );
+                    break;
+                }
+            }
+        }
+        $elements['authloginmsg'] = array(
+            'type'         => 'wysiwyg',
+            'rows'         => 10,
+            'cols'         => 50,
+            'title'        => get_string('samlfieldauthloginmsg', 'auth.saml'),
+            'description'  => get_string('authloginmsgnoparent', 'auth'),
+            'defaultvalue' => self::$default_config['authloginmsg'],
+            'help'         => true,
+            'class'        => 'under-label-help',
+            'rules'       => array(
+                'maxlength' => 1000000
+            )
+        );
+
+        return array(
+            'elements' => $elements,
+            'renderer' => 'div'
+        );
+    }
+
+    public static function validate_instance_config_options($values, Pieform $form) {
+
+        // only allow remoteuser to be unset if usersuniquebyusername is NOT set
+        if (!get_config('usersuniquebyusername') && !$values['remoteuser']) {
+            $form->set_error('remoteuser', get_string('errorremoteuser1', 'auth.saml'));
+        }
+
+        if (!empty($values['institutionidp'])) {
+            try {
+                list ($entityid, $idps, $errors) = self::get_idps($values['institutionidp']);
+                if (!$entityid) {
+                    if (!empty($errors)) {
+                        throw new Exception($errors, 1);
+                    }
+                    else {
+                        throw new Exception(get_string('noentityidpfound', 'auth.saml') . '. ' . get_string('noentityidpneednamespace', 'auth.saml'), 1);
+                    }
+                }
+            }
+            catch (Exception $e) {
+                $form->set_error('institutionidp', get_string('errorbadmetadata1', 'auth.saml', $e->getMessage()));
+            }
+        }
+        else if (!empty($values['institutionidpentityid']) && $list = PluginAuthSaml::get_disco_list()) {
+            if (!isset($list[$values['institutionidpentityid']])) {
+                $form->set_error('institutionidpentityid', get_string('errormissingmetadata', 'auth.saml'));
+            }
+        }
+        else {
+            $form->set_error('institutionidpentityid', get_string('errormissingmetadata', 'auth.saml'));
+        }
+
+        // If we're using Mahara usernames (usr.username) instead of remote usernames
+        // (auth_remote_user.remoteusername), then autocreation cannot be enabled if any
+        // institutions have registration enabled.
+        //
+        // This is because a user self-registering with another institution might pick
+        // a username that matches the username from this SAML service, allowing them
+        // to hijack someone else's account.
+        //
+        // (see the comments in the request_user_authorise function above).
+        if ((!$values['remoteuser']) && ($values['weautocreateusers']) && ($institutions = get_column('institution', 'name', 'registerallowed', '1'))) {
+            $form->set_error('weautocreateusers', get_string('errorregistrationenabledwithautocreate1', 'auth.saml'));
+        }
+
+        // If enabled "We auto-create users" check that all required fields for that are set.
+        if ($values['weautocreateusers']) {
+            $required= array('firstnamefield', 'surnamefield', 'emailfield');
+            foreach ($required as $required_field) {
+                if (empty($values[$required_field])) {
+                    $form->set_error($required_field, get_string('errorextrarequiredfield', 'auth.saml'));
+                }
+            }
+        }
+
+        $dup = get_records_sql_array('SELECT COUNT(instance) AS instance FROM {auth_instance_config}
+                                          WHERE ((field = \'institutionattribute\' AND value = ?) OR
+                                                 (field = \'institutionvalue\' AND value = ?)) AND
+                                                 instance IN (SELECT id FROM {auth_instance} WHERE authname = \'saml\' AND id != ?)
+                                          GROUP BY instance
+                                          ORDER BY instance',
+                                      array($values['institutionattribute'], $values['institutionvalue'], $values['instance']));
+        if (is_array($dup)) {
+            foreach ($dup as $instance) {
+                if ($instance->instance >= 2) {
+                    // we already have an authinstance with these same values
+                    $form->set_error('institutionattribute', get_string('errorbadinstitutioncombo', 'auth.saml'));
+                    break;
+                }
+            }
+        }
+    }
+
+    public static function save_instance_config_options($values, Pieform $form) {
+        global $SESSION;
+
+        $authinstance = new stdClass();
+
+        if ($values['instance'] > 0) {
+            $values['create'] = false;
+            $current = get_records_assoc('auth_instance_config', 'instance', $values['instance'], '', 'field, value');
+            $authinstance->id = $values['instance'];
+        }
+        else {
+            $values['create'] = true;
+            $lastinstance = get_records_array('auth_instance', 'institution', $values['institution'], 'priority DESC', '*', '0', '1');
+
+            if ($lastinstance == false) {
+                $authinstance->priority = 0;
+            }
+            else {
+                $authinstance->priority = $lastinstance[0]->priority + 1;
+            }
+        }
+
+        $authinstance->institution  = $values['institution'];
+        $authinstance->authname     = $values['authname'];
+        $authinstance->active       = (int) $values['active'];
+        $authinstance->instancename = $values['authname'];
+
+        if ($values['create']) {
+            $values['instance'] = insert_record('auth_instance', $authinstance, 'id', true);
+        }
+        else {
+            update_record('auth_instance', $authinstance, array('id' => $values['instance']));
+        }
+
+        if (empty($current)) {
+            $current = array();
+        }
+
+        $entityid = null;
+        if (!empty($values['institutionidpentityid']) && $list = PluginAuthSaml::get_disco_list()) {
+            if (isset($list[$values['institutionidpentityid']])) {
+                // we have xml/php info for this IdP
+                $entityid = $values['institutionidpentityid'];
+            }
+        }
+        if (!$entityid) {
+            // grab the entityId from the metadata
+            list ($entityid, $idps, $errors) = self::get_idps($values['institutionidp']);
+        }
+
+        $changedxml = false;
+        if ($values['institutionidpentityid'] != 'new') {
+            $existingidpfile = AuthSaml::prepare_metadata_path($values['institutionidpentityid']);
+            if (file_exists($existingidpfile)) {
+                $rawxml = file_get_contents($existingidpfile);
+                if ($rawxml != $values['institutionidp']) {
+                    $changedxml = true;
+                    // find out which institutions are using it
+                    $duplicates = get_records_sql_array("
+                        SELECT COUNT(aic.instance) AS instances
+                        FROM {auth_instance_config} aic
+                        JOIN {auth_instance} ai ON (ai.authname = 'saml' AND ai.id = aic.instance)
+                        WHERE aic.field = 'institutionidpentityid' AND aic.value = ? AND aic.instance != ?",
+                        array($values['institutionidpentityid'], $values['instance']));
+                    if ($duplicates && is_array($duplicates) && $duplicates[0]->instances > 0) {
+                        $SESSION->add_ok_msg(get_string('idpentityupdatedduplicates', 'auth.saml', $duplicates[0]->instances));
+                    }
+                    else {
+                        $SESSION->add_ok_msg(get_string('idpentityupdated', 'auth.saml'));
+                    }
+                }
+                else {
+                    $SESSION->add_ok_msg(get_string('idpentityadded', 'auth.saml'));
+                }
+            }
+            else {
+                // existing idpfile not found so just save it
+                $changedxml = true;
+            }
+        }
+        else {
+           $values['institutionidpentityid'] = $entityid;
+           $changedxml = true;
+           $SESSION->add_ok_msg(get_string('idpentityadded', 'auth.saml'));
+        }
+        self::$default_config = array(
+            'user_attribute' => $values['user_attribute'],
+            'weautocreateusers' => $values['weautocreateusers'],
+            'loginlink' => $values['loginlink'],
+            'remoteuser' => $values['remoteuser'],
+            'firstnamefield' => $values['firstnamefield'],
+            'surnamefield' => $values['surnamefield'],
+            'emailfield' => $values['emailfield'],
+            'studentidfield' => $values['studentidfield'],
+            'role' => $values['role'],
+            'roleprefix' => trim($values['roleprefix']),
+            'idaffiliations' => $values['idaffiliations'],
+            'emailaffiliations' => $values['emailaffiliations'],
+            'roleaffiliations' => $values['roleaffiliations'],
+            'roleaffiliationdelimiter' => $values['roleaffiliationdelimiter'],
+            'rolesiteadmin' => $values['rolesiteadmin'],
+            'rolesitestaff' => $values['rolesitestaff'],
+            'roleinstadmin' => $values['roleinstadmin'],
+            'roleinststaff' => $values['roleinststaff'],
+            'roleinstsupportadmin' => $values['roleinstsupportadmin'],
+            'organisationname' => $values['organisationname'],
+            'roleautogroups' => $values['roleautogroups'],
+            'roleautogroupsall' => $values['roleautogroupsall'],
+            'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
+            'institutionattribute' => $values['institutionattribute'],
+            'institutionvalue' => $values['institutionvalue'],
+            'institutionregex' => $values['institutionregex'],
+            'institutionidpentityid' => $entityid,
+            'avatar' => $values['avatar'],
+            'authloginmsg' => $values['authloginmsg'],
+            'metarefresh_metadata_url' => $values['metarefresh_metadata_url'],
+            'metarefresh_metadata_signature' => $values['metarefresh_metadata_signature'],
+        );
+
+        $auth_children = false;
+        if (get_config('saml_create_institution_default') && !empty($values['rolepopulate'])) {
+            // Allow role changes to populate out to 'child' saml instances if this is a 'default' one
+            foreach ($defaults = explode(',', get_config('saml_create_institution_default')) as $default) {
+                if ($values['institution'] == $default) {
+                    // Find all the instances with same institutionidpentityid
+                    $auth_children = get_column('auth_instance_config', 'instance', 'field', 'institutionidpentityid', 'value', $entityid);
+                    break;
+                }
+            }
+        }
+
+        foreach (self::$default_config as $field => $value) {
+            $record = new stdClass();
+            $record->instance = $values['instance'];
+            $record->field    = $field;
+            $record->value    = $value;
+
+            if ($values['create'] || !array_key_exists($field, $current)) {
+                insert_record('auth_instance_config', $record);
+            }
+            else {
+                update_record('auth_instance_config', $record, array('instance' => $values['instance'], 'field' => $field));
+            }
+
+            if ($auth_children && preg_match('/^role/', $field)) {
+                // Populate the role changes to the other SAML instances
+                foreach ($auth_children as $child) {
+                    $dbwhere = new StdClass();
+                    $dbwhere->field = $field;
+                    $dbwhere->instance = $child;
+                    $dbdata = clone $dbwhere;
+                    $dbdata->value = $value;
+                    ensure_record_exists('auth_instance_config', $dbwhere, $dbdata);
+                }
+            }
+        }
+
+        // save the institution config
+        if ($changedxml && !empty($values['institutionidp'])) {
+            $idpfile = AuthSaml::prepare_metadata_path($values['institutionidpentityid']);
+            file_put_contents($idpfile, $values['institutionidp']);
+        }
+
+        return $values;
+    }
+
+    /**
+     * Add "SSO Login" link below the normal login form.
+     */
+    public static function login_form_elements() {
+        // Check how many active IdPs we can connect to and if it less than four we
+        // can display sso buttons for them on login block - otherwise have them
+        // redirect to IdP discovery page
+        $idps = array();
+        if ($rawidps = get_records_sql_array("
+                SELECT aic.value, ai.institution
+                FROM {auth_instance} ai
+                JOIN {auth_instance_config} aic ON aic.instance = ai.id
+                WHERE ai.authname = ?
+                AND ai.active = ?
+                AND aic.field = ?
+                ORDER BY ai.id ASC", array('saml', 1, 'institutionidpentityid'))) {
+            foreach ($rawidps as $rawidp) {
+                if (!isset($idps[$rawidp->value])) {
+                    $idps[$rawidp->value] = $rawidp;
+                }
+            }
+        }
+        $url = get_config('wwwroot') . 'auth/saml/index.php';
+        if (param_exists('login')) {
+            // We're on the transient login page. Redirect back to original page once we're done.
+            $url .= '?wantsurl=' . urlencode(get_full_script_path());
+        }
+
+        $value = '<div class="login-externallink">';
+        if (count($idps) < 4) {
+            foreach ($idps as $idp) {
+                $idpurl = $url;
+                $idpurl .= param_exists('login') ? '&' : '?';
+                $idpurl .= 'idpentityid=' . $idp->value;
+                if (string_exists('login' . $idp->institution, 'auth.saml')) {
+                    // we use custom string defined in auth.saml
+                    $ssolabel = get_string('login' . $idp->institution, 'auth.saml');
+                }
+                else {
+                    $ssolabel = get_string('ssolabelfor', 'auth.saml', get_field('institution', 'displayname', 'name', $idp->institution));
+                }
+                $value .= '<a class="btn btn-primary saml-' . $idp->institution . '" href="' . $idpurl . '">' . $ssolabel . '</a>';
+            }
+        }
+        else {
+            $value .= '<a class="btn btn-primary" href="' . $url . '">' . get_string('login', 'auth.saml') . '</a>';
+        }
+        $value .= '</div>';
+
+        $elements = array(
+            'loginsaml' => array(
+                'value' => $value
+            )
+        );
+        return $elements;
+    }
+
+    public static function need_basic_login_form() {
+        return false;
+    }
+}
+
+/**
+ * Work around for missing function in 5.5 - is in 5.6
+ */
+function auth_saml_openssl_x509_fingerprint($cert, $hash) {
+   $cert = preg_replace('#-.*-|\r|\n#', '', $cert);
+   $bin = base64_decode($cert);
+   return hash($hash, $bin);
+}
+$discofileexists = false;
+if (file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/SimpleSAML/XHTML/IdPDisco.php')) {
+    require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/SimpleSAML/XHTML/IdPDisco.php');
+    $discofileexists = true;
+}
+if ($discofileexists && class_exists('SimpleSAML\XHTML\IdPDisco')) {
+    class PluginAuthSaml_IdPDisco extends SimpleSAML\XHTML\IdPDisco
+    {
+
+        /**
+         * Initializes this discovery service.
+         *
+         * The constructor does the parsing of the request. If this is an invalid request, it will throw an exception.
+         *
+         * @param array  $metadataSets Array with metadata sets we find remote entities in.
+         * @param string $instance The name of this instance of the discovery service.
+         *
+         * @throws Exception If the request is invalid.
+         */
+        public function __construct(array $metadataSets, $instance) {
+            assert('is_string($instance)');
+
+            // initialize standard classes
+            $this->config = SimpleSAML\Configuration::getInstance();
+            $this->metadata = SimpleSAML\Metadata\MetaDataStorageHandler::getMetadataHandler();
+            $this->instance = $instance;
+            $this->metadataSets = $metadataSets;
+            $this->isPassive = false;
+        }
+
+        public function getTheIdPs() {
+            $idpList = $this->getIdPList();
+            $idpList = $this->filterList($idpList);
+            $preferredIdP = $this->getRecommendedIdP();
+            return array('list' => $idpList, 'preferred' => $preferredIdP);
+        }
+    }
+}
+else if ($discofileexists) {
+    global $SESSION;
+    $SESSION->add_msg_once(get_string('errorupdatelib', 'auth.saml'), 'error', false);
+}
+
+/*
+ * Provides any mahara specific wrappers for the metarefresh plugin from simplesamlphp that is used to refresh IDP metadata
+ */
+class Metarefresh {
+    /*
+     * Path that the metarefresh module should write it's metadata file to
+     *
+     * It is also used to store the metarefresh state file
+     */
+    public static function get_metadata_path() {
+        check_dir_exists(get_config('dataroot') . 'metadata/refresh/');
+        return get_config('dataroot') . 'metadata/refresh/';
+    }
+
+    /*
+     * Return all configured metadataurls for idps if any found
+     */
+    public static function get_metadata_urls($viajson=false) {
+        $finalarr = array();
+        $sites = get_records_menu('auth_instance_config', 'field', 'institutionidpentityid', '', 'instance, value');
+        $urls = get_records_array('auth_instance_config', 'field', 'metarefresh_metadata_url', '', 'field, value, instance');
+        $fingerprints = get_records_array('auth_instance_config', 'field', 'metarefresh_metadata_signature', '', 'field, value, instance');
+        if ( ( !$sites || count($sites) <= 0 ) || ( !$urls || count($urls) <= 0 ) ) {
+            if ($viajson === false) {
+                log_warn("Could not get any valid urls for metadata refresh url list", false, false);
+            }
+            return array();//could not get any valid urls to fetch metadata from
+        }
+
+        if ($urls) {
+            foreach ($urls as $url) {
+                if (isset($url->value) && !empty($url->value)) {
+                    if (isset($sites[$url->instance])) {
+                        $finalarr[$sites[$url->instance]]['src'] = $url->value;
+                        if ($fingerprints) {
+                            foreach ($fingerprints as $fingerprint) {
+                                if (isset($fingerprint->instance) && $fingerprint->instance == $url->instance && isset($fingerprint->value) && !empty($fingerprint->value)) {
+                                    $finalarr[$sites[$url->instance]]['validateFingerprint'] = $fingerprint->value;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $finalarr;
+    }
+
+    /*
+     * Given an IDP entity id, find the source url for it
+     */
+    public static function get_metadata_url($idp, $viajson=false) {
+        $sources = self::get_metadata_urls($viajson);
+        if (isset($sources[$idp]) && isset($sources[$idp]['src'])) {
+            return $sources[$idp]['src'];
+        }
+        return '';
+    }
+
+    /*
+     * Given an IDP entity id, find the source fingerprint for it
+     */
+    public static function get_metadata_fingerprint($idp, $viajson=false) {
+        $sources = self::get_metadata_urls($viajson);
+        if (isset($sources[$idp]) && isset($sources[$idp]['validateFingerprint'])) {
+            return $sources[$idp]['validateFingerprint'];
+        }
+        return '';
+    }
+
+    /**
+    * Hook to try a metarefresh using the metarefresh module in simplesaml from mahara
+    *
+    * Most of this code was based on the  cron_hook in the metarefresh module
+    *
+    * With only minimal mahara specific tweaks around config and data paths
+    *
+    */
+    public static function metadata_refresh_hook() {
+        try {
+            //Include autoloader and setup config dir correctly
+            PluginAuthSaml::init_simplesamlphp();
+
+            \SimpleSAML\Logger::setCaptureLog(true);
+            $config = SimpleSAML\Configuration::getInstance();
+            $mconfig = SimpleSAML\Configuration::getOptionalConfig('config-metarefresh.php');
+
+            $sets = $mconfig->getConfigList('sets', array());
+
+            //Store our metarefresh state file in the sitedata for the site
+            $stateFile = self::get_metadata_path() . 'metarefresh-state.php';
+
+            foreach ($sets AS $setkey => $set) {
+
+                SimpleSAML\Logger::info('Mahara [metarefresh]: Executing set [' . $setkey . ']');
+
+                $expireAfter = $set->getInteger('expireAfter', NULL);
+                if ($expireAfter !== NULL) {
+                    $expire = time() + $expireAfter;
+                }
+                else {
+                    $expire = NULL;
+                }
+
+                $outputDir = $set->getString('outputDir');
+                $outputDir = $config->resolvePath($outputDir);
+                $outputFormat = $set->getValueValidate('outputFormat', array('flatfile', 'serialize'), 'flatfile');
+
+                $oldMetadataSrc = SimpleSAML\Metadata\MetaDataStorageSource::getSource(array(
+                    'type' => $outputFormat,
+                    'directory' => $outputDir,
+                ));
+                require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/modules/metarefresh/lib/MetaLoader.php');
+                $metaloader = new SimpleSAML\Module\metarefresh\MetaLoader($expire, $stateFile, $oldMetadataSrc);
+
+                # Get global blacklist, whitelist and caching info
+                $blacklist = $mconfig->getArray('blacklist', array());
+                $whitelist = $mconfig->getArray('whitelist', array());
+                $conditionalGET = $mconfig->getBoolean('conditionalGET', FALSE);
+
+                // get global type filters
+                $available_types = array(
+                    'saml20-idp-remote',
+                    'saml20-sp-remote',
+                    'shib13-idp-remote',
+                    'shib13-sp-remote',
+                    'attributeauthority-remote'
+                );
+                $set_types = $set->getArrayize('types', $available_types);
+
+                foreach($set->getArray('sources') AS $source) {
+
+                    // filter metadata by type of entity
+                    if (isset($source['types'])) {
+                        $metaloader->setTypes($source['types']);
+                    }
+                    else {
+                        $metaloader->setTypes($set_types);
+                    }
+
+                    # Merge global and src specific blacklists
+                    if (isset($source['blacklist'])) {
+                        $source['blacklist'] = array_unique(array_merge($source['blacklist'], $blacklist));
+                    }
+                    else {
+                        $source['blacklist'] = $blacklist;
+                    }
+
+                    # Merge global and src specific whitelists
+                    if (isset($source['whitelist'])) {
+                        $source['whitelist'] = array_unique(array_merge($source['whitelist'], $whitelist));
+                    }
+                    else {
+                        $source['whitelist'] = $whitelist;
+                    }
+
+                    # Let src specific conditionalGET override global one
+                    if (!isset($source['conditionalGET'])) {
+                        $source['conditionalGET'] = $conditionalGET;
+                    }
+
+                    SimpleSAML\Logger::debug('cron [metarefresh]: In set [' . $setkey . '] loading source ['  . $source['src'] . ']');
+                    $metaloader->loadSource($source);
+                }
+
+                // Write state information back to disk
+                @$metaloader->writeState();
+
+                switch ($outputFormat) {
+                    case 'flatfile':
+                        $metaloader->writeMetadataFiles($outputDir);
+                        break;
+                    case 'serialize':
+                        $metaloader->writeMetadataSerialize($outputDir);
+                        break;
+                }
+
+                if ($set->hasValue('arp')) {
+                    $arpconfig = SimpleSAML\Configuration::loadFromArray($set->getValue('arp'));
+                    $metaloader->writeARPfile($arpconfig);
+                }
+            }
+            if ($logging_output = SimpleSAML\Logger::getCapturedLog()) {
+                $fingerprint_fail_string = 'could not verify signature using fingerprint';
+                $fails = array_filter($logging_output, function($el) use ($fingerprint_fail_string) {
+                    return (strpos($el, $fingerprint_fail_string) !== false);
+                });
+                if ($fails) {
+                    $message = "Unable to verify fingerprint for the following:\n" . implode("\n", $fails);
+                    throw new Exception($message);
+                }
+            }
+            return true; // We were able to update successfully
+        }
+        catch (Exception $e) {
+            SimpleSAML\Logger::info('Mahara [metarefresh]: Error during metadata refresh ' . $e->getMessage());
+            require_once('activity.php');
+            // Find the site admins
+            $admins = get_site_admins();
+            $adminids = array();
+            foreach ($admins as $admin) {
+                $lang = get_user_language($admin->id);
+                // Send a notification about the metadata refresh fail
+                $message = new stdClass();
+                $message->users = array($admin->id);
+                $message->subject = get_string_from_language($lang, 'metadatarefreshfailed_subject', 'auth.saml');
+                $message->message = get_string_from_language($lang, 'metadatarefreshfailed_body', 'auth.saml', $e->getMessage());
+                activity_occurred('maharamessage', $message);
+            }
+            return false; // Fetch failed
+        }
+    }
+}

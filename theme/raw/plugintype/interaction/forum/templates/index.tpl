@@ -1,0 +1,117 @@
+{include file="header.tpl"}
+
+{if $admin}
+<div id="forumbtn" class="btn-top-right btn-group btn-group-top">
+    <button class="btn btn-secondary" type="submit" data-url="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum">
+        <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
+        {str tag="newforum" section=interaction.forum}
+    </button>
+</div>
+{/if}
+
+<div class="view-container">
+    {if $forums}
+    <div id="view-forum" class="table-responsive">
+        <table id="forums-list" class="table fullwidth table-padded">
+            <thead>
+                <tr>
+                    <th>
+                        {str tag="name" section="interaction.forum"}
+                    </th>
+                    <th class="text-center">
+                        {str tag="Topics" section="interaction.forum"}
+                    </th>
+                    <th class="subscribeth">
+                        <span class="accessible-hidden visually-hidden">
+                            {str tag=Subscribe section=interaction.forum}
+                        </span>
+                    </th>
+                    <th class="control-buttons">
+                        <span class="accessible-hidden visually-hidden">
+                            {str tag=edit}
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+        <tbody>
+        {foreach from=$forums item=forum}
+
+            <tr>
+                <td>
+                    <h2 class="title">
+                        <a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">
+                            {$forum->title}
+                        </a>
+
+                        {if $publicgroup}
+                        <a href="{$forum->feedlink}">
+                           <span class="icon-rss icon icon-sm right mahara-rss-icon" role="presentation" aria-hidden="true"></span>
+                        </a>
+                        {/if}
+                    </h2>
+                    <div class="detail text-small">
+                        {$forum->description|str_shorten_html:1000:true|safe}
+                    </div>
+
+                    {if $forum->moderators}
+                    <div class="text-small">
+                        <strong>
+                            {str tag="Moderators" section="interaction.forum"}:
+                        </strong>
+
+                        {foreach from=$forum->moderators item=mod}
+                        <a href="{profile_url($mod)}" class="user-icon user-icon-20 user-icon-inline">
+                            <img src="{profile_icon_url user=$mod maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$mod|display_default_name}">
+                        </a>
+
+                        <a href="{profile_url($mod)}" class="moderator">
+                            {$mod|display_name:null:true}
+                        </a>
+                        {/foreach}
+                    </div>
+                    {/if}
+                </td>
+
+                <td class="text-center">
+                    {$forum->topiccount}
+                </td>
+
+                <td class="subscribetd">
+                    {if $forum->subscribe}
+                    {$forum->subscribe|safe}
+                    {/if}
+                </td>
+                {if $admin}
+                <td class="right control-buttons">
+                    <div class="btn-group">
+                        <button class="btn btn-secondary btn-sm" type="submit" data-url="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index">
+                            <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
+                            <span class="visually-hidden">{str tag=editspecific arg1=$forum->title}</span>
+                        </button>
+                        <button class="btn btn-secondary btn-sm" type="submit" data-url="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index">
+                            <span class="text-danger icon icon-trash-alt" role="presentation" aria-hidden="true"></span>
+                            <span class="visually-hidden">{str tag=deletespecific arg1=$forum->title}</span>
+                        </button>
+                    </div>
+                </td>
+                {/if}
+            </tr>
+        {/foreach}
+        <tbody>
+        </table>
+    </div>
+    {else}
+        <p class="no-results">{str tag=noforums section=interaction.forum}</p>
+    {/if}
+    <div class="forummods">
+        <p class="text-small text-inline">
+            {str tag="groupadminlist" section="interaction.forum"}
+        </p>
+        {foreach from=$groupadmins item=groupadmin}
+            <a href="{profile_url($groupadmin)}" class="badge bg-default">
+                <span class="user-icon user-icon-20 user-icon-inline"><img src="{profile_icon_url user=$groupadmin maxheight=20 maxwidth=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}"></span> {$groupadmin|display_name}
+            </a>
+        {/foreach}
+    </div>
+</div>
+{include file="footer.tpl"}

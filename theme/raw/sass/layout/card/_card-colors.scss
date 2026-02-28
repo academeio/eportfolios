@@ -1,0 +1,187 @@
+.card {
+    &.bg-success {
+        border-color: $state-success-border;
+        background-color: $card-bg !important;
+        .card-header {
+            background-color: $state-success-bg;
+            color: $state-success-text;
+        }
+        .card-footer {
+            background-color: scale-color($state-success-bg, $lightness: 70%);
+            color: $state-success-text;
+            &:hover,
+            &:focus {
+                background-color: scale-color($state-success-bg, $lightness: 80%);
+                .icon {
+                    color: $state-success-text;
+                }
+            }
+            .icon {
+                color: $state-success-text;
+            }
+        }
+        .card-footer,
+        .card-body,
+        .card-header,
+        .card-header a {
+            border-color: $state-success-border;
+        }
+        .card-header a,
+        .card-body:not(.no-footer) {
+            border-bottom-width:0;
+        }
+    }
+
+    &.bg-info {
+        border-color: $state-info-border;
+        background-color: $card-bg !important;
+        .card-header {
+            background-color: $state-info-bg;
+            color: $state-info-text;
+        }
+        table {
+            &.table {
+                table-layout: fixed;
+                tr:not(:first-of-type) {
+                    td,
+                    th {
+                        border-top: $table-border-width solid $table-border-color;
+                    }
+                }
+            }
+        }
+        .card-footer {
+            background-color: scale-color($state-info-bg, $lightness: 70%);
+            color: $state-info-text;
+            &:hover,
+            &:focus {
+                background-color: scale-color($state-info-bg, $lightness: 80%);
+                .icon {
+                    color: $state-info-text;
+                }
+            }
+            .icon {
+                color: $state-info-text;
+            }
+        }
+        .card-footer,
+        .card-body,
+        .card-header,
+        .card-header a {
+            border-color: $state-info-border;
+        }
+        .card-header a,
+        .card-body:not(.no-footer) {
+            border-bottom-width:0;
+        }
+    }
+
+    &.bg-warning {
+        border-color: $state-warning-border;
+        background-color: $card-bg !important;
+        .card-header {
+            background-color: $state-warning-bg;
+            color: $state-warning-text;
+        }
+        .card-footer {
+            background-color: scale-color($state-warning-bg, $lightness: 70%);
+            color: $state-warning-link;
+            &:hover,
+            &:focus {
+                background-color: scale-color($state-warning-bg, $lightness: 80%);
+                .icon {
+                    color: $state-warning-link;
+                }
+            }
+            .icon {
+                color: $state-warning-text;
+            }
+        }
+        .card-footer,
+        .card-body,
+        .card-header,
+        .card-header a {
+            border-color: $state-warning-border;
+        }
+        .card-header a,
+        .card-body:not(.no-footer) {
+            border-bottom-width:0;
+        }
+        a:not(.btn) {
+            color: $state-warning-link;
+            &:hover,
+            &:focus {
+              text-decoration-color: $state-warning-link;
+            }
+        }
+    }
+
+    &.bg-danger {
+        border-color: $state-danger-border;
+        background-color: $card-bg !important;
+        .card-header {
+            background-color: $state-danger-bg;
+            color: $state-danger-text;
+        }
+        .card-footer {
+            background-color: scale-color($state-danger-bg, $lightness: 70%);
+            color: $state-danger-text;
+            &:hover,
+            &:focus {
+                background-color: scale-color($state-danger-bg, $lightness: 80%);
+                .icon {
+                    color: $state-danger-text;
+                }
+            }
+            .icon {
+                color: $state-danger-text;
+            }
+        }
+        .card-footer,
+        .card-body,
+        .card-header,
+        .card-header a {
+            border-color: $state-danger-border;
+        }
+        .card-header a,
+        .card-body:not(.no-footer) {
+            border-bottom-width:0;
+        }
+    }
+
+    &.bg-submitted {
+        border-color: $state-submitted-border;
+        background-color: $card-bg !important;
+        .card-header {
+            background-color: $state-submitted-bg;
+            color: $state-submitted-text;
+        }
+        .card-body {
+            background-color: $state-submitted-bg;
+        }
+        .card-footer {
+            background-color: $card-footer-bg;
+            color: $state-submitted-text;
+            &:hover,
+            &:focus {
+                background-color: scale-color($state-submitted-bg, $lightness: 80%);
+                .icon {
+                    color: $state-submitted-text;
+                }
+            }
+            .icon {
+                color: $state-submitted-text;
+            }
+        }
+        .card-footer,
+        .card-body,
+        .card-header,
+        .card-header a {
+            border-color: $state-submitted-border;
+        }
+        .card-header a,
+        .card-body:not(.no-footer) {
+            border-bottom-width:0;
+        }
+    }
+}

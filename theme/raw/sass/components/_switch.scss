@@ -1,0 +1,164 @@
+@use "sass:math";
+
+$transition: 0.1s ease-in 0s;
+$height: 2rem; // 32px;
+$indicator-horizontal-margin: 0.625rem; // 10px;
+$indicator-vertical-margin: 0.25rem; // 4px;
+$indicator-size: 0.625rem; // 10px;
+$label-font-size: $font-size-base;
+
+$indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
+
+.switchbox.form-group {
+    > label {
+        vertical-align: bottom;
+        line-height: $height + ($indicator-vertical-margin * 2);
+    }
+}
+
+
+.form-switch {
+    display: inline-block;
+    .switch {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        position: relative;
+        overflow: hidden;
+        width: 3.75rem; // 60px; // Overridden with inline styles
+        input {
+            @extend .visually-hidden;
+
+            &:focus {
+                + .switch-label {
+                   @include tab-focus;
+                   outline: medium solid $input-focus-border-color;
+                   .switch-inner:before,
+                   .switch-inner:after {
+                       background-color: scale-color($secondary, $lightness: -5.5%);
+                   }
+                }
+            }
+        }
+    }
+
+    .switch-label {
+        border-radius: $input-border-radius;
+        display: block;
+        overflow: hidden;
+        cursor: pointer;
+        padding: 0;
+        min-width: 0;
+        margin: 0;
+
+        &:hover {
+            .switch-inner:before,
+            .switch-inner:after {
+                background-color: scale-color($secondary, $lightness: -5.5%);
+           }
+        }
+    }
+
+    input:disabled + .switch-label {
+        opacity: 0.6;
+        cursor: default;
+
+        &:hover {
+            .switch-inner:before,
+            .switch-inner:after {
+                background-color: $secondary;
+           }
+        }
+    }
+
+    .switch-inner {
+        @include transition(margin $transition);
+        display: block;
+        width: 200%;
+        margin-left: -100%;
+        line-height: $height;
+
+        &:before,
+        &:after {
+            @include box-sizing(border-box);
+            @include box-shadow(none);
+            content: '';
+            background-color: $btn-secondary-bg;
+            border: $btn-border-width solid $btn-secondary-border;
+            border-radius: $input-border-radius;
+            display: block;
+            float: left;
+            width: 50%;
+            height: $height;
+            padding: 0;
+        }
+    }
+
+    input:checked + .switch-label .switch-inner {
+        margin-left: 0;
+    }
+
+
+    .switch-indicator {
+        @include transition(all $transition);
+        border-radius: 50%;
+        display: block;
+        width: $indicator-size;
+        height: $indicator-size;
+        margin: -(math.div($indicator-size, 2)) $indicator-horizontal-margin 0;
+        margin-right: $indicator-horizontal-margin + $indicator-total-width;
+        background: rgba($danger, 0.8);
+        border: 1px solid rgba(scale-color($danger, $lightness: -8.5%), 0.8);
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 100%;
+        transform: none;
+    }
+
+    input:checked + .switch-label .switch-indicator {
+        left: 100%;
+        right: 0;
+        transform: translateX(#{-$indicator-total-width});
+        background-color: rgba($success, 0.8);
+        border: 1px solid rgba(scale-color($success, $lightness: -25%), 0.8);
+
+        ~ .off {
+            transform: translateX(#{-$indicator-total-width}) translateX(100%);
+        }
+
+        ~ .on {
+            transform: none;
+        }
+    }
+
+    .state-label {
+        @include transition(all $transition);
+        white-space: nowrap;
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: $height;
+        width: 100%;
+        padding: $indicator-vertical-margin $indicator-horizontal-margin;
+        font-size: $label-font-size;
+        line-height: 1.5;
+        backface-visibility: hidden;
+        &.off {
+            padding-left: $indicator-total-width;
+            transform: none;
+        }
+
+        &.on {
+            padding-right: $indicator-total-width;
+            transform: translateX(#{$indicator-total-width}) translateX(-100%);
+        }
+    }
+}
+
+// Plan tasks in table form switches wrong width
+.planscontrols .form-switch .state-label {
+  width: auto;
+}

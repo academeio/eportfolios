@@ -1,0 +1,78 @@
+@use "sass:math";
+
+// Display objects in cards differently
+.card-body {
+    ul:not(.profile-info) {
+        font-size: $font-size-sm;
+        &:not(.list-unstyled):not(.unstyled):not(.select2-selection__rendered) {
+            padding-left: $spacing-xl;
+            margin: 0 0 $spacing-xl;
+            &.select2-choices {
+                margin-bottom: 0;
+            }
+        }
+        &.fieldslist {
+          font-size: $font-size-base;
+        }
+    }
+    .sidebar & .form-group,
+    .login-card & .form-group {
+        padding: $spacing-base 0;
+    }
+    .form-group.login{
+        padding: 0;
+        .form-group {
+            padding: 0;
+        }
+    }
+    > .card-footer,
+    form .card-footer {
+        clear: both;
+        margin-top: $spacing-lg;
+        margin-right: -$spacing-lg;
+        margin-bottom: -$spacing-lg;
+        margin-left: -$spacing-lg;
+    }
+    &.flush {
+        padding: $spacing-lg 0 0 0;
+    }
+
+    // images caption
+    &.imageblock .detail {
+      margin-top: $spacing-base;
+      text-align: center;
+      font-size: .875rem;
+      color: $theme-text-midtone-color;
+    }
+}
+
+.sidebar {
+    .card {
+        .list-group .list-group-item-heading {
+            font-size: $font-size-base;
+            margin-bottom: math.div($list-group-item-padding-y, 2);
+        }
+
+        a {
+            text-decoration: none;
+            &:hover,
+            &:focus {
+                text-decoration: underline;
+            }
+        }
+    }
+    .progressbar {
+        .progress-container {
+            padding-top: 0;
+        }
+        .list-group {
+            margin-top: $spacing-lg;
+        }
+    }
+
+    #sb-onlineusers {
+        .list-group {
+            border-radius: 0;
+        }
+    }
+}

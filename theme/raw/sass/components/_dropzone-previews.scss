@@ -1,0 +1,53 @@
+.dropzone-previews {
+    border-radius: $border-radius;
+    clear: both;
+    padding: 2.5rem; // 40px;
+    background-color: $form-bg;
+    border: 2px dashed $border-color;
+
+    &.dropzone-small {
+        padding: $spacing-base;
+        margin-bottom: $spacing-base;
+        .dz-message {
+            font-size: $font-size-base;
+        }
+    }
+    .dz-message {
+        text-align: center;
+        font-size: $font-size-lg;
+        color: $theme-text-midtone-color;
+    }
+    .dz-preview {
+        display: none;
+    }
+
+    .fileupload-container.col-md-12 & {
+        @include media-breakpoint-up(md) {
+            clear: none;
+            float: right;
+            width: 50%;
+            &.full-width {
+                width:100%;
+            }
+        }
+    }
+}
+
+.block-placeholder,
+.highlight {
+    border-radius: $border-radius;
+    width: 100%;
+    background-color: $state-warning-bg;
+    border: 2px dashed scale-color( $state-warning-border, $lightness: -9.50%);
+}
+
+// Extending dropzone-previews for adding artefact to a page
+.block-placeholder {
+    @extend .dropzone-previews;
+    padding: $spacing-xl;
+    margin-bottom: $spacing-xl;
+}
+
+.highlight {
+    margin: 0;
+}

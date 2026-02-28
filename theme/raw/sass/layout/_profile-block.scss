@@ -1,0 +1,50 @@
+.profile-block.card-header {
+    padding:0;
+    min-height: 5.375rem;
+
+    a.username {
+        padding: $spacing-base 5.625rem $spacing-base $spacing-lg; // 10px 90px 10px 15px;
+        display: block;
+        word-break: break-word;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+    }
+
+    a.user-icon {
+        z-index: 5;
+        position: absolute;
+        right: $spacing-base;
+        top: $spacing-base;
+        padding: $thumbnail-padding;
+
+        &:hover,
+        &:focus {
+          background: $thumbnail-bg;
+        }
+    }
+
+    + .list-group {
+        min-height: 2.625rem; // 42px;
+    }
+}
+
+// Sidebar notification item styles
+.list-group-item-profile-notification {
+    font-size: $font-size-sm;
+
+    &:first-child {
+        padding-right: 4.5rem; // 72px; // for the usericon
+    }
+}
+
+.loginas {
+    padding-right: 3.75rem; // 60px;
+}
+
+// account settings user block has overlap of text
+body.admin .user-card .profile-block.card-header {
+    min-height: 5.625rem; // 90px;
+}

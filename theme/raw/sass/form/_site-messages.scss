@@ -1,0 +1,115 @@
+.site-messages {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+
+    .site-message.alert {
+        margin-bottom: 0;
+        border-radius: 0;
+        padding: 0.375rem $spacing-xl; // ~ 6px 20px
+        border: 0;
+        max-height: $site-message-height;
+        overflow-x: hidden;
+
+        // take away default alert icon so it can be aligned with different break points
+        &:before {
+            display: none;
+        }
+        // puts the alert icons into the container with break points
+        .container:before {
+            @include fonttype(solid);
+            position: relative;
+            font-size: $font-size-base * 1.25;
+            line-height: 1.5;
+            padding-right: $spacing-sm;
+        }
+        &.alert-success .container:before {
+            content: fa-content($fa-var-check);
+            color: scale-color($success, $lightness: -30%);
+        }
+        &.alert-info .container:before {
+            content: fa-content($fa-var-info-circle);
+            color: scale-color($info, $lightness: -30%);
+        }
+        &.alert-warning .container:before {
+            content: fa-content($fa-var-exclamation-triangle);
+            color: scale-color($warning, $lightness: -40%);
+        }
+        &.alert-danger .container:before {
+            content: fa-content($fa-var-times);
+            color: scale-color($danger, $lightness: -30%);
+        }
+    }
+    @include media-breakpoint-down(md) {
+        display: none;
+    }
+
+    ~ .header {
+        top: $site-message-height;    //for one message
+        + .main-nav {
+            margin-top: $site-message-height;    //for one message
+        }
+    }
+}
+
+
+//adjust header and fixed elements for sitemessages
+@for $i from 1 through 5 {
+    .header.message-count-#{$i} {
+        top: $site-message-height * $i;
+
+        @include media-breakpoint-down(md) {
+            top: 0;
+        }
+
+        ~ .container {
+            .toolbar-affix.affix {
+                @include media-breakpoint-up(md) {
+                    margin-top: $navbar-height + ($i * $site-message-height);
+                }
+            }
+        }
+
+        + .main-content {
+            @include media-breakpoint-up(md) {
+                margin-top: $navbar-height + ($i * $site-message-height);
+            }
+        }
+
+        ~ .pageheader {
+            @include media-breakpoint-up(md) {
+                margin-top: $navbar-height + ($i * $site-message-height);
+            }
+        }
+    }
+}
+
+.no-site-messages {
+    top: 0;
+    padding-top: 0;
+
+    + .main-content,
+    + .main-content .toolbar-affix.affix {
+        @include media-breakpoint-up(md) {
+            margin-top: $navbar-height;
+        }
+    }
+
+    ~ .pageheader {
+        @include media-breakpoint-up(md) {
+            margin-top: $navbar-height;
+        }
+    }
+}
+
+.errmsg {
+    color: $theme-color-danger;
+}
+
+.sidebar,
+.login-card {
+    .errmsg {
+        margin-left: 0;
+    }
+}

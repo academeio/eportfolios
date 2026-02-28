@@ -1,0 +1,123 @@
+// Core variables and mixins
+
+// Libraries (Please, do not amend content of these folders)
+@import "../lib/font-awesome/fontawesome";
+@import "../lib/select2/core";
+@import "../lib/datatables";
+
+@import "mixins";
+@import "classes"; // Custom utility classes
+
+@import "../typography/fonts";
+@import "../typography/typography";
+@import "../typography/icons";
+@import "../typography/tables";
+@import "../typography/text";
+
+
+// General customisation and component files go here...
+@import "../layout/layout";
+@import "../layout/col-collapse";
+@import "../layout/footer";
+@import "../layout/header";
+@import "../layout/profile-block";
+@import "../layout/block-comments-details-header";
+@import "../layout/gridlayout";
+
+// cards are a very commonly used layout component
+@import "../layout/card/card";
+@import "../layout/card/card-body";
+@import "../layout/card/card-collapse"; // for collapsible cards and collapsible fieldsets
+@import "../layout/card/card-control";
+@import "../layout/card/card-footer";
+@import "../layout/card/card-form";
+@import "../layout/card/card-half";
+@import "../layout/card/card-quarter";
+@import "../layout/card/card-header";
+@import "../layout/card/card-items"; // groups of cards
+@import "../layout/card/card-secondary";
+@import "../layout/card/card-colors";
+
+// Navigation
+@import "../layout/nav/main-nav";
+@import "../layout/nav/nav-tabs";
+@import "../layout/nav/navbar";
+@import "../layout/nav/tabs";
+
+
+// Forms
+@import "../form/alert";
+@import "../form/form";
+@import "../form/form-group";
+@import "../form/input-group";
+@import "../form/site-messages";
+@import "../form/dropdown-group";
+@import "../form/dropdown";
+
+
+// Components - small reusable design elements
+@import "../components/arrow-bar";
+@import "../components/artefactchooser";
+@import "../components/btn";
+@import "../components/btn-group";
+@import "../components/carousel";
+@import "../components/contextual-help";
+@import "../components/cells";
+@import "../components/custom-dropdown";
+@import "../components/dropzone-previews";
+@import "../components/indicator";
+@import "../components/label";
+@import "../components/link-thumb"; // text displayed as a thumbnail (cf. admin cookie consent directives)
+@import "../components/list-group";
+@import "../components/loading-inner";
+@import "../components/modal";
+@import "../components/pagination";
+@import "../components/switch";
+@import "../components/toggles";
+@import "../components/tags";
+@import "../components/user-icon";
+@import "../components/framework"; // For the framework matrix
+@import "../components/datepicker";
+@import "../components/progresscompletion";
+
+
+// Feature related sass. We avoid this where we can in favour of reusable components
+@import "../features/collection-navigation";
+@import "../features/comment";
+@import "../features/dashboard-widget";
+@import "../features/filebrowser";
+@import "../features/forum-post";
+@import "../features/manage-collection";
+@import "../features/message-thread";
+@import "../features/notification"; // email style notification cards
+@import "../features/option-alt";
+@import "../features/skiplink";
+@import "../features/user-pages";
+@import "../features/plan-task";
+@import "../features/timeline";
+@import "../features/coverimage-widget";
+
+// Plugin sass
+@import "../plugin/artefact/resume";
+@import "../plugin/blocktype/externalfeed";
+@import "../plugin/blocktype/externalvideo";
+@import "../plugin/blocktype/openbadgedisplayer";
+@import "../plugin/blocktype/internalmedia";
+@import "../plugin/blocktype/verification";
+@import "../plugin/module/lti_advantage/deeplinkportfoliolist";
+
+// Supporting sass for library code
+@import "../lib/meter.scss"; // progress bar (old/ported)
+@import "../lib/mahara-select2";
+@import "../lib/star";
+@import "../lib/tinymce";
+@import "../lib/draggable";
+@import "../lib/graph";
+@import "../lib/elasticsearch";
+@import "../lib/print";
+@import "../lib/cookieconsent";
+@import "../lib/gridstack";
+
+// Keep these files last to override all other style sheets
+@import "../custom";
+@import "../shame";

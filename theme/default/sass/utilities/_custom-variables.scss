@@ -1,0 +1,95 @@
+// Custom component variables (non-bootstrap components)
+
+//Arrow component variables
+$arrow-color:                               scale-color($theme-accent-color, $lightness: 50%);
+$arrow-bar-bg:                              scale-color($theme-accent-color, $lightness: 70%);
+$arrow-text-color:                          $gray-700;
+$arrow-link-color:                          scale-color($theme-accent-color, $lightness: -20%);
+$arrow-link-hover-color:                    scale-color($theme-accent-color, $lightness: -10%);
+$arrow-link-active-color:                   $gray-700;
+$arrow-link-background-color:               $white;
+
+
+// color for the secondary title in sections (cf. groups)
+$section-heading-color:                     #999;
+$admin-title-color:                         $theme-primary-color;
+$admin-title-bg:                            $theme-primary-color;
+
+$dashboard-widget-border-radius:            50%;
+$dashboard-widget-bg:                       $theme-primary-color;
+$dashboard-widget-hover-bg:                 scale-color($theme-primary-color, $lightness: -20%);
+$dashboard-widget-title-color:              $white;
+$dashboard-widget-circle-bg:                transparent;
+$dashboard-widget-cirlce-icon-color:        scale-color($theme-primary-color, $lightness: 60%);
+
+$help-icon-color:                           #5b8fc8;
+
+// Portfolios page header
+$pageheader-bg:                             #f0f5ea;
+
+// Site footer background colors
+$site-footer-bg:                            scale-color($theme-secondary-color, $lightness: 70%);
+$site-footer-color:                         $theme-secondary-color;
+$site-footer-hover-color:                   $theme-secondary-color;
+$site-footer-hover-bg:                      transparent;
+
+// LEGACY BOOTSTRAP 3 VARIABLES
+
+// Site header
+$navbar-default-bg:                         $white;
+$navbar-default-border:                     transparent;
+
+// Navbar toggle
+$navbar-toggle-color:                       $theme-primary-color;
+$navbar-toggle-bg:                          $white;
+$navbar-toggle-hover-color:                 $theme-primary-color;
+$navbar-toggle-hover-bg:                    scale-color($theme-primary-color, $lightness: 90%);
+$navbar-toggle-active-color:                $theme-primary-color;
+$navbar-toggle-active-bg:                   scale-color($theme-primary-color, $lightness: 90%);
+
+// Navbar menu
+$navbar-default-link-border:                scale-color($theme-primary-color, $lightness: 5%);
+$navbar-default-link-color:                 $white;
+$navbar-default-link-hover-color:           $white;
+$navbar-default-link-bg:                    $theme-primary-color;
+$navbar-default-link-hover-bg:              scale-color($theme-primary-color, $lightness: 6%);
+$navbar-default-active-color:               $white;
+$navbar-default-active-bg:                  scale-color($theme-primary-color, $lightness: -30%);
+
+// Navbar menus children
+$navbar-inverse-bg:                         scale-color($theme-primary-color, $lightness: 10%);
+$navbar-inverse-link-color:                 $white;
+$navbar-inverse-link-hover-color:           $white;
+$navbar-inverse-link-hover-bg:              scale-color($theme-primary-color, $lightness: 15%);
+$navbar-inverse-link-active-color:          $white;
+$navbar-inverse-link-active-bg:             scale-color($theme-primary-color, $lightness: 10%);
+
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               $white;
+$navbar-inverse-toggle-bg:                  transparent;
+$navbar-inverse-toggle-hover-color:         $white;
+$navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg;
+$navbar-inverse-toggle-active-color:        $navbar-inverse-link-active-color;
+$navbar-inverse-toggle-active-bg:           $navbar-inverse-bg;
+
+// Buttons
+$btn-font-family:                           $font-family-base;
+$btn-secondary-color:                       $theme-text-color;
+$btn-secondary-bg:                          $white;
+$btn-secondary-border:                      $gray-200;
+
+$btn-primary-color:                         $white;
+$btn-primary-bg:                            $theme-primary-color;
+$btn-primary-border:                        $theme-primary-color;
+
+// cardss
+$card-border-color:                         #d9d9d9;
+$card-header-bg:                            $white;
+$card-header-color:                         $link-color;
+$card-footer-bg:                            scale-color($theme-primary-color, $lightness: 90%);
+
+$card-secondary-border-color:               scale-color($theme-primary-color, $lightness: 70%);
+
+// Collapse/expand indicator
+$collapse-indicator-color:                  scale-color($theme-primary-color, $lightness: 16%);
+$collapse-indicator-hover-color:            scale-color($theme-primary-color, $lightness: -16%);

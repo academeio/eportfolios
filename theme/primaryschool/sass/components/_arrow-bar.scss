@@ -1,0 +1,14 @@
+.arrow-bar {
+    // to theme the Résumé nav and Groups nav green
+    &.resume,
+    &.group {
+        background-color: scale-color($arrow-alt-color, $lightness: -10%);
+
+        .arrow {
+            background-color: $arrow-alt-color;
+            &:after {
+                border-left-color: $arrow-alt-color;
+            }
+        }
+    }
+}

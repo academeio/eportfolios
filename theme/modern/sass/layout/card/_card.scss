@@ -1,0 +1,10 @@
+.sidebar {
+    .card {
+        border-color: $theme-secondary-color;
+    }
+}
+.card.bg-warning {
+    .card-header a {
+        border-width: 0;
+    }
+}

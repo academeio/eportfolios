@@ -1,0 +1,263 @@
+@use "sass:math";
+
+$logged-in-height: 13.75rem; // 220px
+$logged-in-height-tablet: 12.5rem; // 200px;
+$logged-in-height-phone: 7.5rem; // 120px;
+
+.dashboard-widget-container {
+
+    .thumbnail-widget {
+        position: relative;
+        display: inline-block;
+        margin-bottom: $spacing-base;
+        margin-left: 0;
+        vertical-align: top;
+        float:left;
+        width: math.div(10, 4) * 10%;
+        padding: 0;
+
+        text-decoration: none;
+        height: $logged-in-height;
+        overflow:hidden;
+
+        @include media-breakpoint-between (sm, xl) {
+            width: math.div(10, 3.7) * 10%;
+            border-left: 0;
+            height: $logged-in-height-tablet;
+        }
+
+        @include media-breakpoint-down(md) {
+            width: math.div(10, 3.1) * 10%;
+            border-left: 0;
+            height: auto;
+            overflow: visible;
+        }
+
+        .widget {
+            background-color: $theme-accent-color-two;
+            border-left: 10px solid $white;
+            height: $logged-in-height;
+
+            @include media-breakpoint-between (sm, xl) {
+                height: $logged-in-height-tablet;
+            }
+
+            @include media-breakpoint-down(md) {
+                height: $logged-in-height-phone;
+            }
+
+            .puzzle {
+                background-color: $theme-accent-color;
+                border: 10px solid $white;
+                border-left: 0;
+                width: 50px;
+                height: 80px;
+                -moz-border-radius: 30px 120px 120px 30px;
+                -webkit-border-radius: 30px 120px 120px 30px;
+                border-radius: 30px 120px 120px 30px;
+                display: block;
+                position: relative;
+                left: -$spacing-base;
+                top: 30%;
+
+                @include media-breakpoint-between (sm, xl) {
+                    width: 40px;
+                    height: 60px;
+                    -moz-border-radius: 20px 100px 100px 20px;
+                    -webkit-border-radius: 20px 100px 100px 20px;
+                    border-radius: 20px 100px 100px 20px;
+                }
+
+                @include media-breakpoint-down(md) {
+                    display: none;
+                }
+            }
+        }
+
+        &.first {
+            .widget {
+                background-color: $theme-accent-color;
+
+                .puzzle {
+                    background-color: $white;
+                    border: 10px solid $white;
+                    border-left: 0;
+                }
+            }
+        }
+
+        &.last {
+            .widget {
+                background-color: $theme-secondary-color;
+
+                .puzzle {
+                    background-color: $theme-accent-color-two;
+                    border: 10px solid $white;
+                    border-left: 0;
+                }
+            }
+        }
+
+        .widget-heading {
+            padding: $spacing-base $spacing-lg;
+            height: $logged-in-height;
+            background-color: transparent;
+            position: relative;
+            top: -80px;
+            text-align: center;
+
+            @include media-breakpoint-between (sm, xl) {
+                height: $logged-in-height-tablet;
+                top: -60px;
+                padding: $spacing-base $spacing-lg;
+            }
+
+            @include media-breakpoint-down(md) {
+                height: $logged-in-height-phone;
+                top: 0;
+                padding: $spacing-sm;
+            }
+
+            h2 {
+                font-family: 'Shadows Into Light Two', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-weight: $font-weight-normal;
+                font-size: 1.875rem; // 30px;
+                color: $white;
+
+                @include media-breakpoint-between (sm, xl) {
+                    font-size: 2rem; // 32px;
+                    margin: 0;
+                }
+
+                @include media-breakpoint-down(md) {
+                    font-size: 1.375rem; // 22px;
+                    margin: 0;
+                }
+            }
+
+            .pict {
+                margin: $spacing-sm 0 $spacing-sm 1.5625rem; // 5px 0 5px 25px;
+                text-align: center;
+
+                img {
+                    max-width: 100%;
+
+                    @include media-breakpoint-down(md) {
+                        display: none;
+                    }
+                }
+            }
+
+            p {
+                margin: 0;
+                font-size: $font-size-sm;
+                color: $white;
+
+                @include media-breakpoint-down(md) {
+                    margin: 0;
+                    line-height: 1.1;
+                }
+            }
+
+            a {
+                color: $white;
+            }
+        }
+
+        &.logged-in {
+            &:hover,
+            &:focus {
+                .widget-heading {
+                    background-color: $theme-primary-color;
+                }
+            }
+        }
+    }
+
+    .penciltip {
+        position: relative;
+        display: inline-block;
+        height: $logged-in-height;
+        border-top: 90px solid transparent;
+        border-left: 100px solid #fcdcb9;
+        border-bottom: 90px solid transparent;
+        vertical-align: top;
+        margin-bottom: $spacing-base;
+        width: 125px;
+
+        @include media-breakpoint-between (sm, xl) {
+            height: $logged-in-height-tablet;
+            width: 100px;
+        }
+
+        @include media-breakpoint-down(md) {
+            display: none;
+        }
+
+        .puzzlewrap {
+            border-left: 10px solid $white;
+            position: relative;
+            height: $logged-in-height;
+            width: 90px;
+            left: -100px;
+            top: -90px;
+
+            @include media-breakpoint-between (sm, xl) {
+                height: $logged-in-height-tablet;
+            }
+        }
+
+        .puzzle {
+            background-color: $theme-secondary-color;
+            border: 10px solid $white;
+            border-left: 0;
+            width: 50px;
+            height: 80px;
+            -moz-border-radius: 30px 120px 120px 30px;
+            -webkit-border-radius: 30px 120px 120px 30px;
+            border-radius: 30px 120px 120px 30px;
+            display: inline-block;
+            position: relative;
+            top: 30%;
+            left: -10px;
+
+            @include media-breakpoint-between (sm, xl) {
+                width: 40px;
+                height: 60px;
+                -moz-border-radius: 20px 100px 100px 20px;
+                -webkit-border-radius: 20px 100px 100px 20px;
+                border-radius: 20px 100px 100px 20px;
+            }
+
+            .pencillead {
+                background-color: $gray-700;
+                width: 25px;
+                height: 40px;
+                -moz-border-radius: 0 50px 50px 0;
+                -webkit-border-radius: 0 50px 50px 0;
+                border-radius: 0 50px 50px 0;
+                display: inline-block;
+                position: relative;
+                left: 100px;
+                top: 14px;
+
+                @include media-breakpoint-between (sm, xl) {
+                    left: 90px;
+                    top: 12px;
+                    width: 20px;
+                    height: 35px;
+                }
+            }
+        }
+    }
+}
+
+.loggedout .dashboard-widget-container {
+    min-height: 350px;
+    @include media-breakpoint-between (sm, xl) {
+        min-height: 320px;
+    }
+    @include media-breakpoint-down(md) {
+        min-height: 0;
+    }
+}

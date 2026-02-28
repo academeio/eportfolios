@@ -1,0 +1,82 @@
+.footer {
+    background-color: $site-footer-bg;
+    .footer-nav {
+        font-size: $font-size-sm;
+
+        @include media-breakpoint-down(md) {
+            float: none !important;
+            text-align: center;
+            display: block;
+            margin-top: $spacing-base;
+        }
+
+        .icon-stack {
+            font-size: $font-size-sm;
+        }
+        .nav-link {
+            color: $site-footer-color;
+            &:hover,
+            &:focus {
+                background-color: $site-footer-hover-bg;
+                color: $site-footer-hover-color;
+            }
+        }
+    }
+
+    .footer-performance-info {
+        font-size: $font-size-sm;
+    }
+    .metadata {
+        color: $site-footer-color;
+        a {
+            color: $site-footer-color;
+            text-decoration: underline;
+        }
+    }
+    .footer-inner {
+        @extend .clearfix;
+        padding-top: $spacing-lg;
+        padding-bottom: $spacing-xxl;
+        .mahara-logo {
+            margin-right: $spacing-xl;
+            @include media-breakpoint-down(md) {
+                float: none !important;
+                text-align: center;
+            }
+        }
+        .mahara-version {
+            padding-top: 0.5rem; // 8px;
+            @include media-breakpoint-down(md) {
+                float: none !important;
+                text-align: center;
+                padding-top: $spacing-xl;
+            }
+        }
+        .site-performace {
+            clear: both;
+            padding-top: $spacing-base;
+        }
+    }
+    &.upgrade-footer {
+        .mahara-logo {
+            @include media-breakpoint-up(md) {
+                float: left;
+            }
+        }
+        .release-info {
+            margin: $spacing-base 0;
+            @include media-breakpoint-up(md) {
+                float: right;
+            }
+        }
+    }
+}
+
+.mahara-logo a {
+    height: 2.3125rem; // 37px;
+    display: inline-block;
+    .mahara-footer-logo {
+        height: 100%;
+        max-width: none;
+    }
+}

@@ -1,0 +1,195 @@
+<?php
+/**
+ * Main library for the import file plugin
+ *
+ * @package    mahara
+ * @subpackage import-file
+ * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
+
+defined('INTERNAL') || die();
+
+require_once('uploadmanager.php');
+
+/**
+ * The PluginImportFile class
+ */
+class PluginImportFile extends PluginImport {
+
+    /**
+     * Manifest
+     * @var mixed
+     */
+    private $manifest;
+    /**
+     * Files
+     * @var mixed
+     */
+    private $files;
+    /**
+     * zipfilesha1
+     * @var mixed
+     */
+    private $zipfilesha1;
+    /**
+     * Artefacts
+     * @var mixed
+     */
+    private $artefacts;
+    /**
+     * Import directory
+     * @var mixed
+     */
+    private $importdir;
+
+    /**
+     * PluginImportFile constructor
+     *
+     * @param  int $id
+     * @param  mixed|null $record
+     */
+    public function __construct($id, $record=null) {
+        parent::__construct($id, $record);
+        $data = $this->get('data');
+        $this->manifest = $data['filesmanifest'];
+        $this->zipfilesha1 = $data['zipfilesha1'];
+    }
+
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'import.file');
+    }
+
+    /**
+     * Validate transported data
+     *
+     * @param  ImporterTransport $transport
+     * @return boolean
+     */
+    public static function validate_transported_data(ImporterTransport $transport) {
+        return true; // nothing to do , we're just importing files to the file artefact plugin
+    }
+
+    /**
+     * Process file import
+     *
+     * @param  int $step
+     */
+    public function process($step = PluginImport::STEP_NON_INTERACTIVE) {
+    //    $this->importertransport->extract_file($this->importertransport->get('mimetype'), $this->zipfilesha1);
+        $this->verify_file_contents();
+        $this->add_artefacts();
+    }
+
+    /**
+     * Verify file contents
+     *
+     * @throws ImportException
+     */
+    public function verify_file_contents() {
+        $uzd = $this->importertransport->get('tempdir') . 'extract/';
+        $includedfiles = get_dir_contents($uzd);
+        $okfiles = array();
+        $badfiles = array();
+        // check what arrived in the directory
+        foreach ($includedfiles as $k => $f) {
+            // @todo penny later we might need this
+            if (is_dir($f)) {
+                $badfiles[] = $f;
+                unset($includedfiles[$k]);
+                continue;
+            }
+            if (get_config('viruschecking')) {
+                if ($errormsg = mahara_clam_scan_file($uzd . $f)) {
+                    throw new ImportException($this, $errormsg);
+                }
+            }
+            $sha1 = sha1_file($uzd . $f);
+            if (array_key_exists($sha1, $this->manifest)) {
+                $tmp = new stdClass();
+                $tmp->sha1 = $sha1;
+                $tmp->wantsfilename = $this->manifest[$sha1]['filename'];
+                $tmp->actualfilename = $f;
+                $okfiles[] = $tmp;
+                unset($includedfiles[$k]);
+                continue;
+            }
+            $badfiles[] = $f;
+            unset($includedfiles[$k]);
+        }
+        $ok_c  = count($okfiles);
+        $bad_c = count($badfiles);
+        $man_c = count($this->manifest);
+        if ($ok_c != $man_c) {
+            throw new ImportException($this, 'Files received did not exactly match what was in the manifest');
+            // @todo penny later - better reporting (missing files, too many files, etc)
+        }
+        $this->files = $okfiles;
+    }
+
+    /**
+     * Add artefacts
+     *
+     * @throws ImportException
+     */
+    public function add_artefacts() {
+        // we're just adding them as files into an 'incoming' directory in the user's file area.
+        safe_require('artefact', 'file');
+        $uzd = $this->importertransport->get('tempdir') . 'extract/';
+        try {
+            $this->importdir = ArtefactTypeFolder::get_folder_id('incoming', get_string('incomingfolderdesc'), null, true, $this->get('usr'));
+        } catch (Exception $e) {
+            throw new ImportException($this, $e->getMessage());
+        }
+        $savedfiles = array(); // to put files into so we can delete them should we encounter an exception
+        foreach ($this->files as $f) {
+            try {
+                $explode_wantsfilename = explode('.', $f->wantsfilename);
+                $data = (object)array(
+                    'title' => $f->wantsfilename,
+                    'oldextension' => end($explode_wantsfilename),
+                    'description' => $f->wantsfilename . ' (' . get_string('importedfrom', 'mahara', $this->get('importertransport')->get_description()) . ')',
+                    'parent' => $this->importdir,
+                    'owner' => $this->get('usr'),
+                    'container' => 0,
+                );
+
+                $id = ArtefactTypeFile::save_file(
+                    $uzd . $f->actualfilename,
+                    $data,
+                    $this->get('usrobj'),
+                    true
+                );
+                if (empty($id)) {
+                    throw new ImportException($this, "Failed to create new artefact for $f->sha1");
+                }
+                $savedfiles[] = $id;
+            }
+            catch (Exception $e) {
+                foreach ($savedfiles as $fileid) {
+                    $tmp = artefact_instance_from_id($fileid);
+                    $tmp->delete();
+                }
+                throw new ImportException($this, 'Failed to create some new artefacts');
+            }
+        }
+        $this->artefacts = $savedfiles;
+    }
+
+    /**
+     * Get returun data: folder, file
+     * Keep track of what files we add and the new folder if any
+     *
+     * @return array
+     */
+    public function get_return_data() {
+        return array('folder' => $this->importdir, 'file' => (count($this->artefacts) == 1) ? $this->artefacts[0] : 0);
+    }
+}

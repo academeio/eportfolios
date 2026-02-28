@@ -1,0 +1,609 @@
+@use "sass:math";
+
+// modifications for list elements such a list of pages, collections
+
+.list-group {
+    a {
+        &.text-success {
+            @extend .text-success;
+        }
+        &.text-link {
+            @extend .text-link;
+        }
+    }
+    .user-card & {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .list-nested {
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-left: -$list-group-item-padding-x;
+        margin-right: -$list-group-item-padding-x;
+        > li > a {
+            padding: math.div($list-group-item-padding-y, 2) $list-group-item-padding-x;
+            display: block;
+            line-height: 1;
+        }
+        small {
+            @extend .text-midtone;
+        }
+    }
+    &.list-group-unbordered {
+        border: 0;
+        > .list-group-item {
+            border: 0;
+            padding: math.div($list-group-item-padding-y, 2) 0; // 5px 0
+        }
+        li {
+            border:0;
+            padding: math.div($list-group-item-padding-y, 2) math.div($list-group-item-padding-x, 2); // 5px 7.5px
+        }
+        .small {
+            padding: 0;
+            a {
+                padding: math.div($list-group-item-padding-y, 2) 0; // 5px 0
+            }
+        }
+    }
+    &.list-group-lite .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+
+    // removes list-group-item first child's border-top when list-item includes block editing header links
+    .block-header:first-child + .list-group-item {
+        border-top-width: 0;
+    }
+
+    // removes card-footer border-top if it comes straight after list-group
+    ~ .card-footer {
+        border-top-width: 0;
+    }
+
+    // adds the first child border-top back
+    &.list-group-top-border {
+        &.clearboth {
+            clear: both;
+        }
+        .list-group-item:first-child {
+            border-top-width: $list-group-border-width;
+        }
+    }
+}
+
+// all sidebar list-groups have header and footer so don't need border-radius and border-bottom
+.sidebar {
+  .card .list-group {
+    border-radius: 0;
+    border-bottom: 0;
+    .list-group-item:last-child {
+      border-radius: 0;
+    }
+  }
+  // except the user card
+  .user-card {
+    .card .list-group {
+      .list-group-item:last-child {
+        border-bottom-left-radius: $list-group-border-radius;
+        border-bottom-right-radius: $list-group-border-radius;
+      }
+    }
+  }
+}
+
+// in default cards the last list-group-item need border-radius so the white background doesn't overlap the card border
+.card .list-group .list-group-item:last-child {
+  border-bottom-left-radius: $list-group-border-radius;
+  border-bottom-right-radius: $list-group-border-radius;
+}
+
+// when block has no block title it needs the top border for lists
+.card-secondary .no-heading {
+    .list-group {
+        .list-group-item {
+            border-top-width: $list-group-border-width;
+        }
+    }
+}
+
+.list-group-item-heading {
+    margin-top: 0;
+    font-size: $h4-font-size; // 24px
+
+    .text-small {
+        font-family: $font-family-base;
+    }
+
+    .notes {
+        color: $theme-text-lighttone-color;
+    }
+
+    .icon {
+      line-height: $headings-line-height;
+    }
+
+    .text-tiny {
+        font-family: $font-family-base;
+        margin-top: $spacing-sm;
+    }
+}
+
+.card-secondary .list-group-item-heading {
+    font-family: $font-family-base !important;
+    margin-top: 0;
+    margin-bottom: 0 !important;
+    font-size: $font-size-lg; // 18px
+    font-weight: $font-weight-normal !important;
+
+    // to make the link look less messy
+    a.collapsible {
+      display: block;
+      margin-right: -$list-group-item-padding-x;
+    }
+}
+
+.list-group-item.draft,
+.list-group-item-warning {
+    background-color: $state-warning-bg;
+    color: $state-warning-text;
+
+    // links but not .btn links
+    a:not(.btn) {
+        color: $state-warning-link;
+        &:hover,
+        &:focus {
+          text-decoration-color: $state-warning-link;
+        }
+    }
+}
+.list-group-item-danger {
+    background: scale-color($danger, $lightness: 90%);
+    color: $theme-text-color;
+    .notes {
+        color: $theme-text-color;
+        background-color: $list-group-disabled-bg;
+        border: $list-group-border-width solid $list-group-border-color;
+        padding: $list-group-item-padding-y $list-group-item-padding-x;
+        font-size: $font-size-sm;
+        border-radius: $list-group-border-radius;
+    }
+}
+.list-group-item-private {
+    background-color: $list-group-disabled-bg;
+    .text-midtone {
+        color: $theme-text-color;
+    }
+}
+
+.list-group-item-link {
+    padding: 0;
+    a {
+        display: block;
+        text-decoration: none;
+        &:hover,
+        &:focus {
+            background: $list-group-hover-bg;
+            text-decoration: none !important;
+        }
+
+        // online users sidebar
+        &.online-user {
+            padding: $list-group-item-padding-y $list-group-item-padding-x;
+        }
+    }
+}
+
+// list-group-item with btn-group
+.list-group-item {
+    border-left-width: 0;
+    border-right-width: 0;
+
+    // default list-group-item has border-top and last child border-bottom
+    // first-child needs to take away border-top
+    &:first-child {
+        border-top-width: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    // last-child needs to take away border-bottom-radius
+    &:last-child {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    &.flush {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    // for list-group-items that has collapsible indicator on right but need left flushed
+    &.flush-collapsible {
+        padding-left: 0;
+        // for when flushed items has an icon on the left that looks odd when flushed
+        .icon.left {
+          padding-left: $spacing-sm; // 5px
+        }
+        .has-attachment {
+          margin-right: -$list-group-item-padding-x;
+        }
+    }
+
+    // blog post buttons
+    .list-group-item-controls {
+        float: none;
+        @include media-breakpoint-up(md) {
+            float: right;
+        }
+    }
+
+    .btn-title {
+        padding-left: 0.3125rem; // 5px
+        @include media-breakpoint-down(lg) {
+            @include visually-hidden;
+        }
+    }
+
+    .usericon-heading {
+        @extend .clearfix;
+
+        .list-group-item-heading {
+            &.middle {
+                margin: $spacing-base 0; // 10px 0
+            }
+        }
+        .list-group-item-heading + .btn {
+            margin-top: $spacing-base; // 10px
+        }
+    }
+
+    &.editrow {
+        border-top: 0;
+    }
+
+    // in search/tag results, the right column needs a slight gap when stacking
+    @include media-breakpoint-down(lg) {
+        .col-md-4,
+        .col-md-5 {
+            margin-top: $spacing-base;
+        }
+    }
+}
+
+.details-before-list-group {
+    margin: 0;
+
+    p {
+        margin: $spacing-base 0; // 10px 0
+    }
+
+    ~ .list-group .list-group-item:first-child,
+    ~ .list-group .block-header:first-child + .list-group-item {
+        border-top-width: $list-group-border-width;
+    }
+    ~ .folder-card .list-group-item:first-child,
+    ~ .folder-card .block-header:first-child + .list-group-item {
+        border-top-width: $list-group-border-width;
+    }
+}
+
+.list-group-item-default {
+    background-color: rgba(scale-color($gray-100, $lightness: 62.75%), 0.5);
+}
+
+.list-group-item-text {
+    background-color: transparent;
+    color: $theme-text-color;
+}
+
+.section-import {
+    .list-group-item .list-group,
+    .fieldset-body .list-group {
+        padding-top: $spacing-base; // 10px
+        .list-group-item:last-child {
+            border-bottom: 0;
+        }
+    }
+    .list-group-item {
+        .list-group-item-heading {
+            float: none;
+        }
+    }
+}
+
+.column-list {
+    -moz-column-count: 4;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 4;
+    -webkit-column-gap: 20px;
+    column-count: 4;
+    column-gap: 20px;
+    @include media-breakpoint-down(lg) {
+        -moz-column-count: 3;
+        -moz-column-gap: 20px;
+        -webkit-column-count: 3;
+        -webkit-column-gap: 20px;
+        column-count: 3;
+        column-gap: 20px;
+    }
+    @include media-breakpoint-down(lg) {
+        -moz-column-count: 2;
+        -moz-column-gap: 20px;
+        -webkit-column-count: 2;
+        -webkit-column-gap: 20px;
+        column-count: 2;
+        column-gap: 20px;
+    }
+}
+
+.column-list li {
+    list-style-position: inside;
+    span.help {
+        font-size: inherit;
+        .icon {
+            font-size: $font-size-base * 1.25; // 20px
+        }
+    }
+}
+
+.showmore {
+    text-align: center;
+    clear: both;
+    width: 100%;
+}
+
+// wall block list-group-item-heading
+.wall .list-group-item-heading {
+    font-size: $font-size-base;
+}
+
+// file folder list-group
+.filedownload-item {
+    .file-icon-link {
+      vertical-align: top;
+      width: 2.125rem;
+      display: inline-block;
+      text-align: center;
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+      .icon.left,
+      .file-icon {
+        margin: 0;
+        padding: 0;
+      }
+    }
+    .list-group-item-heading {
+        font-size: $font-size-base;
+        font-family: $font-family-base;
+        font-weight: $font-weight-normal;
+        margin-bottom: 0;
+        display: inline-block;
+        width: 80%;
+        margin-right: 0;
+
+        a {
+          text-decoration: $link-decoration;;
+          &:hover,
+          &:focus {
+            text-decoration: $link-hover-decoration;
+          }
+        }
+    }
+    a {
+        word-break: break-all;
+        vertical-align: top;
+        &:hover,
+        &:focus {
+          &.inner-link {
+            text-decoration: $link-hover-decoration;
+          }
+        }
+    }
+    .file-description {
+        margin-left: 2.375rem; // 38px
+    }
+    .icon-download {
+      position: relative;
+      top: $spacing-xs;
+    }
+}
+
+// attachment files list-group
+.has-attachment .list-group {
+    .card-header {
+      font-size: $font-size-base;
+      padding: 0;
+      line-height: 1;
+    }
+
+    // when opened first child needs border-top
+    .block-header:first-child + .list-group-item,
+    .list-group-item:first-child {
+        border-top: $list-group-border-width solid $list-group-border-color;
+    }
+
+    // last-child needs to take away border-bottom but bring back border-radius
+    .list-group-item:last-child {
+        border-bottom-width: 0;
+        border-bottom-left-radius: $list-group-border-radius;
+        border-bottom-right-radius: $list-group-border-radius;
+    }
+
+    .list-group-item {
+      .modal_link {
+        vertical-align: top;
+      }
+      .file-icon-link {
+        vertical-align: top;
+        width: 2.125rem;
+        display: inline-block;
+        text-align: center;
+        &:hover,
+        &:focus {
+          text-decoration: none;
+        }
+        .icon.left,
+        .file-icon {
+          margin: 0;
+          padding: 0;
+        }
+      }
+      .title {
+          font-size: $font-size-sm;
+          margin-top: 0;
+          max-width: calc(100% - (2.25rem * 2));
+          display: inline-block;
+          margin-right: 0;
+          word-wrap: anywhere;
+          a {
+            text-decoration: $link-decoration;
+            &:hover,
+            &:focus {
+              text-decoration: $link-hover-decoration;
+            }
+          }
+      }
+      .icon-download {
+        position: relative;
+        top: $spacing-xs;
+      }
+      .file-description {
+          margin-left: 2.375rem; // 38px
+      }
+    }
+}
+
+// overrides comments attachments
+.comment-item .has-attachment .list-group .list-group-item .title {
+    max-width: 100%;
+}
+
+
+// Resume entire block
+.resume-content {
+    padding: 0 0 1rem 0;
+
+    h5.title {
+        font-size: $h5-font-size;
+        margin-top: 2em;
+    }
+}
+
+// Entire resume blocks need to have all list-group-item borders removed but not child list-group ones
+.bt-entireresume,
+.bt-entireresume-editor {
+    .list-group-item.flush {
+        border-width: 0;
+    }
+}
+
+// Resume field blocks need first-child border-top removed
+.bt-resumefield,
+.bt-resumefield-editor {
+    .list-group.list-group-top-border .list-group-item:first-child {
+        border-top-width: 0;
+    }
+}
+
+// Plugins list-group
+.plugins-list-group {
+    h3.list-group-item-heading {
+        margin-bottom: 0;
+    }
+    div.list-group-item-heading {
+        font-size: $font-size-base;
+    }
+}
+
+// lists with list-group-item-heading that don't need margin bottom like peoplelistinfo
+.peoplelistinfo {
+    .list-group-item-heading {
+        margin-bottom: 0;
+    }
+}
+
+
+// content in lists with a usericon needs to be pushed in to align, default is usericon-30
+.push-left-for-usericon {
+    margin-left: 1.875rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2) + $spacing-base;
+}
+// for a 60px usericon like on People page
+.push-left-for-usericon-60 {
+    margin-left: 3.75rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2) + $spacing-base;
+}
+
+// Blog post details
+.post,
+.post-heading {
+    .metadata {
+        margin: $spacing-sm 0; // 5px 0
+    }
+}
+
+// Inbox subject to not wrap responsively
+.inboxblock {
+    .subject {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 85%;
+        white-space: nowrap;
+        vertical-align: bottom;
+        text-decoration: underline;
+    }
+}
+
+// fonts
+#fontlist ul.actionlist {
+  .list-group-item {
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+
+// filedown icon need to be accessible
+.list-group {
+  .download-link {
+    display: block;
+    float: right;
+  }
+}
+
+// remove top border radius from find groups list
+#findgroups {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
+  .list-group-item:last-child {
+    border-bottom-left-radius: $card-inner-border-radius;
+    border-bottom-right-radius: $card-inner-border-radius;
+  }
+}
+
+// tags results list-group first child remove top border and radius
+.tag-results #results {
+  border-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
+  .list-group-item:last-child {
+    border-bottom-left-radius: $card-inner-border-radius;
+    border-bottom-right-radius: $card-inner-border-radius;
+  }
+}
+
+// remove secret url second to last child border-bottom, there's a hidden edit list-group-item under too so need last child too
+.card .list-group.secreturls {
+  .list-group-item:nth-last-child(2),
+  .list-group-item:last-child {
+    border-bottom-left-radius: $card-inner-border-radius;
+    border-bottom-right-radius: $card-inner-border-radius;
+    border-bottom: 0;
+
+  }
+}

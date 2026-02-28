@@ -1,0 +1,33 @@
+
+.card-items {
+    margin-left: -3%; //take away left margin added again by .card
+    margin-bottom: 6.25rem; // 100px; //buffer
+    margin-top: $spacing-xxl;
+    &.card-items-no-margin {
+        margin-bottom: 0;
+    }
+    .card {
+        width: 30.3%;
+        float:left;
+        margin-left:3%;
+        @include media-breakpoint-down(lg) {
+            width: 50 - 3%;
+        }
+        @include media-breakpoint-down(md) {
+            width: 97%;
+        }
+        &.double {
+            width: 30.3% * 2 + 3%; //double width card
+            @include media-breakpoint-down(md) {
+                margin-top: $spacing-xxxl;
+                width: 100% - 3;
+            }
+        }
+        &.card-half {
+            width: 50 - 3%;
+            @include media-breakpoint-down(lg) {
+            width: 97%;
+            }
+        }
+    }
+}

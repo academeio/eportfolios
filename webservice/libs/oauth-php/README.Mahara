@@ -1,0 +1,30 @@
+oauth-php in Mahara
+======================
+
+Website: https://code.google.com/archive/p/oauth-php/
+Version: 175
+
+Notes: This package is not maintained and was last updated in 2010
+       This library is used to provide the OAuth 1.x server side processing.
+
+Changes:
+
+* HTTP Headers should really be case insensitive -
+OAuthRequest.php:
+        // fix tolerance of header capitalisation
+        if (isset($this->headers['authorization'])) {
+            $this->headers['Authorization'] = $this->headers['authorization'];
+        }
+
+* Enable override of storage mechanism for test suite -
+OAuthStore.php:
+    public static function instance ( $store = 'MySQL', $options = array(), $override = false)
+    {
+        if (!OAuthStore::$instance || $override)
+
+* Created Mahara specific storage API -
+OAuthStoreMahara.php
+
+* Modified use of $_SESSION to $SESSION since session is normally closed.
+* Modified oauth-php/signature_method/OAuthSignatureMethod_MD5.php
+ to work with PHP7.3/7.4 replacing {} for [] in arrays

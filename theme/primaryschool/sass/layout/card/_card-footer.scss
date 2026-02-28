@@ -1,0 +1,16 @@
+a.card-footer {
+    color: $theme-primary-color;
+
+    &:hover {
+        color: scale-color($theme-primary-color, $lightness: 5%);
+        .icon {
+            color: scale-color($theme-primary-color, $lightness: 5%);
+        }
+        .icon.float-end { //only apply link colorto right aligned icons
+            color: scale-color($theme-primary-color, $lightness: 5%);
+        }
+    }
+    .icon.float-end {
+        color: $theme-primary-color;
+    }
+}

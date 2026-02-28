@@ -1,0 +1,22 @@
+$font-path: '../../primaryschool/fonts';
+
+$regular: normal, normal;
+
+$ShadowsIntoLighttwo: (
+    shadows-into-light-two-v6-latin-ext_latin-regular: $regular
+);
+
+@each $fontname, $style in $ShadowsIntoLighttwo {
+    @font-face {
+        font-family: 'Shadows Into Light Two';
+        src: url('#{$font-path}/shadowsintolighttwo/#{$fontname}.eot');
+        src: url('#{$font-path}/shadowsintolighttwo/#{$fontname}.eot?#iefix') format('embedded-opentype'),
+             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.woff2') format('woff2'),
+             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.svg##{$fontname}') format('svg'),
+             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.otf') format('opentype'),
+             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.ttf') format('truetype'),
+             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.woff') format('woff');
+        font-weight: nth($style, 1);
+        font-style:  nth($style, 2);
+    }
+}

@@ -1,0 +1,47 @@
+.custom-dropdown {
+    // cf. collection navigation. uses many of the same styles as _dropdown
+    position: relative;
+    text-align: left;
+
+    > ul {
+        // hidden list
+        z-index: 5; // to go over at least .inner-link elements and .btn-group-top
+        position: absolute;
+        top: calc(100% - 1px);
+        width: 100%;
+        list-style-type: none;
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 0;
+        margin: 0;
+        background-color: $body-bg;
+        border: $btn-border-width solid $btn-secondary-border;
+
+        > li > a {
+            // option links
+            display: block;
+            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+            color: $dropdown-link-color;
+
+            &:hover {
+                background-color: $dropdown-link-hover-bg;
+                color: $dropdown-link-hover-color;
+                text-decoration: none;
+            }
+        }
+
+        > li > span {
+            // selected item
+            display: block;
+            background-color: $dropdown-link-active-bg;
+            color: $dropdown-link-active-color;
+            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+            cursor: default;
+        }
+    }
+
+    &.dropdown span.picker  {
+        background-color: $body-bg;
+        cursor: pointer;
+    }
+}

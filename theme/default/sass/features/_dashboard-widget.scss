@@ -1,0 +1,91 @@
+.dashboard-widget-container {
+    text-align: center;
+
+    .thumbnail-widget {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: $spacing-xl;
+        border-radius: $dashboard-widget-border-radius;
+        text-align: center;
+        padding: 0;
+        float: none;
+        width: 15rem; // 240px;
+        height: 15rem; // 240px;
+
+        @include media-breakpoint-down(lg) {
+            width: 9rem; // 144px;
+            height: 9rem; // 144px;
+            margin-right: $spacing-base;
+        }
+
+        &.last {
+            margin-right: 0;
+            @include media-breakpoint-down(lg) {
+                margin-right: 0;
+            }
+        }
+
+        .widget-heading {
+            padding: 0;
+            border-radius: $dashboard-widget-border-radius;
+            background-color: $dashboard-widget-bg;
+            width: 15rem; // 240px;
+            height: 15rem; // 240px;
+
+            @include media-breakpoint-down(lg) {
+                width: 9rem; // 144px;
+                height: 9rem; // 144px;
+            }
+
+            .circle-bg {
+                padding-top: $spacing-xl;
+                margin-right: 0;
+                margin-bottom: 0;
+                float: none;
+                background-color: $dashboard-widget-circle-bg;
+                width: auto;
+                height: auto;
+
+                .icon {
+                    color: $dashboard-widget-cirlce-icon-color;
+                    font-size: 4.5rem; // 72px;
+                    line-height: 1.6;
+
+                    @include media-breakpoint-down(lg) {
+                        font-size: 2.5rem; // 40px;
+                    }
+                }
+            }
+
+            h2 {
+                text-align: center !important;
+                margin: 0 !important;
+                color: $dashboard-widget-title-color !important;
+
+                @include media-breakpoint-down(lg) {
+                    font-size: 1.125rem !important; // 18px;
+                }
+            }
+
+            p {
+                font-size: 0.8125rem; // 13px;
+                text-align: center;
+                margin: $spacing-sm $spacing-xxl;
+                color: $dashboard-widget-title-color;
+
+                @include media-breakpoint-down(lg) {
+                    display: none;
+                }
+            }
+        }
+
+        &.logged-in {
+            &:hover,
+            &:focus {
+                .widget-heading {
+                    background: $dashboard-widget-hover-bg;
+                }
+            }
+        }
+    }
+}

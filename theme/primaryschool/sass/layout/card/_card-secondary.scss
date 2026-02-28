@@ -1,0 +1,12 @@
+.card.card-secondary {
+    border-radius: 0;
+    > .card-header, .card-header-nested {
+        border-radius: 0;
+        border-bottom: 0;
+        padding-left: $spacing-base;
+
+        a {
+            text-decoration: underline;
+        }
+    }
+}

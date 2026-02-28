@@ -1,0 +1,231 @@
+.move-indicator {
+    @extend .text-muted;
+    font-size: $font-size-base * 0.75;
+    vertical-align: middle;
+    margin-left: -$spacing-sm;
+    opacity: 0.7;
+
+    a:hover &,
+    .card-header:hover & {
+        opacity: 1;
+    }
+    .card-secondary & {
+        float: left;
+        margin: $card-spacer-y $spacing-sm;
+        font-size: $font-size-base;
+    }
+}
+
+//dash
+.collapse-indicator {
+    color: $collapse-indicator-color;
+    font-size: $font-size-sm;
+    display: block;
+    transition-duration: 0.3s;
+    line-height: $headings-line-height;
+    margin-top: $spacing-sm;
+    &.text-small {
+        font-size: $font-size-sm;
+    }
+    .collapsed & {
+        color: $collapse-indicator-color;
+
+        // advanced options collapsible collapsed
+        .link-expand-right & {
+            padding-left: $spacing-sm;
+            padding-right: 0;
+        }
+    }
+    // advanced options collapsible not collapsed
+    .link-expand-right & {
+        padding-left: 0;
+        padding-right: $spacing-sm;
+    }
+
+    a:hover &,
+    a:focus & {
+        color: $collapse-indicator-hover-color;
+    }
+    .collapsed ~ & {
+        transform: rotate(180deg);
+        transition-duration: 0.3s;
+    }
+    &.block-config-modal {
+        margin-left: $spacing-sm;
+    }
+
+    // just valigning the attachment indicator
+    .card-footer & {
+      margin-top: $spacing-xs;
+    }
+
+    // card-secondary header indicator
+    .card-secondary h2.card-header & {
+      margin-top: 0.625rem; // 10px;
+    }
+    // but not on edit screen
+    .card-secondary h2.card-header .btn-group-top & {
+      margin-top: 0;
+    }
+}
+
+// just valigning the attachment indicator
+.card.collapsible:not(.card-secondary).has-attachment .card-header a .collapse-indicator {
+  margin-top: $spacing-xs;
+}
+
+tr[data-bs-toggle="collapse"],
+a[data-bs-toggle="collapse"],
+button[data-bs-toggle="collapse"] {
+    &:hover {
+      outline: none;
+    }
+    &:focus {
+      outline: medium solid $input-focus-border-color;
+    }
+    &:hover .collapse-indicator,
+    &:focus .collapse-indicator{
+        color: $collapse-indicator-hover-color;
+    }
+    .collapse-indicator {
+        transform: rotate(-180deg);
+        transition-duration: 0.3s;
+        color: $collapse-indicator-color;
+        height: auto;
+    }
+    &.collapsed .collapse-indicator {
+        transform: rotate(0deg);
+        transition-duration: 0.3s;
+    }
+}
+
+// needs to align to top in the heading in list like resume education/employment
+.list-group-item.flush-collapsible .list-group-item-heading a[data-bs-toggle="collapse"] .collapse-indicator {
+    position: absolute;
+    top: $list-group-item-padding-y;
+    right: 0.125rem; // 2px
+}
+
+// need to be float right for blog post list
+.taggedposts,
+.recentblogpost {
+  a[data-bs-toggle="collapse"] {
+    display: inline-block;
+    float: right;
+  }
+  // but not the attachments
+  .has-attachment a[data-bs-toggle="collapse"] {
+    display: block;
+    float: none;
+  }
+}
+
+.expand-indicator {
+    @extend .text-muted;
+    font-size: $font-size-sm;
+    padding-right: $spacing-sm;
+    margin-top: 0;
+    + .icon {
+        color: $collapse-indicator-color;
+        &:hover,
+        &:focus {
+            color: $collapse-indicator-hover-color;
+        }
+    }
+}
+
+// syntax change if link is an outer-link
+[data-bs-toggle="collapse"].outer-link {
+    &.collapsed {
+        ~ .collapse-indicator {
+            color: $collapse-indicator-color;
+        }
+    }
+    &:hover,
+    &:focus {
+        ~ .collapse-indicator {
+            color: $collapse-indicator-hover-color;
+        }
+    }
+}
+
+// Align text and chevron across multiple layouts
+.collapse-inline {
+    display: inline-block;
+    width: 90%;
+}
+
+.columns5 .collapse-inline {
+    width: 80%;
+}
+
+@include media-breakpoint-up(md) {
+    .columns3.col-width-15 .collapse-inline {
+        width: 70%;
+    }
+}
+
+// Align in edit mode
+.editing {
+    .icon-chevron-down {
+        padding-right: $spacing-sm;
+    }
+    .columns1,
+    .columns2,
+    .columns3,
+    .columns4,
+    .columns5 {
+        .collapse-inline {
+            width: 65%;
+        }
+    }
+    @include media-breakpoint-up(md) {
+        .columns1 .collapse-inline {
+            width: 85%;
+        }
+        .columns2.col-width-33,
+        .columns3.col-width-33 {
+            .collapse-inline {
+                width: 50%;
+            }
+        }
+    }
+    @include media-breakpoint-up(lg) {
+        .columns4.col-width-25,
+        .columns3.col-width-25 {
+            .collapse-inline {
+                width: 50%;
+            }
+        }
+    }
+    @include media-breakpoint-up(xl) {
+        .columns3.col-width-25 {
+            width: 60%;
+        }
+        .columns1,
+        .columns2.col-width-33,
+        .columns3.col-width-33,
+        .columns4 {
+            .collapse-inline {
+                width: 70%;
+            }
+        }
+        .columns5 {
+            .collapse-inline {
+                width: 50%;
+            }
+        }
+    }
+}
+
+.secreturls .list-group-item,
+.iframesources .buttonscell {
+    .collapse-indicator.open .icon-chevron-down {
+        transform: rotate(-180deg);
+        transition-duration: 0.3s;
+    }
+    .collapse-indicator.closed .icon-chevron-down {
+        transform: rotate(0deg);
+        transition-duration: 0.3s;
+    }
+}

@@ -1,0 +1,90 @@
+@use "sass:math";
+
+.dashboard-widget-container {
+    clear: both;
+    margin-top: $spacing-xl;
+
+    .thumbnail-widget {
+        position: relative;
+        display: block;
+        margin-bottom: $spacing-lg;
+        text-decoration: none;
+
+        @include media-breakpoint-up(md) {
+            float:left;
+            width: math.div(10, 3) * 10%;
+            padding-left: 2%;
+            margin-bottom: $spacing-xxxl;
+            &.first {
+                padding-left: 0;
+            }
+        }
+
+        .widget-heading {
+            clear: both;
+            padding: $spacing-base;
+            background-color: $dashboard-widget-bg;
+            border-radius: $dashboard-widget-border-radius;
+
+            .circle-bg {
+                margin-right: $spacing-base;
+                margin-bottom: $spacing-lg;
+                border-radius: 50%;
+                position: relative;
+                float: left;
+                background-color: $dashboard-widget-circle-bg;
+                width: 3.75rem; // 60px;
+                height: 3.75rem; // 60px;
+                text-align: center;
+
+                .icon {
+                    color: $dashboard-widget-cirlce-icon-color;
+                    line-height: 1.8;
+                    font-size: $font-size-base * 2; // 32px;
+                }
+            }
+
+            .widget-content {
+                @media (min-width: 767px) and (max-width: 979px) {
+                    clear: both; // need this for when the titles are long in other languages and wrap oddly
+                }
+            }
+
+            h2 {
+                margin: $spacing-base 0; // 5px 0;
+                font-weight: $font-weight-bold;
+                color: $dashboard-widget-title-color;
+                line-height: 1;
+            }
+
+            p {
+                margin: 0;
+                font-size: $font-size-sm;
+                color: $dashboard-widget-title-color;
+            }
+        }
+
+        &.logged-in {
+            &:hover,
+            &:focus {
+                text-decoration: none;
+
+                .widget-heading {
+                    background: $dashboard-widget-hover-bg;
+                }
+            }
+        }
+    }
+}
+.dashboard-editable {
+    margin-top: $spacing-xxl;
+    clear: both;
+
+    @include media-breakpoint-up(lg) {
+      border-top: $h1heading-border-width solid $h1heading-border-color;
+    }
+
+    #editdashboard {
+        margin-top: 0;
+    }
+}

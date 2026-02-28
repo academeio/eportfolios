@@ -1,0 +1,70 @@
+{foreach from=$institutions item=institution}
+        <tr class="{cycle values='r0,r1'}">
+                <td>
+                    <a href="{$WWWROOT}institution/index.php?institution={$institution->name}">
+                        {$institution->displayname}
+                    </a>
+                </td>
+                <td class="center">
+                    {$institution->name}
+                </td>
+                <td class="center">
+                  {if !$institution->site}
+                        <a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&amp;institution={$institution->name}">{$institution->members}</a>
+                  {else}
+                        <a href="{$WWWROOT}admin/users/search.php?institution=mahara">{$institution->members}</a>
+                  {/if}
+                </td>
+                <td class="center">{if $institution->maxuseraccounts}{$institution->maxuseraccounts}{/if}</td>
+                <td class="center">
+                {if !$institution->site}
+                        <a href="{$WWWROOT}group/index.php?filter=all">{$institution->groupcount}</a>
+                {/if}
+                </td>
+                <td class="center">{if $institution->maxgroups}{$institution->maxgroups}{/if}</td>
+                <td class="center">
+                    {if !$institution->site}<a href="{$WWWROOT}admin/users/institutionstaff.php?institution={$institution->name}">{/if}
+                        {$institution->staff}
+                    {if !$institution->site}</a>{/if}</td>
+                <td class="center">
+                    {if !$institution->site}<a href="{$WWWROOT}admin/users/institutionsupportadmins.php?institution={$institution->name}">{/if}
+                        {$institution->supportadmins}
+                    {if !$institution->site}</a>{/if}</td>
+                <td class="center">
+                    {if !$institution->site}<a href="{$WWWROOT}admin/users/institutionadmins.php?institution={$institution->name}">{/if}
+                        {$institution->admins}
+                    {if !$institution->site}</a>{/if}</td>
+                <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>
+                <td class="controls">
+                        <form action="" method="post"  class="btn-group float-end">
+                          <input type="hidden" name="i" value="{$institution->name}">
+                          {if $webserviceconnections}
+                              <a class="first btn-secondary btn-sm button btn btn-group-first" href="{$WWWROOT}webservice/admin/connections.php?i={$institution->name}">
+                                  <span class="icon icon-plug text-default" role="presentation" aria-hidden="true"></span>
+                                  <span class="visually-hidden">
+                                      {str(tag=connectspecific arg1=$institution->displayname)|escape:html|safe}
+                                  </span>
+                              </a>
+                          {/if}
+                            <button type="submit" name="edit" value="1" class="btn-secondary btn-sm button btn
+                            {if !($siteadmin && !$institution->members && $institution->name != 'mahara')} no-delete-btn btn-group-last{/if}
+                            {if !$webserviceconnections} btn-group-first {/if}"
+                            title="{str(tag=editspecific arg1=$institution->displayname)|escape:html|safe}">
+                                 <span class="icon icon-cog text-default" role="presentation" aria-hidden="true"></span>
+                                 <span class="visually-hidden">
+                                     {str tag="edit"}
+                                 </span>
+                             </button>
+                         {if $siteadmin && !$institution->members && $institution->name != 'mahara'}
+                            <button type="submit" name="delete" value="1" class="btn-secondary btn-sm button btn btn-group-last last" title="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
+
+                                <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
+                                <span class="visually-hidden">
+                                    {str tag="delete"}
+                                </span>
+                            </button>
+                        {/if}
+                        </form>
+                </td>
+        </tr>
+{/foreach}

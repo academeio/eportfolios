@@ -1,0 +1,49 @@
+.collection-nav {
+    padding: 0;
+    margin-top: $spacing-lg;
+    margin-bottom: 4.375rem; // 70px;
+    position: relative;
+
+    @include media-breakpoint-down(lg) {
+      margin-bottom: 3.125rem; // 50px;
+    }
+
+    .collection-title {
+        font-weight: $font-weight-bold;
+        font-size: $font-size-base;
+        margin-top: 0;
+        padding-bottom: $spacing-base;
+
+        @include media-breakpoint-up(lg) {
+          margin-right: 18.75rem; // 300px;
+          margin-bottom: 0;
+          border-bottom: $border-width solid $border-color;
+        }
+        @include media-breakpoint-down(lg) {
+          padding-bottom: 0;
+        }
+    }
+    .collection-nav-btns {
+      display: inline-block;
+
+      @include media-breakpoint-up(lg) {
+        position: absolute;
+        right: 0px;
+        bottom: -0.0625rem; // -1px;
+      }
+    }
+    nav.custom-dropdown {
+        margin: 0 auto;
+        display: inline-block;
+        min-width: 12.5rem; // 200px;
+        .picker {
+          padding-right: 2rem;
+        }
+    }
+}
+
+.modal-body {
+    .collection-nav {
+        margin-top: 40px;
+    }
+}

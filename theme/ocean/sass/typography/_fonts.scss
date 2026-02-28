@@ -1,0 +1,22 @@
+$font-path: '../../ocean/fonts';
+
+$regular: normal, normal;
+
+$osvaldo: (
+    osvaldo-regular: $regular
+);
+
+@each $fontname, $style in $osvaldo {
+    @font-face {
+        font-family: 'Osvaldo';
+        src: url('#{$font-path}/osvaldo/#{$fontname}.eot');
+        src: url('#{$font-path}/osvaldo/#{$fontname}.eot?#iefix') format('embedded-opentype'),
+             url('#{$font-path}/osvaldo/#{$fontname}.woff2') format('woff2'),
+             url('#{$font-path}/osvaldo/#{$fontname}.svg##{$fontname}') format('svg'),
+             url('#{$font-path}/osvaldo/#{$fontname}.otf') format('opentype'),
+             url('#{$font-path}/osvaldo/#{$fontname}.ttf') format('truetype'),
+             url('#{$font-path}/osvaldo/#{$fontname}.woff') format('woff');
+        font-weight: nth($style, 1);
+        font-style:  nth($style, 2);
+    }
+}

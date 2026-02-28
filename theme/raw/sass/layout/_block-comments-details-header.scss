@@ -1,0 +1,173 @@
+.block-header {
+  a {
+     display: block;
+     color: $theme-block-header-color;
+     text-align: right;
+     text-decoration: none;
+     background-color: $theme-block-header-bg-color;
+     padding: $btn-padding-y $btn-padding-x;
+     border: 0;
+     font-size: $btn-font-size-sm;
+
+     &:hover,
+     &:focus {
+       background-color: $theme-block-header-hover-bg-color;
+       color: $theme-block-header-hover-color;
+     }
+     // display button with edit button
+     &.with-quickedit {
+       display: inline-block;
+       float: right;
+     }
+     // edit button with display button
+     &.with-displaylink {
+       display: inline-block;
+       text-align: left;
+     }
+     // just the edit button itself
+     &.quickeditlink,
+     &.quick-edit {
+       text-align: left;
+     }
+   }
+
+   &.active-block a {
+      background-color: $theme-block-header-active-bg-color;
+      color: $theme-block-header-active-color;
+   }
+
+   &.details-comments.quick-edit {
+     background-color: $theme-block-header-bg-color;
+     &.active-block {
+        background-color: $theme-block-header-active-bg-color;
+     }
+   }
+}
+
+.list-group {
+  .block-header {
+    &.btn-group-top {
+      margin-top: 0;
+      margin-bottom: 0;
+      height: 0;
+      text-align: right;
+      float: right;
+
+      .btn-secondary {
+        display: inline-block;
+        padding: $btn-padding-y $btn-padding-x;
+        border: 0;
+        background-color: $theme-block-header-bg-color;
+        color: $theme-block-header-color;
+        border-bottom-left-radius: $btn-border-radius-sm;
+        border-bottom-right-radius: $btn-border-radius-sm;
+
+        &:hover,
+        &:focus {
+          background-color: $theme-block-header-hover-bg-color;
+          color: $theme-block-header-hover-color;
+          border: 0;
+        }
+
+        &.active-block .btn-secondary {
+          background-color: $theme-block-header-active-bg-color;
+          color: $theme-block-header-active-color;
+        }
+      }
+    }
+
+    ~ .list-group-item .title {
+        margin-right: 6.25rem; // 100px;
+    }
+
+    &.d-none {
+      ~ .list-group-item .title {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.bh-margin-left {
+   margin-left: $spacing-base;
+}
+
+.file-download-list,
+.has-attachment {
+  .list-group {
+    .block-header {
+      ~ .list-group-item {
+        .icon-download {
+          left: -5.75rem; // -92px;
+          position: relative;
+          top: $spacing-xs;
+        }
+        .title {
+          display: inline-block;
+          max-width: calc(100% - ((2.25rem * 2) + 5.5rem));
+          margin-right: 0;
+
+        }
+      }
+
+      &.d-none {
+        ~ .list-group-item {
+          .icon-download {
+            left: 0;
+          }
+          .title {
+            max-width: calc(100% - (2.25rem * 2));
+          }
+        }
+      }
+    }
+  }
+}
+
+.card.card-secondary .card-body {
+  .block-header {
+      margin-top: -$spacing-lg;
+  }
+  // exception of attachments lists in resume
+  .has-attachment .list-group {
+    .block-header {
+      margin-top: 0;
+    }
+  }
+}
+// exception of pdf and tagged posts blocks
+.card.card-secondary {
+  &.bt-pdf,
+  &.bt-taggedposts {
+    .block-header {
+        margin-top: 0;
+    }
+  }
+}
+
+.block-header {
+  &.btn-group-top {
+    .btn-secondary {
+      background-color: $theme-block-header-bg-color;
+      color: $theme-block-header-color;
+      border: 0;
+      padding: $btn-padding-y $btn-padding-x;
+
+      &:hover,
+      &:focus {
+        background-color: $theme-block-header-hover-bg-color;
+        color: $theme-block-header-hover-color;
+        border: 0;
+      }
+
+      &:not(:disabled):not(.disabled):active {
+        background-color: $theme-block-header-active-bg-color;
+        color: $theme-block-header-active-color;
+      }
+    }
+    &.active-block .btn-secondary {
+      background-color: $theme-block-header-active-bg-color;
+      color: $theme-block-header-active-color;
+    }
+  }
+}

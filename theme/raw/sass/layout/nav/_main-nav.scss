@@ -1,0 +1,200 @@
+/*
+ * Primary navigation menu
+ * with collapsible
+ */
+.fixed-top {
+    position:relative;
+    border: 0;
+
+    @include media-breakpoint-up(md) {
+        position:fixed;
+    }
+}
+
+.navbar-main {
+    margin-bottom: 0;
+
+    > .container {
+        position: relative;
+    }
+
+    .nav-toggle-area {
+        float: right;
+        padding: 0.8125rem 0 0.75rem 0; // 13px 0 12px 0;
+    }
+
+    .navbar-collapse {
+        margin-right: -$spacing-lg;
+        margin-left: -$spacing-lg;
+        padding: 0;
+        position: static;
+        clear: both;
+        max-height: none;
+
+        @include media-breakpoint-up(md) {
+            position: absolute;
+            right: $spacing-lg;
+            top: $navbar-height;
+            max-width: 300px;
+            z-index: 5;
+            overflow-y: hidden;
+            overflow-x: hidden;
+            margin-right: 0;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+
+            .header.no-site-messages & {
+                max-height: calc(100vh - #{($navbar-height + $site-message-height)});
+            }
+            @for $i from 1 through 5 {
+                .header.message-count-#{$i} & {
+                    max-height: calc(100vh - #{($navbar-height + ($i * $site-message-height))});
+                }
+            }
+            &.show {
+                overflow-y: auto;
+                background-color: $navbar-default-link-bg;
+            }
+        }
+
+        @include media-breakpoint-down(md) {
+            border-width: 1px 0 0 0;
+        }
+
+        &.collapsing {
+            overflow-y: hidden;
+        }
+    }
+
+    // Top level navigation items use colour variables from "navbar-default"
+    .navbar-nav {
+        margin: 0;
+        flex-grow: 1;
+
+        @include media-breakpoint-up(md) {
+            width: 300px;
+        }
+
+        li {
+            float: none;
+            display: block;
+            position: relative;
+        }
+
+        > li > a,
+        > li > button.menu-dropdown-toggle {
+            display: block;
+            width: 100%;
+            text-align: left;
+            color: $navbar-default-link-color;
+            background-color: $navbar-default-link-bg;
+            padding: $navbar-default-padding-y $navbar-default-padding-x;
+            font-weight: $font-weight-normal;
+            border: 1px solid $navbar-default-link-border;
+            margin-top: -1px;
+            text-decoration: none;
+            border-radius: 0;
+            float: none;
+
+            @include media-breakpoint-down(md) {
+                border-right: 0;
+                border-left: 0;
+            }
+
+            // the icons on the left
+            .icon {
+                margin-right: $spacing-sm;
+                width: 1.5em; // 24px
+                text-align: center;
+            }
+
+            // navbar menu children toggles
+            .icon.navbar-showchildren {
+                color: $navbar-inverse-toggle-hover-color;
+                background: $navbar-inverse-toggle-hover-bg;
+                border-radius: 0;
+                border: 0;
+                position: absolute;
+                right: $spacing-base; // 10px
+                top: 0.4375rem; // 7px
+                height: 2.375rem; // 38px;
+                width: 2.625rem; // 42px;
+                padding: 0.75rem;
+                margin: 0;
+                cursor: pointer;
+                transform: rotate(-180deg);
+                transition-duration: 0.3s;
+                text-align: center;
+            }
+
+            &:hover,
+            &:focus {
+                background-color: $navbar-default-link-hover-bg;
+                text-decoration:none;
+                color: $navbar-default-link-hover-color;
+            }
+
+            &.disabled {
+                color: $btn-link-disabled-color;
+                cursor: not-allowed;
+            }
+
+            &.collapsed {
+                .icon.navbar-showchildren {
+                    transform: rotate(0deg);
+                    transition-duration: 0.3s;
+                    background: $navbar-inverse-toggle-bg;
+                    color: $navbar-inverse-toggle-color;
+                }
+            }
+        }
+
+        > .active > a,
+        > .active > button.menu-dropdown-toggle {
+            background-color: $navbar-default-active-bg;
+            color: $navbar-default-active-color;
+
+            &:hover,
+            &:focus {
+                background-color: $navbar-default-active-bg;
+                color: $navbar-default-active-color;
+            }
+        }
+    }
+
+    // Child navigation items
+    .child-nav {
+        border-top:0;
+        max-width: 100%;
+        // overflow: hidden;
+        padding: 0;
+        clear: both;
+
+        li > a {
+            display: block;
+            color: $navbar-inverse-link-color;
+            background-color: $navbar-inverse-bg;
+            padding: $navbar-default-padding-y $navbar-default-padding-x $navbar-default-padding-y 2.8125rem;
+            margin-top: -1px;
+            font-weight: $font-weight-normal;
+            white-space: normal;
+            text-decoration: none;
+            &:hover,
+            &:focus {
+                text-decoration: none;
+                background-color: $navbar-inverse-link-hover-bg;
+                color: $navbar-inverse-link-hover-color;
+            }
+        }
+
+        .active > a {
+            font-weight: $font-weight-bold;
+            background-color: $navbar-inverse-link-active-bg;
+            color: $navbar-inverse-link-active-color;
+            &:hover,
+            &:focus {
+                background-color: $navbar-inverse-link-hover-bg;
+                color: $navbar-inverse-link-hover-color;
+            }
+        }
+    }
+}

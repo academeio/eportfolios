@@ -1,0 +1,32 @@
+.link-thumb {
+    text-align: center;
+    min-width: 3.875rem; // 62px;
+    position: relative;
+    display: block;
+    padding: 0.4375rem 0.9375rem 0.9375rem; // 7px 15px 15px;
+    font-size: $font-size-base * 1.25; // 20px
+    margin-bottom: 0.25rem; // 4px;
+    background-color: $thumbnail-bg;
+    text-decoration: none !important;
+
+    &.thumbnail {
+        &:hover,
+        &:focus,
+        &.active {
+            background-color: scale-color($thumbnail-bg, $lightness: 38%);
+            color: $theme-text-color;
+            text-decoration: none;
+            border-color: $thumbnail-border-color;
+        }
+    }
+    .metadata {
+        font-size: $font-size-base * 0.75;
+        position: absolute;
+        bottom: $spacing-xs;
+        right: $spacing-xs;
+    }
+}
+
+.list-inline .list-tile {
+    padding: 0;
+}

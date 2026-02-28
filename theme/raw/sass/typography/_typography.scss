@@ -1,0 +1,488 @@
+@use "sass:math";
+
+// Basic type related customisation
+body, p {
+    font-weight: $font-weight-normal;
+}
+
+//
+// Headings
+//
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  margin-bottom: $headings-margin-bottom;
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+  line-height: $headings-line-height;
+  color: $headings-color;
+}
+
+h1, .h1 { @include font-size($h1-font-size); }
+h2, .h2 { @include font-size($h2-font-size); }
+h3, .h3 { @include font-size($h3-font-size); }
+h4, .h4 { @include font-size($h4-font-size); }
+h5, .h5 { @include font-size($h5-font-size); }
+h6, .h6 { @include font-size($h6-font-size); }
+
+h1 {
+    @extend .page-header;
+    padding-bottom: $line-height-computed * 0.5;
+    margin-bottom: $spacing-xl !important;
+    border-bottom: $h1heading-border-width solid $h1heading-border-color;
+    @include media-breakpoint-down(lg) {
+      border-bottom: 0;
+      font-size: $h2-font-size; // making it smaller for mobile
+    }
+}
+
+// Add padding if there is no navigation
+.header + .container {
+    h1 {
+      padding-top: $line-height-computed * 0.5;
+    }
+    .card-body h1 {
+        padding-top: 0;
+    }
+}
+
+// Portfolios page header title
+.pageheader {
+    margin-top: 0;
+    margin-bottom: 0;
+    h1 {
+        margin: $spacing-xl 0;
+        padding: 0;
+        border-bottom: 0;
+    }
+}
+
+.page-header {
+    ~ form.with-heading,
+    ~ form .with-heading,
+    ~ .form.with-heading {
+        @include border-bottom-radius($border-radius);
+        background-color: $form-bg;
+        padding: $spacing-xl $spacing-base $spacing-base $spacing-base; // 20px 10px 10px 10px;
+        margin-top: -$spacing-xl; // -20px (from H1 margin)
+        margin-bottom: $spacing-lg;
+
+        @include media-breakpoint-down(lg) {
+            padding: $spacing-xl;
+            margin-top: $spacing-sm; // 5px;
+        }
+
+        &.invite-friend,
+        &#addmember {
+            @include border-radius(0);
+            padding: 0;
+            margin-top: $spacing-base;
+            background: none;
+
+            .input-group-append {
+                margin-left: 0;
+            }
+        }
+
+        ~ form.with-heading {
+            padding-top: 0;
+            margin-top: -$h1heading-border-width;
+            max-width: 100%;
+        }
+        .form-group {
+            .select2 {
+                max-width: 100%;
+            }
+        }
+        .btn-secondary {
+            border-radius: $btn-border-radius-sm;
+        }
+    }
+    ~ div.with-heading {
+        padding-bottom: $spacing-base;
+        margin-bottom: $spacing-base;
+        @include media-breakpoint-down(md) {
+            border-bottom: $h1heading-border-width solid $h1heading-border-color;
+        }
+        a {
+            margin-right: $spacing-sm;
+        }
+        .tags a {
+            margin-right: 0;
+        }
+    }
+
+    // when there are tabs above search under h1
+    ~ .nav-tabs + form.with-heading {
+        margin-top: 0;
+    }
+}
+
+h2, h3, h4, h5, legend {
+    &.card-header {
+        margin: 0;
+        font-size: $font-size-lg;
+    }
+    &.no-margin {
+        margin: 0;
+    }
+}
+
+.subsection-heading +  .section-heading {
+    color: $section-heading-color;
+}
+
+strong {
+    font-weight: $font-weight-bold;
+}
+
+em {
+    font-weight: $font-weight-normal;
+    font-style: italic;
+}
+
+strong i,
+strong em {
+    font-style: normal; // #tasteful
+}
+
+a {
+    &.link-block {
+        display: block;
+        text-decoration: none;
+    }
+    &:hover {
+        text-decoration-color: $link-hover-color;
+        outline: 0;
+    }
+    &:focus {
+        text-decoration-color: $link-hover-color;
+        outline: medium solid $input-focus-border-color;
+    }
+}
+
+.list-unstyled:not(.list-group) {
+    li {
+        padding-bottom: $spacing-sm;
+    }
+}
+
+.link-unstyled {
+    color: $theme-text-color;
+    text-decoration: none;
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+// Styles for links at the bottom of blocktype
+// ie. add comment link and artefact detail link
+.link-blocktype {
+    font-size: $font-size-sm;
+    margin: $spacing-base 0 0 0;
+    padding: $input-btn-padding-y $input-btn-padding-x;
+    display: inline-block;
+    text-decoration: none !important;
+    &:hover,
+    &:focus {
+        background-color: $accent-bg;
+        text-decoration: none !important;
+    }
+    .icon {
+        display: inline-block;
+    }
+    &.js-peerassessment-modal,
+    &.js-add-comment-modal {
+        margin: $spacing-base 0;
+    }
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    &.artefact-img {
+        line-height: 1;
+        max-width: 1.875rem; // 30px;
+        max-height: 1.875rem; // 30px;
+        margin-right: $spacing-sm;
+    }
+}
+
+.file-icon {
+    margin-right: $spacing-sm;
+    margin-left: $spacing-sm;
+
+    &.icon {
+        width: 1.5rem; // 24px
+    }
+}
+
+hr {
+    margin-top: #{math.div($line-height-base, 2)}rem;
+    margin-bottom: $hr-margin-y;
+    background-color: transparent;
+    opacity: 1;
+    border-top: $hr-border-width solid $hr-border-color;
+}
+
+ul {
+    &.unstyled.unstyled { //increase the importance
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    // People and fonts page
+    &.user-action-list {
+        margin-top: $spacing-sm;
+        margin-bottom: 0;
+        li {
+          .icon.left {
+            width: 1.875em;
+            font-size: 1.25em;
+            text-align: center;
+          }
+          .btn .icon.left {
+            width: auto;
+          }
+          &.acceptdenyfriendbtns {
+            margin-bottom: $spacing-base;
+          }
+          a {
+              text-decoration: none;
+              &:hover,
+              &:focus {
+                text-decoration: underline;
+              }
+          }
+        }
+    }
+}
+
+blockquote {
+    margin-top: $spacing-xl;
+    margin-bottom: $spacing-xl;
+    &.small,
+    .text-small & {
+        font-size: $font-size-base;
+    }
+}
+
+.lead,
+.lead p {
+    font-size: $lead-font-size;
+    font-weight: $lead-font-weight;
+    margin-bottom: $spacing-lg;
+
+    &.text-small {
+        font-size: $font-size-sm;
+    }
+    &.link {
+        margin-bottom: 0;
+    }
+}
+
+label.lead {
+    margin-bottom: 0;
+}
+
+.content-text,
+.postcontent {
+    margin: $spacing-base 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+}
+
+.metadata,
+.postedon {
+    font-family: $font-family-base;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-normal;
+    color: $theme-text-midtone-color;
+}
+
+.license {
+    margin: $spacing-base 0;
+    .license-icon {
+        padding-right: $spacing-base;
+    }
+}
+
+.licenseicon {
+    padding: 0 $spacing-base $spacing-sm 0;
+}
+
+pre {
+    padding: $spacing-base;
+    margin: 0 0 $spacing-base;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: $pre-bg;
+    border: $border-width solid $border-color;
+    border-radius: $border-radius-sm;
+    span.wsname {
+        font-weight: $font-weight-bold;
+    }
+    span.wsdescription {
+        color: $info;
+        padding-right: $spacing-base;
+
+        .wsrequired {
+            font-weight: $font-weight-bold;
+            color: $theme-color-danger;
+        }
+        .wsoptional {
+            font-weight: $font-weight-bold;
+        }
+        .wsdescriptiontext {
+            font-style: italic;
+        }
+    }
+}
+
+.h2, .h3, h2, h3 {
+    margin-top: $spacing-xl;
+}
+
+.h4, .h5, .h6, h4, h5, h6 {
+    margin-top: $spacing-base;
+}
+
+/* headings in html entered by user neutralised */
+.myblogs,
+.content-text,
+.card-body,
+#resumefieldform_coverletterdisplay_container,
+#resumefieldform_interestdisplay_container,
+.note-name div,
+.view-description,
+.forum-post .postedits,
+.mce-content-body,
+.blockinstructions,
+.viewinstructions,
+.bt-groupinfo {
+  h1, h2, h3, h4, h5, h6  {
+    font-family: $font-family-base !important;
+    font-weight: $font-weight-bold !important;
+    color: $theme-text-color !important;
+
+    /* but not some titles */
+    &.list-group-item-heading,
+    &.title,
+    &.card-header {
+      font-family: $headings-font-family !important;
+      font-weight: $headings-font-weight !important;
+      color: $headings-color !important;
+    }
+  }
+
+  /* remove border bottom, padding and margin for h1 */
+  h1 {
+    border-bottom: 0;
+    padding: 0;
+    margin-bottom: $spacing-base;
+  }
+}
+
+// Matrix header, move small text under H1 back to original
+.matrixheader {
+    h1.pageheader-actions ~ div.with-heading {
+        margin-top: 0;
+    }
+}
+
+// Add margin to TinyMCE blocks
+body#tinymce {
+    margin: $spacing-base;
+}
+
+//font list list group item title
+#fontlist h2.title {
+  margin-top: 0;
+  font-size: $h4-font-size; // 24px
+}
+
+// group views block heading titles
+.bt-groupviews,
+.bt-groupviews-editor {
+    .title {
+        margin-top: $spacing-xl;
+        font-size: $h5-font-size;
+    }
+}
+
+// Group listing user status on right but not on group home page
+.groupuserstatus {
+    margin-bottom: $spacing-base;
+    @include media-breakpoint-up(md) {
+        text-align: right;
+    }
+}
+
+// view artefact
+.viewartefact {
+  color: $theme-text-midtone-color;
+}
+
+.artefacttype {
+    font-family: $font-family-base;
+    font-weight: $font-weight-base;
+}
+
+.no-margin-top {
+  margin-top: 0;
+}
+
+small, .small {
+  font-size: $font-size-sm;
+}
+
+.font-base {
+    font-family: $font-family-base;
+    font-weight: $font-weight-base;
+}
+
+// portfolio completion table icons
+a.verify_action,
+a.unsignoff_action,
+a.signoff_action {
+    text-decoration: none;
+}
+
+// adding/removing members headings
+.userlisttable .h3 {
+    margin-bottom: $headings-margin-bottom !important;
+    font-family: $headings-font-family !important;
+    font-weight: $headings-font-weight !important;
+    line-height: $headings-line-height !important;
+    color: $headings-color !important;
+}
+
+section {
+  > h3:first-child {
+    margin-top: 0;
+  }
+}
+
+.mce-content-body {
+    figure {
+        display: table;
+        margin: 1rem auto;
+
+        & .image.align-center {
+            display: table;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        & .align-left {
+            float: left;
+        }
+        & .align-right {
+            float: right;
+        }
+    }
+}

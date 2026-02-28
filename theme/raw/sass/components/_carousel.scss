@@ -1,0 +1,76 @@
+.carousel {
+    width: 100%;
+    margin: 0;
+    height: 100% !important;
+    clear: both;
+
+    .carousel-item {
+        img {
+            width: 100%;
+            margin: 0 !important;
+        }
+    }
+
+    // Overriding bootstrap carousel styles
+    .carousel-caption {
+        text-align: center;
+        font-size: $font-size-sm;
+        position: relative;
+        color: $theme-text-midtone-color;
+        background-color: transparent;
+        text-shadow: none;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: $spacing-base 0 0 0;
+    }
+
+    .carousel-control {
+        opacity: .75;
+
+        &:hover,
+        &:focus {
+            opacity: 1;
+        }
+
+        .icon {
+            font-size: $font-size-base * 2; // 32px;
+            color: $white;
+            background-color: $black;
+            padding: $btn-padding-y $btn-padding-x;
+            border-radius: $btn-border-radius;
+        }
+    }
+
+    // if bootstrap example markup gets used on html pages they have a graphic icon instead, so this is to make it align with gallery styling
+    .carousel-control-prev,
+    .carousel-control-next {
+        opacity: .75;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            opacity: 1;
+            text-decoration: none;
+        }
+    }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon  {
+        @include fonttype(solid);
+        font-weight: 900;
+        font-size: $font-size-base * 2; // 32px;
+        line-height: .75em;
+        color: $white;
+        background: $black;
+        padding: $btn-padding-y $btn-padding-x;
+        border-radius: $btn-border-radius;
+        width: auto;
+        height: auto;
+    }
+    .carousel-control-prev-icon::before {
+        content: "\f104";
+    }
+    .carousel-control-next-icon::before {
+        content: "\f105";
+    }
+}

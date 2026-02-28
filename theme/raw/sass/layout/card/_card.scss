@@ -1,0 +1,96 @@
+.card {
+    margin-bottom: $line-height-computed;
+    border: $card-border-width solid $card-border-color;
+    border-radius: $card-border-radius;
+    form {
+        margin:0;
+    }
+    table {
+        font-size: $font-size-base;
+        margin-bottom: 0;
+    }
+    small {
+        line-height: $line-height-base;
+        color: $theme-text-midtone-color;
+        display: block;
+    }
+
+    .list-group-item small {
+        @extend .text-midtone;
+    }
+
+    dl {
+        dt {
+            font-weight: $font-weight-normal;
+            clear: both;
+            margin-right: $spacing-base
+        }
+        dd, dt {
+            display: inline-block;
+            float: left;
+        }
+
+        dd {
+            color: $theme-text-midtone-color;
+            line-height: $line-height-base;
+            font-size: $font-size-sm;
+        }
+    }
+    .nav-pills {
+        margin: 0;
+    }
+    > .list-group:last-child {
+        .list-group-item:last-child {
+            border-bottom: 0;
+        }
+    }
+
+    .has-attachment {
+        border-radius: $card-border-radius;
+        border-width: $card-border-width;
+        margin-top: $spacing-base;
+        margin-bottom: 0;
+
+        // unless it just indicates that the card has attachments like in comments
+        &.comment-item {
+            margin-top: 0;
+            border-radius: 0;
+        }
+    }
+    .activegrouplabels {
+        padding: $card-spacer-y $card-spacer-x;
+
+        + .list-group {
+            .list-group-item:first-child {
+                @include border-top-radius(0);
+            }
+        }
+    }
+}
+
+.view-pane .card {
+    border-width: 0;
+}
+
+// Login card
+.login-externallink {
+    display: inline-block;
+
+    a.btn {
+        margin: 0 $spacing-sm $spacing-sm 0;
+        white-space: nowrap;
+
+        span {
+            color: $btn-primary-color;
+        }
+    }
+}
+
+.login-related-links {
+  .register-link{
+    padding-right: 0.125rem; // 2px;
+  }
+  .forgotpass-link {
+    padding-left: $spacing-sm;
+  }
+}

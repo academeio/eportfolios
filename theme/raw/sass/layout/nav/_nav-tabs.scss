@@ -1,0 +1,56 @@
+.nav-tabs {
+    padding-left: 0 !important;
+    margin-bottom: 0 !important;
+    border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
+
+    &.nav {
+        li > a {
+            margin-right: 0.125rem; // 2px;
+            display: block;
+            font-weight: $font-weight-light;
+            border: 0;
+            border-bottom: 3px solid transparent;
+            padding: $nav-link-padding-y $nav-link-padding-x;
+            font-size: $font-size-lg;
+            text-decoration: none;
+            border-radius: $nav-tabs-border-radius $nav-tabs-border-radius 0 0;
+
+            &:hover,
+            &:focus {
+                background: scale-color($gray-100, $lightness: 45%);
+                border-bottom-color: $nav-tabs-link-hover-border-color;
+                text-decoration: none;
+            }
+
+            &.inactive {
+                color: $theme-text-lighttone-color;
+                &:hover,
+                &:focus {
+                    color: $theme-text-lighttone-color;
+                    background: transparent;
+                    border-bottom-color: transparent;
+                }
+            }
+
+            &.active {
+                color: $nav-tabs-link-active-color;
+                background-color: $nav-tabs-link-active-bg;
+                border-bottom: 3px solid $nav-tabs-link-active-border-color;
+
+                &:hover,
+                &:focus {
+                    border-bottom-color: $nav-tabs-link-hover-border-color;
+                }
+            }
+        }
+    }
+    > li {
+        margin-bottom: -$nav-tabs-border-width;
+    }
+}
+
+// hide unwanted elements
+.nav-tabs + .submit,
+.tab-content legend {
+    display: none;
+}

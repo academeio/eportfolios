@@ -1,0 +1,14 @@
+Popper.js for bootstrap
+=======================
+
+Website: https://popper.js.org/
+Version: 2.10.2
+
+A library used to position poppers in web applications.
+
+This is used for the edit/delete dropdown box on the
+portfolio card on view/index.php.
+
+It's a requirement of Bootstrap 5 dropdowns and tooltips
+
+It was fetched from the CDN https://unpkg.com/@popperjs/core@2.10.2/dist/umd/popper.min.js

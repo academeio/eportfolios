@@ -1,0 +1,134 @@
+.fileupload {
+    .intro {
+        font-weight: $font-weight-bold;
+    }
+    .description {
+        color: $theme-text-midtone-color;
+        font-size: $font-size-sm;
+    }
+    .title {
+        padding: 0;
+        margin: 0 0 $spacing-lg 0;
+    }
+}
+
+.card-fake {
+    margin: $spacing-lg 0;
+    .card-header {
+        padding: $card-spacer-y $card-spacer-x !important;
+    }
+}
+
+.resize-image {
+    .help,
+    label {
+        display: table-cell;
+    }
+    .help {
+        float: none;
+        margin-top: 0;
+    }
+}
+
+// reset margin and padding for upload file forms
+.filelist.table,
+.fileuploadlicense {
+    .form-group {
+        padding: $spacing-base 0 !important;
+        border-bottom-width: 0 !important;
+    }
+}
+
+.uploadform + .fileuploadlicense {
+    margin-top: $spacing-lg;
+}
+
+.fileuploadlicense {
+    input, .picker {
+        max-width: 12.5rem; // 200px;
+    }
+    @include media-breakpoint-between(lg, xl) {
+        label {
+            min-width: 100%;
+        }
+    }
+}
+
+.filebrowser.form-group {
+    margin-bottom: 0;
+    border-bottom: $list-group-border-width solid $list-group-border-color;
+}
+#files .filebrowser.form-group {
+    border-bottom: 0;
+}
+
+.uploadform.userfile {
+    margin-bottom: $spacing-xl;
+    .fileupload-container.col-md-12 & {
+        width: 50%;
+        float: left;
+        margin-bottom: $spacing-xl;
+    }
+    .file {
+        display: block;
+    }
+}
+
+.filelist {
+    .file-move-list {
+        list-style-type: none;
+        margin-top: $spacing-base;
+        padding-left: $spacing-lg;
+
+        li .icon {
+            color: $theme-text-color;
+        }
+    }
+}
+
+.filelist-wrapper {
+    border: 0;
+}
+.table .fileedittablewrap {
+    background-color: $table-accent-bg;
+    padding-left: $spacing-xl;
+    padding-right: $spacing-xl;
+}
+
+// file browser inside modal screen
+.modal-filebrowser {
+    margin-top: 3.125rem; // 50px;
+    padding: $spacing-base $spacing-xl $spacing-xl;
+
+    .btn-close {
+        width: 100%;
+        text-align: right;
+        float: none;
+        margin-bottom: $spacing-base;
+    }
+}
+
+.folderhover td{
+    background-color: $state-warning-bg;
+}
+
+.file-wrapper {
+    margin-bottom: 0.5rem; // 8px;
+}
+
+.filedata-icon {
+    float: left;
+    margin-right: 3.75rem; // 60px;
+    padding-bottom: $spacing-xxl;
+}
+
+.icon-drag:hover {
+    cursor: move;
+}
+.icon-drag:focus {
+    outline: medium solid $input-focus-border-color;
+}
+
+table.filelist .filename {
+    word-break: break-all;
+}

@@ -1,0 +1,108 @@
+// using bootstrap popover to style the help content
+span.help {
+    font-size: $font-size-lg;
+    vertical-align: top;
+    padding-left: $spacing-base;
+    display: inline-block;
+
+    .icon {
+        color: $help-icon-color;
+        font-size: 1.25rem; // 20px
+        opacity: 0.8;
+    }
+    &:hover {
+        .icon {
+            opacity: 1;
+        }
+    }
+    .table & {
+        margin-top: -$spacing-xs;
+        .icon {
+            font-size: 1.25rem; // 20px
+        }
+    }
+    a {
+        border-width: 0;
+    }
+}
+
+// Used for the sign-off block in verifyform.tpl
+div.help {
+    .icon {
+        color: $help-icon-color;
+        opacity: 0.8;
+    }
+    &:hover {
+        .icon {
+            opacity:1;
+        }
+    }
+}
+
+.contextualHelp {
+    position: absolute;
+    z-index: $zindex-popover;
+    width: $popover-max-width;
+    // Reset font and text propertes given new insertion method
+    font-family: $font-family-base;
+    font-size: $popover-font-size;
+    text-transform: none;
+    font-weight: $font-weight-normal;
+    line-height: $line-height-base;
+    text-align: left;
+    background-color: $popover-bg;
+    background-clip: padding-box;
+    border: $popover-border-width solid $popover-border-color;
+    border-radius: $popover-border-radius;
+    padding: 0 $popover-body-padding-x $popover-body-padding-y;
+    box-shadow: $popover-box-shadow;
+    color: $theme-text-color;
+
+    // Overrides for proper insertion
+    white-space: normal;
+
+    .help-dismiss {
+        color: $theme-text-midtone-color;
+        margin-left: $popover-body-padding-x;
+
+        .icon-times {
+          margin-top: $popover-body-padding-y;
+          line-height: $headings-line-height;
+        }
+    }
+
+    h2, h3, h4, h5 {
+      font-size: $h6-font-size;
+    }
+
+    h1, h3 {
+      &:first-child {
+        margin-left: -$popover-body-padding-x;
+        margin-right: -$popover-body-padding-x;
+        margin-top: 0;
+        font-size: $h6-font-size;
+        font-family: $font-family-base;
+        padding: $popover-header-padding-y $popover-header-padding-x !important;
+        background-color: $popover-header-bg;
+        border-bottom: $popover-border-width solid scale-color($popover-header-bg, $lightness: -5%);
+        border-radius: $popover-border-radius $popover-border-radius 0 0;
+        font-weight: $font-weight-bold;
+        line-height: $headings-line-height;
+      }
+    }
+}
+
+.form-select-filter .contextualHelp {
+  //  top: 0 !important; //fixes a bug where the contextualhelp displays outside the top of the page. Overrides inline styles
+    width: 500px !important;
+    max-width:100%;
+}
+
+.input-group.with-help {
+    position: relative;
+    padding-right: 2.5rem; // 40px;
+    select:not(:first-child),
+    input:not(:first-child) {
+        @include border-end-radius($border-radius-sm);
+    }
+}

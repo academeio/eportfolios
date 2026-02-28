@@ -1,0 +1,212 @@
+@use "sass:math";
+
+.collapsible legend,
+.card-header {
+    background-color: $card-header-bg;
+    color: $card-header-color;
+    position: relative;
+    display: block;
+    font-family: $font-family-base !important;
+    font-weight: $font-weight-light;
+
+    a,
+    button[data-bs-toggle="collapse"] {
+        text-decoration: none;
+        color: $card-header-color;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+            color: $card-header-color;
+        }
+    }
+
+    p {
+        margin: 0;
+    }
+
+    &.has-link,
+    &.profile-block {
+        padding: 0;
+        margin: 0;
+        a:not(.secondary-link) {
+            border-width: 0;
+            &.user-icon {
+                border: $thumbnail-border-width solid $thumbnail-border-color;
+            }
+        }
+    }
+
+    .secondary-link {
+        color: $link-color;
+        text-decoration: $link-decoration;
+
+        &:hover,
+        &:focus {
+          text-decoration: $link-hover-decoration;
+        }
+    }
+
+    button[data-bs-toggle="collapse"] {
+        width: 100%;
+        text-align: left;
+    }
+    // by default links in headings get display: block and padding.
+    // Use .secondary-link if you don't want this behaviour
+    a:not(.secondary-link),
+    button[data-bs-toggle="collapse"] {
+        display: block;
+        color: $card-header-color;
+        padding: $card-spacer-y $card-spacer-x;
+        border: $card-border-width solid $card-border-color;
+        .card-secondary > & {
+            padding: $card-spacer-y math.div($card-spacer-x, 2); // 10px 8px
+            border-width: 0;
+        }
+
+        &.collapsed {
+            background-color: $card-header-bg;
+            padding: $card-spacer-y $card-spacer-x;
+
+            &.outer-link {
+               background: none;
+            }
+
+            .card-secondary > & {
+                padding: $card-spacer-y math.div($card-spacer-x, 2); // 10px 8px
+            }
+        }
+        &:hover, &:focus {
+            background: none;
+            text-decoration: none;
+            color: scale-color($card-header-color, $lightness: -15%);
+        }
+        .pieform > .collapsible-group:first-child &,
+        .card.first & {
+            @include border-top-radius($card-border-radius);
+        }
+    }
+    .help a { //fix css on contextual help icons
+        padding: 0;
+        border: 0;
+        &:hover {
+            background:none;
+        }
+    }
+}
+
+.card-header .btn-link {
+    &:hover {
+        .icon {
+            color: $link-color;
+        }
+    }
+}
+
+h2,
+h3 {
+    &.card-header {
+        font-size: $font-size-base * 1.25; // 20px
+        margin: 0 !important;
+    }
+}
+
+.card {
+    > .card-header {
+        font-size: $font-size-base * 1.25; // 20px
+        .icon {
+          line-height: $headings-line-height;
+        }
+    }
+    &.collapsible:not(.card-secondary) {
+        .card-header {
+            border: 0;
+            a {
+                border: $card-border-width solid $card-border-color;
+                border-bottom-width: 0;
+            }
+        }
+        &.last {
+            .card-header {
+                a.collapsed {
+                    border-bottom-width: $card-border-width;
+                }
+            }
+        }
+        &.has-attachment {
+            .card-header {
+                font-weight: $font-weight-normal;
+                border-radius: $card-inner-border-radius;
+                a {
+                    border-width: 0;
+                    line-height: 1;
+                    text-decoration: none;
+                    border-radius: $card-inner-border-radius $card-inner-border-radius 0 0;
+
+                    &.collapsed {
+                      border-radius: $card-inner-border-radius;
+                    }
+
+                    .icon-paperclip,
+                    .collapse-indicator {
+                        line-height: 1;
+                    }
+                }
+            }
+        }
+        &.text-white.bg-primary {
+            background: transparent !important;
+            .card-header {
+                a {
+                    background-color: $theme-primary-color;
+                }
+                .icon,
+                .subject,
+                .metadata,
+                .sentdate {
+                    color: $white;
+                }
+            }
+            .card-body {
+                color: $theme-text-color;
+            }
+        }
+    }
+
+    &.text-weight-bold {
+        .card-header {
+            font-weight: $font-weight-bold;
+        }
+    }
+}
+
+// remove border radius from first child list-group-item in a card that appears under a card-header
+.card-header + .list-group .list-group-item:first-child {
+    border-radius: 0;
+}
+
+// remove border-bottom for attachments list card-header
+.has-attachment .card-header {
+    border-bottom: 0;
+    font-weight: $font-weight-normal;
+}
+
+// tabs in card-header
+.card-header.with-tabs {
+  padding-bottom: 0;
+  .card-header-tabs {
+    padding: 0;
+    margin: 0 $card-cap-padding-y;
+    border-bottom: 0;
+    &.nav-tabs.nav li {
+      margin-bottom: 0;
+      > a {
+        background-color: $card-bg;
+        border: $card-border-width solid $card-border-color;
+        &.active {
+          border-bottom-color: $card-bg;
+        }
+      }
+    }
+  }
+}

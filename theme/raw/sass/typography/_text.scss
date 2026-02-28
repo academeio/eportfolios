@@ -1,0 +1,75 @@
+// Text modifying class (start with .text-)
+.text-default {
+    color: $theme-text-color;
+}
+
+.text-lighttone {
+    color: $theme-text-lighttone-color;
+}
+
+.text-midtone {
+    color: $theme-text-midtone-color;
+}
+
+.text-link {
+    color: $link-color;
+}
+
+.text-watermark {
+    text-shadow: 0 1px 0 $text-shadow;
+    opacity: 0.3;
+}
+
+.text-small {
+    font-size: $font-size-sm;
+}
+
+.text-tiny {
+    font-size: $font-size-sm * 0.75;
+}
+
+.text-regular {
+    font-size: $font-size-base;
+}
+
+.text-inline.text-inline { // specificity
+    display: inline-block;
+}
+
+.text-block.text-block { // specificity
+    display: block;
+}
+
+.text-danger {
+    color: $state-danger-text !important; // Needs to be important to override default
+}
+
+.text-warning {
+    color: $state-warning-text !important; // Needs to be important to override default
+
+    &a {
+        color: $state-warning-link;
+        &:hover,
+        &:focus {
+          text-decoration-color: $state-warning-link;
+        }
+    }
+}
+
+.inboxblock {
+  .unread {
+      font-weight: $font-weight-bold;
+  }
+}
+
+.errormsg {
+    color: $state-danger-text;
+}
+
+.text-weight-normal {
+  font-weight: $font-weight-base;
+}
+
+.locked-post {
+    margin-left: $spacing-base;
+}

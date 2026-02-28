@@ -1,0 +1,6 @@
+// Makes the label red when a form error is shown
+.has-error {
+  label {
+    color: $state-danger-text;
+  }
+}

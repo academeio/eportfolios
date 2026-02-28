@@ -1,0 +1,87 @@
+.dashboard-widget-container {
+    text-align: center;
+
+    .thumbnail-widget {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: $spacing-xl;
+        border-radius: $dashboard-widget-border-radius;
+        text-align: center;
+        padding: 0;
+        float: none;
+        width: 15rem; // 240px;
+        height: 15rem; // 240px;
+
+        @include media-breakpoint-down(lg) {
+            width: 9rem; // 144px;
+            height: 9rem; // 144px;
+            margin-right: $spacing-base;
+        }
+
+        &.last {
+            margin-right: 0;
+            @include media-breakpoint-down(lg) {
+                margin-right: 0;
+            }
+        }
+
+        &.logged-in {
+            &:hover,
+            &:focus {
+                background-color: scale-color($theme-secondary-color, $lightness: 70%);
+                transition: all 0.2s ease 0s;
+            }
+        }
+
+        .widget-heading {
+            padding: 0;
+            border-radius: $dashboard-widget-border-radius;
+            width: 15rem; // 240px;
+            height: 15rem; // 240px;
+
+            @include media-breakpoint-down(lg) {
+                width: 9rem; // 144px;
+                height: 9rem; // 144px;
+            }
+
+            .circle-bg {
+                padding-top: $spacing-xl;
+                margin-right: 0;
+                margin-bottom: 0;
+                float: none;
+                background-color: transparent;
+                width: auto;
+                height: auto;
+
+                .icon {
+                    color: $dashboard-widget-cirlce-icon-color;
+                    font-size: 4.5rem; // 72px;
+                    line-height: 1.6;
+
+                    @include media-breakpoint-down(lg) {
+                        font-size: 2.5rem; // 40px;
+                    }
+                }
+            }
+
+            h2 {
+                text-align: center;
+                margin: 0;
+
+                @include media-breakpoint-down(lg) {
+                    font-size: 1.125rem; // 18px;
+                }
+            }
+
+            p {
+                font-size: 0.8125rem; // 13px;
+                text-align: center;
+                margin: 0 $spacing-xxl;
+
+                @include media-breakpoint-down(lg) {
+                    display: none;
+                }
+            }
+        }
+    }
+}

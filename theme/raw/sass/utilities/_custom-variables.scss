@@ -1,0 +1,223 @@
+// Custom component variables (non-bootstrap components)
+//
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+//Arrow component variables
+$arrow-color:                               scale-color($theme-primary-color, $lightness: 80%) !default;
+$arrow-bar-bg:                              scale-color($arrow-color, $lightness: 35%) !default;
+$arrow-text-color:                          $theme-text-color !default;
+$arrow-link-color:                          $link-color !default;
+$arrow-link-hover-color:                    $theme-text-color !default;
+$arrow-link-active-color:                   $theme-text-color !default;
+$arrow-link-background-color:               $white !default;
+
+// color for the secondary title in sections (cf. groups)
+$section-heading-color:                     #999 !default;
+
+$dashboard-widget-border-radius:            $border-radius !default;
+$dashboard-widget-bg:                       $body-bg !default;
+$dashboard-widget-hover-bg:                 scale-color($theme-primary-color, $lightness: 80%) !default;
+$dashboard-widget-title-color:              #333333 !default;
+$dashboard-widget-circle-bg:                $theme-primary-color !default;
+$dashboard-widget-cirlce-icon-color:        $white !default;
+
+$help-icon-color:                           $theme-color-statetext !default;
+$rss-icon-color:                            #FE6500 !default;
+
+// SmartEvidence status colors
+$assessment-begun-color:                    #5b9aa9 !default;
+$assessment-incomplete-color:               $theme-color-danger !default;
+$assessment-partial-color:                  $theme-color-warning !default;
+$assessment-completed-color:                $theme-color-success !default;
+
+// Progress completion page
+$progresscompletion-verified-color:         $theme-color-success !default;
+$progresscompletion-notverified-color:      $theme-color-danger !default;
+
+// Portfolios page header
+$pageheader-bg:                             #f7f7f7 !default;
+
+// Site footer background colors
+$site-footer-bg:                            rgba(255, 255, 255, 0.7) !default;
+$site-footer-color:                         $link-color !default;
+$site-footer-hover-color:                   $link-hover-color !default;
+$site-footer-hover-bg:                      #eee !default;
+
+// Site messages
+$site-message-height:                       (0.375rem + 0.375rem + $font-size-base) * $line-height-base !default; // (padding-top + padding-bottom + font-size) * line-height
+
+// Site header
+$navbar-height:                             3.75rem !default; // 60px, must be in rem for site messages calculation to work
+$navbar-default-bg:                         $white !default;
+$navbar-default-border:                     scale-color($navbar-default-bg, $lightness: -6.5%) !default;
+
+// Navbar toggle
+$navbar-toggle-color:                       $link-color !default;
+$navbar-toggle-bg:                          transparent !default;
+$navbar-toggle-hover-color:                 $link-color !default;
+$navbar-toggle-hover-bg:                    #F1F1F1 !default;
+$navbar-toggle-active-color:                $link-color !default;
+$navbar-toggle-active-bg:                   #F1F1F1 !default;
+
+// Navbar menu
+$navbar-default-padding-y:                  0.625rem !default; // 10px
+$navbar-default-padding-x:                  0.9375rem !default; // 15px
+$navbar-default-link-border:                scale-color($navbar-default-bg, $lightness: -6.5%) !default;
+$navbar-default-link-color:                 $link-color !default;
+$navbar-default-link-hover-color:           $link-hover-color !default;
+$navbar-default-link-bg:                    $navbar-default-bg !default;
+$navbar-default-link-hover-bg:              #F1F1F1 !default;
+$navbar-default-active-color:               $gray-700 !default;
+$navbar-default-active-bg:                  #ececec !default;
+
+// Navbar menus children
+$navbar-inverse-bg:                         #F1F1F1 !default;
+$navbar-inverse-link-color:                 $link-color !default;
+$navbar-inverse-link-hover-color:           $link-hover-color !default;
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%) !default;
+$navbar-inverse-link-active-color:          $theme-text-color !default;
+$navbar-inverse-link-active-bg:             #F1F1F1 !default;
+
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               scale-color($gray-500, $lightness: 37.5%) !default;
+$navbar-inverse-toggle-bg:                  transparent !default;
+$navbar-inverse-toggle-hover-color:         $navbar-default-link-color !default;
+$navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg !default;
+$navbar-inverse-toggle-active-color:        $navbar-inverse-link-active-color !default;
+$navbar-inverse-toggle-active-bg:           $navbar-inverse-bg !default;
+
+//Fonts
+$line-height-computed:                      $font-size-base * $line-height-base !default; // ~24px
+$text-shadow:                               $white !default;
+
+// Form states
+$state-success-text:                        scale-color($success, $lightness: -50%) !default;
+$state-success-bg:                          scale-color($success, $lightness: 70%) !default;
+$state-success-border:                      scale-color($success, $lightness: 50%) !default;
+$state-success-link:                        scale-color($success, $lightness: -30%) !default;
+
+$state-info-text:                           scale-color($info, $lightness: -50%) !default;
+$state-info-bg:                             scale-color($info, $lightness: 70%) !default;
+$state-info-border:                         scale-color($info, $lightness: 50%) !default;
+$state-info-link:                           scale-color($info, $lightness: -30%) !default;
+
+$state-warning-text:                        scale-color($warning, $lightness: -60%) !default;
+$state-warning-bg:                          scale-color($warning, $lightness: 85%) !default;
+$state-warning-border:                      scale-color($warning, $lightness: 50%) !default;
+$state-warning-link:                        scale-color($warning, $lightness: -40%) !default;
+
+$state-danger-text:                         scale-color($danger, $lightness: -50%) !default;
+$state-danger-bg:                           scale-color($danger, $lightness: 90%) !default;
+$state-danger-border:                       scale-color($danger, $lightness: 50%) !default;
+$state-danger-link:                         scale-color($danger, $lightness: -30%) !default;
+
+$state-submitted-text:                      $theme-text-color !default;
+$state-submitted-bg:                        scale-color($yellow, $lightness: 90%) !default;
+$state-submitted-border:                    scale-color($yellow, $lightness: 50%) !default;
+$state-submitted-link:                      scale-color($yellow, $lightness: -30%) !default;
+
+// Buttons + Forms
+$btn-font-family:                           $font-family-base !default;
+
+$btn-secondary-color:                       $theme-text-color !default;
+$btn-secondary-bg:                          #F9F9F9 !default;
+$btn-secondary-border:                      $border-color !default;
+
+$btn-primary-color:                         $white !default;
+$btn-primary-bg:                            $theme-primary-color !default;
+$btn-primary-border:                        scale-color($theme-primary-color, $lightness: -16%) !default;
+
+$btn-disabled-color:                        #ddd !default;
+$btn-disabled-bg:                           #f9f9f9 !default;
+$btn-disabled-border:                       #ddd !default;
+
+// Cards
+$card-border-color:                         #ddd !default;
+$card-header-bg:                            #f9f9f9 !default;
+$card-header-color:                         $theme-text-color !default;
+$card-footer-bg:                            #f5f5f5 !default;
+
+$card-secondary-header-bg:                  transparent !default;
+$card-secondary-header-color:               $theme-text-color !default;
+$card-secondary-border-color:               #ddd !default;
+$card-secondary-border-width:               2px !default;
+
+// Gridstack dotted line around blocks
+$draggable-border-color:                    #888 !default;
+
+// Tables
+$cursor-disabled:                           not-allowed !default; // Disabled cursor for form controls and buttons.
+
+// Popovers
+$popover-fallback-border-color:             #ccc !default;
+
+// Modals
+$modal-header-bg:                           $gray-100 !default;
+$modal-header-color:                        #333333 !default;
+
+// List groups
+$list-group-border:                         #ddd !default;
+$list-group-line-height:                    1.3 !default;
+
+// Code
+$pre-bg:                                    #f5f5f5 !default;
+
+// Header inbox message count background color
+$navbar-messages-count-color:               #000 !default;
+$navbar-messages-count-bg:                  #fc9f1a !default;
+
+// Block headers for comments and details links
+$theme-block-header-bg-color:               #333333 !default;
+$theme-block-header-color:                  $white !default;
+$theme-block-header-hover-bg-color:         scale-color($theme-block-header-bg-color, $lightness: -30%) !default;
+$theme-block-header-hover-color:            $white !default;
+$theme-block-header-active-bg-color:        $theme-primary-color !default;
+$theme-block-header-active-color:           $white !default;
+
+// Collapse/expand indicator
+$collapse-indicator-color:                  scale-color($gray-500, $lightness: 37.5%) !default;
+$collapse-indicator-hover-color:            $component-active-bg !default;
+
+// Accent background for info/hover
+$accent-bg:                                 scale-color($gray-100, $lightness: 35%) !default;
+
+// Form background color
+$form-bg:                                   scale-color($gray-100, $lightness: 35%) !default;
+
+// Page heading border-bottom
+$h1heading-border-color:                    rgba($black, .125) !default;
+$h1heading-border-width:                    1px !default;
+
+// Common spaces between elements (margins and paddings)
+$spacing-xs:                                0.1875rem !default; // 3px
+$spacing-sm:                                0.3125rem !default; // 5px
+$spacing-base:                              0.625rem !default; // 10px
+$spacing-lg:                                0.9375rem !default; // 15px
+$spacing-xl:                                1.25rem !default; // 20px
+$spacing-xxl:                               1.875rem !default; // 30px
+$spacing-xxxl:                              3.125rem !default; // 50px
+
+// User icon border radius
+$user-icon-border-radius:                   $thumbnail-border-radius !default;
+
+// LTI Advantage Quicklinks Portfolio.
+$lti-advantage-ql-row-color:                       #494c4e !default;
+$lti-advantage-ql-row-border-top-color:            #cdd5dc !default;
+$lti-advantage-ql-row-hover-background:            scale-color($theme-primary-color, $lightness: 90%) !default;
+$lti-advantage-ql-row-hover-border-top-color:      scale-color($theme-primary-color, $lightness: 40%) !default;
+$lti-advantage-ql-wrapper-background:              rgba(0,0,0, 0.4) !default;
+$lti-advantage-ql-wrapper-background-fallback:     rgb(0,0,0) !default;
+$lti-advantage-ql-modal-title-background:          linear-gradient(to bottom, #f5f4f4 0%,#e7e7e7 100%) !default;
+$lti-advantage-ql-modal-title-border-bottom-color: #d7d7d7 !default;
+$lti-advantage-ql-modal-content-border-color:      #888 !default;
+$lti-advantage-ql-modal-content-background-color:  #fefefe !default;
+$lti-advantage-ql-modal-btnsrow-background-color:  #ffffff !default;
+$lti-advantage-ql-modal-btnsrow-border-color:      #d7d7d7 !default;
+$lti-advantage-ql-modal-btnsrow-box-shadow-color:  rgba(180, 180, 205, 0.8) !default;
+$lti-advantage-ql-btn-primary-color:               $btn-primary-color !default;
+$lti-advantage-ql-btn-primary-background-color:    $btn-primary-bg !default;
+$lti-advantage-ql-btn-primary-border-color:        $btn-primary-border !default;
+$lti-advantage-ql-btn-secondary-color:             $btn-secondary-color !default;
+$lti-advantage-ql-btn-secondary-background-color:  scale-color($btn-secondary-bg, $lightness: -10%) !default;
+$lti-advantage-ql-btn-secondary-border-color:      scale-color($btn-secondary-border, $lightness: -10%) !default;

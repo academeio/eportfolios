@@ -1,0 +1,71 @@
+// Display tags styles
+
+.tags {
+    a,
+    a.tag {
+        color: $link-color;
+    }
+}
+
+// Tag result page
+.mytags {
+    margin-top: 1.5625rem; // 25px
+    .tagfreq.badge {
+        color: inherit;
+        border: 1px solid $link-color;
+        background-color: transparent;
+    }
+    .tag {
+        margin-right: $spacing-base;
+    }
+}
+.mytags .selected,
+.tag-results .selected {
+    font-weight: $font-weight-bold;
+    color: $theme-text-midtone-color;
+    text-decoration: none;
+    .badge {
+        border: 1px solid transparent;
+        color: $white;
+        background-color: $theme-text-midtone-color;
+    }
+}
+.tag-results .btn-top-right {
+    margin-right: -0.0625rem; // -1px;
+    margin-top: -2.9375rem; // -47px;
+    height: 2.9375rem; // 47px;
+    margin-left: 70%;
+    margin-bottom: 0;
+
+    @include media-breakpoint-down(lg) {
+        margin: 0;
+        height: auto;
+    }
+}
+.tag-filters {
+    @extend .clearfix;
+    background: scale-color($card-bg, $lightness: -1.5%);
+    padding: $card-spacer-y $card-spacer-x;
+    border-bottom: $card-border-width solid $card-border-color;
+    .float-end {
+      margin-top: 0.5rem; // 8px;
+    }
+}
+
+//Edit tag page
+.tag-action-description {
+    color: $theme-text-lighttone-color;
+    font-style: italic;
+    font-size: $font-size-sm;
+    max-width: 90%;
+    display: block;
+    margin-top: $spacing-base;
+    margin-bottom: $spacing-lg;
+}
+
+.moretags {
+    .icon-ellipsis-h {
+        vertical-align: -$spacing-xs;
+        padding-left: 0.125rem; // 2px;
+    }
+}

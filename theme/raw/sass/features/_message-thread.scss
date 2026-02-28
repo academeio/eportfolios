@@ -1,0 +1,28 @@
+.message-preview {
+    .metadata {
+        display: none;
+        @include media-breakpoint-up(sm) {
+            display: inline-block;
+        }
+    }
+}
+
+.message-content {
+    width: 100%;
+    padding-left: 4.0625rem; // 65px;
+    .date,
+    .recipients {
+        margin-bottom: 0;
+    }
+    .subject {
+        padding-bottom: $card-spacer-y;
+        margin-bottom: 1.3125rem; // 21px;
+        border-bottom: $card-border-width solid $card-border-color;
+    }
+    .date,
+    .recipients,
+    .subject {
+        color: $theme-text-midtone-color;
+        font-size: $font-size-sm;
+    }
+}

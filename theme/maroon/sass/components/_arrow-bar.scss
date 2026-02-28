@@ -1,0 +1,14 @@
+.arrow-bar {
+  border-radius: 0;
+}
+
+.nav-inpage {
+    &.nav > li {
+        > a, button {
+            margin-top: 1px;
+            margin-bottom: 0;
+            padding: 1rem .5rem;
+            border-radius: 0;
+        }
+    }
+}
