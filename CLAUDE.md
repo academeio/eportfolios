@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ePortfolios is an open-source ePortfolio and competency assessment platform for educational institutions, forked from Mahara 22.10.0 (GPL v3). Current version: 22.20.0.
+ePortfolios is an open-source ePortfolio and competency assessment platform for educational institutions, forked from Mahara 22.10.0 (GPL v3). Current version: 22.20.1.
 
 **Stack:** PHP 8.1+, PostgreSQL 12+ or MariaDB 10.6+, Bootstrap 5, SASS/SCSS, jQuery, Smarty templates (Dwoo variant), Apache/Nginx.
 
@@ -175,7 +175,7 @@ Themes in `theme/` directory. Each has `themeconfig.php` defining parent and CSS
 | `lib/dml.php` | Database abstraction layer |
 | `lib/view.php` | View/page/block management |
 | `lib/config-defaults.php` | All default configuration values (~1400 lines) |
-| `lib/version.php` | Version number (2026022800, series 22.20) |
+| `lib/version.php` | Version number (2026030100, series 22.20) |
 | `config-dist.php` | Configuration template (copy to `config.php`) |
 
 ## Conventions

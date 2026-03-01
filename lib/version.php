@@ -19,6 +19,6 @@ $config = new stdClass();
 
 $config->version = 2026030100;
 $config->series = '22.20';
-$config->release = '22.20.0';
+$config->release = '22.20.1';
 $config->minupgradefrom = 2022090903;
 $config->minupgraderelease = '22.10.0 (Mahara 22.10.0)';
