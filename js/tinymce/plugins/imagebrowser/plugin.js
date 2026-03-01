@@ -1,16 +1,66 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
- * Released under LGPL License.
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
+ * @package eportfolios
+ * @copyright Copyright, Moxiecode Systems AB (original)
+ * @copyright Copyright (C) 2026 Academe Research, Inc
+ * @license LGPL License - http://www.tinymce.com/license
  */
 
 /*global tinymce:true */
 
 tinymce.PluginManager.add('imagebrowser', function(editor) {
+
+    /**
+     * Detect the current page context by reading hidden form fields.
+     * Returns an object with viewid, blogpostid, blogid, postid, group,
+     * institution values used to determine the file-browser tab context.
+     */
+    function getPageContext() {
+        var context = {
+            view: 0,
+            post: 0,
+            blogid: 0,
+            blogpostid: 0,
+            group: 0,
+            institution: 0
+        };
+
+        if (jQuery('#viewid').length) {
+            context.view = jQuery('#viewid').val();
+        }
+        if (jQuery('#editpost_blogpost').length) {
+            context.blogpostid = jQuery('#editpost_blogpost').val();
+        }
+        if (jQuery('#editpost_blog').length) {
+            context.blogid = jQuery('#editpost_blog').val();
+        }
+        if (jQuery('#edittopic_post').length) {
+            context.post = jQuery('#edittopic_post').val();
+        }
+
+        if (jQuery('#newblog_group').length) {
+            context.group = jQuery('#newblog_group').val();
+        }
+        else if (jQuery('#editblog_group').length) {
+            context.group = jQuery('#editblog_group').val();
+        }
+        else if (jQuery('#edit_interaction_group').length) {
+            context.group = jQuery('#edit_interaction_group').val();
+        }
+        else if (jQuery('input[name="group"]').length) {
+            context.group = jQuery('input[name="group"]').val();
+        }
+
+        if (jQuery('#newblog_institution').length) {
+            context.institution = jQuery('#newblog_institution').val();
+        }
+        if (jQuery('#editblog_institution').length) {
+            context.institution = jQuery('#editblog_institution').val();
+        }
+
+        return context;
+    }
 
     function imageBrowserDialogue() {
         return function () {
@@ -79,53 +129,18 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             data.width = data.height = data.hspace = data.vspace = data.border = data.align = data.style = data.showcaption = '';
         }
 
-        // are we in a view, somewhere in a group, etc? (forum topic, forum or group page, blog, blog post, etc.?)
-        // this determines selected tab for file browser
-        // TODO find a better way than scraping the page like this
-        var viewid = 0;
-        if (jQuery('#viewid').length) {
-            viewid = jQuery('#viewid').val()
-        }
-        var blogpostid = 0;
-        if (jQuery('#editpost_blogpost').length) {
-            blogpostid = jQuery('#editpost_blogpost').val()
-        }
-        var blogid = 0;
-        if (jQuery('#editpost_blog').length) {
-            blogid = jQuery('#editpost_blog').val()
-        }
-        var postid = 0;
-        if (jQuery('#edittopic_post').length) {
-            postid = jQuery('#edittopic_post').val()
-        }
-        var group = 0;
-        if (jQuery('#newblog_group').length) {
-            group = jQuery('#newblog_group').val();
-        }
-        else if (jQuery('#editblog_group').length) {
-            group = jQuery('#editblog_group').val();
-        }
-        else if (jQuery('#edit_interaction_group').length) {
-            group = jQuery('#edit_interaction_group').val();
-        }
-        else if (jQuery('input[name="group"]').length) {
-            group = jQuery('input[name="group"]').val();
-        }
-        var institution = 0;
-        if (jQuery('#newblog_institution').length) {
-            institution = jQuery('#newblog_institution').val();
-        }
-        if (jQuery('#editblog_institution').length) {
-            institution = jQuery('#editblog_institution').val();
-        }
-        var pd = {'view': viewid,
-                  'post': postid,
-                  'blogid': blogid,
-                  'blogpostid': blogpostid,
-                  'group': group,
-                  'institution': institution,
-                  'selected': selected,
-                  'change': 1};
+        // Detect page context (view, group, blog, etc.) for file browser tab selection
+        var context = getPageContext();
+        var pd = {
+            'view': context.view,
+            'post': context.post,
+            'blogid': context.blogid,
+            'blogpostid': context.blogpostid,
+            'group': context.group,
+            'institution': context.institution,
+            'selected': selected,
+            'change': 1
+        };
 
         sendjsonrequest(config['wwwroot'] + 'json/imagebrowser.json.php', pd, 'POST', function(ibdata) {
             addImageBrowser(ibdata);
@@ -194,8 +209,12 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
 
             jQuery(browser).removeClass('d-none');
 
-            // execute additional js for the config block
-            eval(configblock.data.javascript);
+            // Execute additional JS for the config block (Pieform init code).
+            // Uses DOM script injection instead of eval() for safer global-scope execution.
+            var scriptEl = document.createElement('script');
+            scriptEl.textContent = configblock.data.javascript;
+            document.body.appendChild(scriptEl);
+            document.body.removeChild(scriptEl);
 
             if (deletebutton.length) {
                 deletebutton.trigger('focus');
@@ -532,7 +551,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
 
     editor.ui.registry.addButton('imagebrowser', {
         icon: 'image',
-        tooltip: 'Insert/edit image',
+        tooltip: 'Insert image',
         onAction: imageBrowserDialogue(),
         onSetup: function(api) {
             var nodeChangeHandler = function(e) {
