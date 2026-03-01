@@ -1544,5 +1544,26 @@
                 <INDEX NAME="statusix" UNIQUE="false" FIELDS="status"/>
             </INDEXES>
         </TABLE>
+        <TABLE NAME="content_template">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="content" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="category" TYPE="char" LENGTH="100" NOTNULL="false" />
+                <FIELD NAME="sort_order" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="builtin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="activeix" UNIQUE="false" FIELDS="active" />
+                <INDEX NAME="categoryix" UNIQUE="false" FIELDS="category" />
+            </INDEXES>
+        </TABLE>
     </TABLES>
 </XMLDB>

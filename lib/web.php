@@ -304,7 +304,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $mathslate = (get_config('mathjax')) ? 'mathslate' : '';
                     $toolbar = array(
                         null,
-                        '"toolbar_toggle | blocks | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
+                        '"toolbar_toggle | blocks | bold italic | bullist numlist | link unlink | imagebrowser contenttemplates | undo redo"',
                         '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
                         '"fontfamily | fontsize | emoticons nonbreaking charmap ' . $mathslate . ' | table | removeformat pastetext | anchor | code"',
                     );
@@ -330,7 +330,8 @@ EOF;
 
                     // Build external_plugins config for self-hosted custom plugins
                     $external_plugins = "imagebrowser: '{$wwwroot}js/tinymce/plugins/imagebrowser/plugin.js',\n";
-                    $external_plugins .= "        tooltoggle: '{$wwwroot}js/tinymce/plugins/tooltoggle/plugin.js'";
+                    $external_plugins .= "        tooltoggle: '{$wwwroot}js/tinymce/plugins/tooltoggle/plugin.js',\n";
+                    $external_plugins .= "        contenttemplates: '{$wwwroot}js/tinymce/plugins/contenttemplates/plugin.js'";
                     if (!empty($mathslate)) {
                         $external_plugins .= ",\n        mathslate: '{$wwwroot}js/tinymce/plugins/mathslate/plugin.js'";
                     }
@@ -2363,6 +2364,12 @@ function admin_nav() {
             'url'    => 'admin/site/menu.php',
             'title'  => get_string('menus', 'admin'),
             'weight' => 30,
+        ),
+        'configsite/contenttemplates' => array(
+            'path'   => 'configsite/contenttemplates',
+            'url'    => 'admin/site/contenttemplates.php',
+            'title'  => get_string('contenttemplates', 'contenttemplates'),
+            'weight' => 35,
         ),
         'configsite/networking' => array(
             'path'   => 'configsite/networking',

@@ -933,5 +933,35 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {artefact} SET license = REPLACE(license, 'https://www.gnu.org/', 'https://www.gnu.org/')");
     }
 
+    if ($oldversion < 2026030100) {
+        log_debug('Creating content_template table for Content Templates plugin');
+        $table = new XMLDBTable('content_template');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('description', XMLDB_TYPE_TEXT, 'small');
+        $table->addFieldInfo('content', XMLDB_TYPE_TEXT, 'big', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('category', XMLDB_TYPE_CHAR, 100);
+        $table->addFieldInfo('sort_order', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('active', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addFieldInfo('builtin', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+
+        // Add indexes to match install.xml
+        $table = new XMLDBTable('content_template');
+        $index = new XMLDBIndex('activeix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('active'));
+        add_index($table, $index);
+        $index = new XMLDBIndex('categoryix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('category'));
+        add_index($table, $index);
+
+        log_debug('Seeding built-in content templates');
+        require_once(get_config('libroot') . 'contenttemplates.php');
+        seed_content_templates();
+    }
+
     return $status;
 }
