@@ -282,8 +282,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $found_tinymce = $check[$key];
                     $javascript_array[] = $wwwroot . 'artefact/file/js/filebrowser.js';
                     $javascript_array[] = $jsroot . 'switchbox.js';
-                    $tinymce_cdn_version = '7.9.1';
-                    $headers[] = '<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/' . $tinymce_cdn_version . '/tinymce.min.js" referrerpolicy="no-referrer"></script>';
+                    $headers[] = '<script src="' . $wwwroot . 'js/tinymce/tinymce.min.js"></script>';
                     // TinyMCE 7 only exposes lowercase `tinymce`; add shim for legacy `tinyMCE` references
                     $headers[] = '<script>window.tinyMCE = window.tinymce;</script>';
                     $content_css = json_encode($THEME->get_url('style/tinymce.css'));
@@ -291,14 +290,12 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $language = substr($language, 0, ((substr_count($language, '_') > 0) ? 5 : 2));
                     $tinymce_language_url_config = '';
                     if ($language != 'en') {
-                        // TinyMCE 7 language packs on cdnjs
-                        $tinymce_lang_cdn_base = 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' . $tinymce_cdn_version . '/langs/';
+                        $tinymce_lang_base = $wwwroot . 'js/tinymce/langs/';
                         $tinymce_lang_file = $language;
                         if (strlen($language) == 2) {
-                            // Try xx_XX format for two-letter codes (e.g. fr → fr_FR)
                             $tinymce_lang_file = $language . '_' . strtoupper($language);
                         }
-                        $tinymce_language_url_config = "language_url: '{$tinymce_lang_cdn_base}{$tinymce_lang_file}.min.js',";
+                        $tinymce_language_url_config = "language_url: '{$tinymce_lang_base}{$tinymce_lang_file}.min.js',";
                     }
                     $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
                     $extramceconfig = isset($extraconfig['tinymceconfig']) ? $extraconfig['tinymceconfig'] : '';
