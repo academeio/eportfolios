@@ -304,7 +304,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $mathslate = (get_config('mathjax')) ? 'mathslate' : '';
                     $toolbar = array(
                         null,
-                        '"toolbar_toggle | blocks | bold italic | bullist numlist | link unlink | imagebrowser contenttemplates | undo redo"',
+                        '"toolbar_toggle | blocks | bold italic | bullist numlist | link unlink | imagebrowser structuredcontent | undo redo"',
                         '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
                         '"fontfamily | fontsize | emoticons nonbreaking charmap ' . $mathslate . ' | table | removeformat pastetext | anchor | code"',
                     );
@@ -331,7 +331,7 @@ EOF;
                     // Build external_plugins config for self-hosted custom plugins
                     $external_plugins = "imagebrowser: '{$wwwroot}js/tinymce/plugins/imagebrowser/plugin.js',\n";
                     $external_plugins .= "        tooltoggle: '{$wwwroot}js/tinymce/plugins/tooltoggle/plugin.js',\n";
-                    $external_plugins .= "        contenttemplates: '{$wwwroot}js/tinymce/plugins/contenttemplates/plugin.js'";
+                    $external_plugins .= "        structuredcontent: '{$wwwroot}js/tinymce/plugins/structuredcontent/plugin.js'";
                     if (!empty($mathslate)) {
                         $external_plugins .= ",\n        mathslate: '{$wwwroot}js/tinymce/plugins/mathslate/plugin.js'";
                     }
@@ -419,6 +419,17 @@ tinyMCE.init({
     'branding': false,
     cache_suffix: '?v={$CFG->cacheversion}',
     {$extramceconfig}
+    structuredcontent: {
+        fetch: async function(query) {
+            return new Promise(function(resolve) {
+                sendjsonrequest('{$wwwroot}json/structuredcontent.json.php',
+                    { query: query || '' }, 'POST', function(data) {
+                        resolve({ templates: data.data.templates, categories: data.data.categories });
+                    });
+            });
+        },
+        insertMode: 'both'
+    },
     setup: function(ed) {
         {$tinymcebehatsetup}
         ed.on('init', function(ed) {
@@ -2368,7 +2379,7 @@ function admin_nav() {
         'configsite/contenttemplates' => array(
             'path'   => 'configsite/contenttemplates',
             'url'    => 'admin/site/contenttemplates.php',
-            'title'  => get_string('contenttemplates', 'contenttemplates'),
+            'title'  => get_string('structuredcontent', 'contenttemplates'),
             'weight' => 35,
         ),
         'configsite/networking' => array(

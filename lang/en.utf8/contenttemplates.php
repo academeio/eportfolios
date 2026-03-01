@@ -13,6 +13,7 @@ defined('INTERNAL') || die();
 
 // Plugin & button
 $string['contenttemplates'] = 'Content templates';
+$string['structuredcontent'] = 'Structured Content';
 $string['inserttemplate'] = 'Insert template';
 $string['contenttemplatedescription'] = 'Insert a pre-designed content template into the editor.';
 
