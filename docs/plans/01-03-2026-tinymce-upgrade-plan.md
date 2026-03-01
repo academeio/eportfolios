@@ -1,11 +1,11 @@
 # TinyMCE Upgrade Project Plan
 
 **Created:** 01-03-2026
-**Status:** Phases 1-3 DONE (shipped in v22.20.1), Phases 4-5 IN PROGRESS
+**Status:** Phases 1-4 DONE (Phases 1-3 shipped in v22.20.1, Phase 4 done), Phase 5 PLANNED, Phase 6 DONE
 
 ## Overview
 
-Upgrade the TinyMCE rich text editor from v5.10.2 (bundled) to v7.9.1 (CDN), modernize custom plugins, and add new editor features.
+Upgrade the TinyMCE rich text editor from v5.10.2 (bundled) to v7.9.1 (CDN), modernize custom plugins, and add new editor features. The templating capability (Phase 5) is a strategic priority — it underpins structured content workflows for competency-based medical education (CBME).
 
 ## Phase 1: CSS Fix (DONE)
 
@@ -64,7 +64,7 @@ Upgrade the TinyMCE rich text editor from v5.10.2 (bundled) to v7.9.1 (CDN), mod
 - `db/upgrade.php` — migration for `content_template` table
 - `lib/version.php` — version bump
 
-## Phase 4: Image Browser Cleanup (IN PROGRESS)
+## Phase 4: Image Browser Cleanup (DONE)
 
 **Goal:** Targeted cleanup of the `imagebrowser` plugin without full rewrite.
 
@@ -83,17 +83,40 @@ The image browser is deeply integrated with the artefact/file system (Pieform fi
 **Files modified:**
 - `js/tinymce/plugins/imagebrowser/plugin.js`
 
-## Phase 5: MathSlate Replacement (IN PROGRESS)
+## Phase 5: TinyMCE Templates Plugin (PLANNED)
+
+**Goal:** Build a structured document templates plugin for TinyMCE 7, replacing the `template` plugin that was removed in TinyMCE 6.
+
+**Priority:** HIGH — this is a strategic capability for competency-based medical education (CBME) workflows.
+
+**Scope:** Separate project/repo. See `docs/plans/01-03-2026-tinymce-templates-plugin.md` for the full design brief and brainstorming context.
+
+### Why This Matters
+
+TinyMCE's built-in `template` plugin was removed in v6. The Phase 3 `contenttemplates` plugin provides simple reusable content snippets (two-column layouts, info boxes, checklists), but it is not a full templating system. CBME workflows require structured document templates with defined sections, placeholder fields, and consistent formatting — clinical encounter logs, competency assessment forms, procedure checklists, reflective narratives, etc.
+
+### Relationship to Phase 3 (Content Templates)
+
+Phase 3's `contenttemplates` inserts *content blocks* — small reusable HTML fragments. Phase 5 is about *document templates* — full-page structures with sections, placeholders, and metadata. They are complementary:
+
+- **Content Templates** (Phase 3): "Insert a two-column layout block here"
+- **Document Templates** (Phase 5): "Start a new Clinical Encounter Log with these 6 sections pre-filled"
+
+### Separate Repo
+
+This plugin will be developed as a standalone open-source project, usable by any TinyMCE 7 installation (not just ePortfolios). It will be integrated into ePortfolios via the `external_plugins` config, same as the other custom plugins.
+
+## Phase 6: MathSlate Replacement (DONE)
 
 **Goal:** Replace the YUI3-based MathSlate equation editor with a lightweight LaTeX-input plugin.
 
 ### Problem
-MathSlate is a 340KB, 42-file plugin using YUI3 (Yahoo UI, unmaintained) loaded from `yahooapis.com` CDN. It also depends on MathJax 2.7.1. The drag-drop equation builder is over-engineered for typical usage — most users who need math notation already know LaTeX.
+MathSlate was a 340KB, 42-file plugin using YUI3 (Yahoo UI, unmaintained) loaded from `yahooapis.com` CDN. It also depended on MathJax 2.7.1. The drag-drop equation builder was over-engineered for typical usage — most users who need math notation already know LaTeX.
 
 ### Solution
-Replace with a self-contained plugin (~200 lines) that provides:
+Replaced with a self-contained plugin (~250 lines) that provides:
 1. **LaTeX text input** — textarea for direct LaTeX entry
-2. **Symbol palette** — clickable grid of common math symbols inserting LaTeX snippets
+2. **Symbol palette** — clickable grid of common math symbols (5 categories) inserting LaTeX snippets
 3. **Live preview** — renders LaTeX via MathJax 3.x in real-time
 4. Uses TinyMCE 7's native `editor.windowManager.open()` dialog API
 
@@ -101,25 +124,19 @@ Replace with a self-contained plugin (~200 lines) that provides:
 **Rewritten:**
 - `js/tinymce/plugins/mathslate/plugin.js` — complete rewrite
 
-**Deleted (YUI and legacy files):**
+**Deleted (37 YUI and legacy files):**
 - `js/tinymce/plugins/mathslate/yui/` — entire YUI directory (~30 files)
-- `js/tinymce/plugins/mathslate/mathslate.html` — YUI dialog page (HTTP)
-- `js/tinymce/plugins/mathslate/mathslate-s.html` — YUI dialog page (HTTPS)
-- `js/tinymce/plugins/mathslate/help.html` — YUI help page
-- `js/tinymce/plugins/mathslate/styles.css` — YUI-specific styles
-- `js/tinymce/plugins/mathslate/strings.js` — Moodle-style string loader
-- `js/tinymce/plugins/mathslate/CHANGES` — changelog
-- `js/tinymce/plugins/mathslate/README.Mahara` — Mahara-specific readme
+- `js/tinymce/plugins/mathslate/mathslate.html`, `mathslate-s.html` — YUI dialog pages
+- `js/tinymce/plugins/mathslate/help.html`, `styles.css`, `strings.js` — YUI support files
+- `js/tinymce/plugins/mathslate/CHANGES`, `README.Mahara` — legacy docs
 
 **Kept:**
-- `js/tinymce/plugins/mathslate/config.json` — symbol definitions (reference)
-- `js/tinymce/plugins/mathslate/img/mathslate.png` — icon
-- `js/tinymce/plugins/mathslate/LICENSE` — license file
-- `js/tinymce/plugins/mathslate/README.md` — documentation
+- `config.json` (symbol definitions, reference), `img/mathslate.png`, `LICENSE`, `README.md`
 
 ## Verification
 
 - **Image Browser:** Open a journal entry → click "Insert image" → verify browser opens, file selection works, image inserts into editor
 - **MathSlate:** Enable MathJax in site config → open editor → click math button → type LaTeX → verify preview renders → insert into editor
+- **Templates:** See separate project plan
 - **Behat:** Existing `test/behat/features/tinymce_editor.feature` scenarios pass
-- **No PHP changes** in Phases 4-5, so no DB upgrade needed
+- **No PHP changes** in Phases 4 and 6, so no DB upgrade needed
