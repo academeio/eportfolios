@@ -350,5 +350,78 @@ function get_builtin_content_templates() {
                 . '<p><strong>Date:</strong> </p>'
                 . '<p><strong>Topics to follow up:</strong> </p>',
         ),
+        // CBME templates — structured documents with placeholder fields
+        array(
+            'title' => 'Clinical Encounter Log',
+            'description' => 'Structured log for documenting clinical encounters with placeholder fields',
+            'category' => 'cbme',
+            'content' => '<h4>Clinical Encounter Log</h4>'
+                . '<p><strong>Date:</strong> <span class="tmpl-field" data-field="date" data-required="true">Enter date</span></p>'
+                . '<p><strong>Setting:</strong> <span class="tmpl-field" data-field="setting">e.g., Emergency Department, Outpatient Clinic</span></p>'
+                . '<h5>Presenting Complaint</h5>'
+                . '<p><span class="tmpl-field" data-field="complaint" data-required="true">Describe the presenting complaint</span></p>'
+                . '<h5>Clinical Reasoning</h5>'
+                . '<p><span class="tmpl-field" data-field="reasoning">Document your clinical reasoning process</span></p>'
+                . '<h5>Procedures / Interventions</h5>'
+                . '<p><span class="tmpl-field" data-field="procedures">List any procedures performed or interventions made</span></p>'
+                . '<h5>Learning Points</h5>'
+                . '<p><span class="tmpl-field" data-field="learning" data-required="true">What did you learn from this encounter?</span></p>'
+                . '<h5>Supervisor Feedback</h5>'
+                . '<p><span class="tmpl-field" data-field="feedback">Record supervisor feedback</span></p>',
+        ),
+        array(
+            'title' => 'Reflective Narrative (Gibbs)',
+            'description' => 'Guided reflection using the Gibbs reflective cycle with placeholder fields',
+            'category' => 'cbme',
+            'content' => '<h4>Reflective Narrative</h4>'
+                . '<h5>Description</h5>'
+                . '<p><span class="tmpl-field" data-field="description" data-required="true">What happened? Describe the event or experience</span></p>'
+                . '<h5>Feelings</h5>'
+                . '<p><span class="tmpl-field" data-field="feelings">What were you thinking and feeling?</span></p>'
+                . '<h5>Evaluation</h5>'
+                . '<p><span class="tmpl-field" data-field="evaluation">What was good and bad about the experience?</span></p>'
+                . '<h5>Analysis</h5>'
+                . '<p><span class="tmpl-field" data-field="analysis">What sense can you make of the situation?</span></p>'
+                . '<h5>Conclusion</h5>'
+                . '<p><span class="tmpl-field" data-field="conclusion">What else could you have done?</span></p>'
+                . '<h5>Action Plan</h5>'
+                . '<p><span class="tmpl-field" data-field="action_plan" data-required="true">What will you do differently next time?</span></p>',
+        ),
+        array(
+            'title' => 'Case Presentation',
+            'description' => 'Standardized medical case presentation format with placeholder fields',
+            'category' => 'cbme',
+            'content' => '<h4>Case Presentation</h4>'
+                . '<p><strong>Date:</strong> <span class="tmpl-field" data-field="date">Enter date</span></p>'
+                . '<h5>History of Presenting Illness</h5>'
+                . '<p><span class="tmpl-field" data-field="history" data-required="true">Present the history</span></p>'
+                . '<h5>Examination Findings</h5>'
+                . '<p><span class="tmpl-field" data-field="examination">Describe relevant examination findings</span></p>'
+                . '<h5>Investigations</h5>'
+                . '<p><span class="tmpl-field" data-field="investigations">List investigations and results</span></p>'
+                . '<h5>Differential Diagnosis</h5>'
+                . '<p><span class="tmpl-field" data-field="differential" data-required="true">List differential diagnoses with reasoning</span></p>'
+                . '<h5>Management Plan</h5>'
+                . '<p><span class="tmpl-field" data-field="management" data-required="true">Describe the management plan</span></p>'
+                . '<h5>Learning Points</h5>'
+                . '<p><span class="tmpl-field" data-field="learning">Key learning from this case</span></p>',
+        ),
+        array(
+            'title' => 'Procedure Log',
+            'description' => 'Structured record of a procedure performed with placeholder fields',
+            'category' => 'cbme',
+            'content' => '<h4>Procedure Log</h4>'
+                . '<p><strong>Date:</strong> <span class="tmpl-field" data-field="date" data-required="true">Enter date</span></p>'
+                . '<p><strong>Procedure:</strong> <span class="tmpl-field" data-field="procedure" data-required="true">Name of procedure</span></p>'
+                . '<p><strong>Supervision Level:</strong> <span class="tmpl-field" data-field="supervision">e.g., Direct, Indirect, Independent</span></p>'
+                . '<h5>Indication</h5>'
+                . '<p><span class="tmpl-field" data-field="indication">Why was this procedure performed?</span></p>'
+                . '<h5>Technique</h5>'
+                . '<p><span class="tmpl-field" data-field="technique">Describe the technique used</span></p>'
+                . '<h5>Outcome / Complications</h5>'
+                . '<p><span class="tmpl-field" data-field="outcome">Result and any complications</span></p>'
+                . '<h5>Reflection</h5>'
+                . '<p><span class="tmpl-field" data-field="reflection">What did you learn? What would you do differently?</span></p>',
+        ),
     );
 }

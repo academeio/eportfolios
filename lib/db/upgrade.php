@@ -963,5 +963,18 @@ function xmldb_core_upgrade($oldversion=0) {
         seed_content_templates();
     }
 
+    if ($oldversion < 2026030200) {
+        log_debug('Updating content template categories for Structured Content plugin');
+
+        // Re-categorize Phase 3 built-in templates into "snippets" category
+        execute_sql(
+            "UPDATE {content_template} SET category = 'snippets' WHERE builtin = 1 AND category IN ('layout', 'reflection', 'assessment', 'general', 'portfolio')"
+        );
+
+        log_debug('Seeding CBME content templates');
+        require_once(get_config('libroot') . 'contenttemplates.php');
+        seed_content_templates();
+    }
+
     return $status;
 }
