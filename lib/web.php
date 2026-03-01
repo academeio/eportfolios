@@ -384,7 +384,7 @@ window.maharaTinyMCEConfig = {
         + ",iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type|style]"
         + ",a[id|class|title|href|name|target]"
         + ",button[id|class|title]"
-    ,urlconverter_callback : "custom_urlconvert",
+    ,urlconverter_callback : custom_urlconvert,
     language: '{$language}',
     {$tinymce_language_url_config}
     directionality: "{$tinymce_langdir}",

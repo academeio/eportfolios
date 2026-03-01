@@ -549,7 +549,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         editor.serializer.addNodeFilter('figure', toggleContentEditableState(false));
     });
 
-    editor.ui.registry.addButton('imagebrowser', {
+    editor.ui.registry.addToggleButton('imagebrowser', {
         icon: 'image',
         tooltip: 'Insert image',
         onAction: imageBrowserDialogue(),
