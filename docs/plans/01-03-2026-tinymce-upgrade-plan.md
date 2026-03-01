@@ -89,7 +89,7 @@ The image browser is deeply integrated with the artefact/file system (Pieform fi
 
 **Priority:** HIGH — this is a strategic capability for competency-based medical education (CBME) workflows.
 
-**Scope:** Separate project/repo. See `docs/plans/01-03-2026-tinymce-templates-plugin.md` for the full design brief and brainstorming context.
+**Scope:** Separate project/repo (`academeio/tinymce-structured-content`). See `docs/plans/01-03-2026-tinymce-structured-content-design.md` for the full approved design.
 
 ### Why This Matters
 
