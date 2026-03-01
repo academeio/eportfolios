@@ -83,12 +83,12 @@ function pieform_element_wysiwyg_get_headdata() {
     if (is_html_editor_enabled() && !empty($_PIEFORM_WYSIWYGS)) {
         $result = '<script>'
          . "\nvar editor_to_focus;"
-         . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
+         . "\nPieformManager.connect('onsubmit', null, function() { tinymce.triggerSave(); });"
          . "\nPieformManager.connect('onload', null, function() {\n";
         foreach ($_PIEFORM_WYSIWYGS as $name => $editors) {
             $result .= "    if (!arguments[0] || arguments[0]=='{$name}') {\n";
             foreach($editors as $editorname => $editor) {
-                $result .= "        tinyMCE.execCommand('mceAddEditor', false, '$editor');\n";
+                $result .= "        maharaAddEditor('$editor');\n";
                 $result .= "        jQuery('#{$editor}').on('focus', function() {\n";
                 $result .= "            editor_to_focus = '$editor';\n";
                 $result .= "        });\n";
@@ -99,7 +99,7 @@ function pieform_element_wysiwyg_get_headdata() {
         foreach ($_PIEFORM_WYSIWYGS as $name => $editors) {
             $result .= "    if (!arguments[0] || arguments[0]=='{$name}') {\n";
             foreach($editors as $editorname => $editor) {
-                $result .= "        tinyMCE.execCommand('mceRemoveEditor', false, '$editor');\n";
+                $result .= "        maharaRemoveEditor('$editor');\n";
             }
             $result .= "    };\n";
         }
@@ -150,11 +150,10 @@ function pieform_element_wysiwyg_views_js(Pieform $form, $element) {
     if (is_html_editor_enabled()) {
         $formname = json_encode($form->get_name());
         $editor = json_encode($form->get_name() . '_' . $element['name']);
-        return "\ntinyMCE.idCounter=0;"
-            . "\ntinyMCE.execCommand('mceAddEditor', false, $editor);"
-            . "\nPieformManager.connect('onsubmit', $formname, tinyMCE.triggerSave);"
+        return "\nmaharaAddEditor($editor);"
+            . "\nPieformManager.connect('onsubmit', $formname, function() { tinymce.triggerSave(); });"
             . "\nPieformManager.connect('onreply', $formname, function () {"
-            . "\n  tinyMCE.execCommand('mceRemoveEditor', false, $editor);"
+            . "\n  maharaRemoveEditor($editor);"
             . "});";
     }
     return '';

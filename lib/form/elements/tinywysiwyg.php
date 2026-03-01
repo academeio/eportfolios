@@ -55,11 +55,10 @@ function pieform_element_tinywysiwyg_views_js(Pieform $form, $element) {
     if (is_html_editor_enabled()) {
         $formname = json_encode($form->get_name());
         $editor = json_encode($form->get_name() . '_' . $element['name']);
-        return "\ntinyMCE.idCounter=0;"
-            . "\ntinyMCE.execCommand('mceAddEditor', false, $editor);"
-            . "\nPieformManager.connect('onsubmit', $formname, tinyMCE.triggerSave);"
+        return "\nmaharaAddEditor($editor);"
+            . "\nPieformManager.connect('onsubmit', $formname, function() { tinymce.triggerSave(); });"
             . "\nPieformManager.connect('onreply', $formname, function () {"
-            . "\n  tinyMCE.execCommand('mceRemoveEditor', false, $editor);"
+            . "\n  maharaRemoveEditor($editor);"
             . "});";
     }
     return '';

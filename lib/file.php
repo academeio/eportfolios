@@ -336,11 +336,16 @@ function file_mime_type($file, $originalfilename=false) {
     }
 
     if ($magicfile !== false && class_exists('finfo') ) {
-        if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
-            $type = @$finfo->file($file);
+        try {
+            if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
+                $type = @$finfo->file($file);
+            }
+        }
+        catch (Exception $e) {
+            // PHP 8.1+ throws exceptions for corrupt magic files
         }
     }
-    else if (function_exists('mime_content_type')) {
+    if (empty($type) && function_exists('mime_content_type')) {
         $type = mime_content_type($file);
     }
 
@@ -386,29 +391,34 @@ function standard_magic_paths($key = 'fullarray') {
  * path directly in it, but instead just store a key corresponding to a path specified in
  * standard_magic_paths().
  *
- * NOTE: In this scenario we don't change powered_by_mahara.png to svg because
- * the path is used to test whether we are looking at a working magicdb file.
+ * NOTE: We use a PNG file to test whether we are looking at a working magicdb file.
  */
 function update_magicdb_path() {
-    // Determine where the server's "magic" db is\
+    // Determine where the server's "magic" db is
     if (class_exists('finfo')) {
-        $file = get_config('docroot') . 'theme/raw/images/powered_by_mahara.png';
+        $file = get_config('docroot') . 'theme/raw/images/powered_by_eportfolios.png';
 
         $magicpathstotry = standard_magic_paths();
         $workingpath = false;
         foreach ($magicpathstotry as $i=>$magicfile) {
             $type = false;
-            if (defined('FILEINFO_MIME_TYPE')) {
-                if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
-                    $type = @$finfo->file($file);
-                }
-            }
-            else if ($finfo = @new finfo(FILEINFO_MIME, $magicfile)) {
-                if ($typecharset = @$finfo->file($file)) {
-                    if ($bits = explode(';', $typecharset)) {
-                        $type = $bits[0];
+            try {
+                if (defined('FILEINFO_MIME_TYPE')) {
+                    if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
+                        $type = @$finfo->file($file);
                     }
                 }
+                else if ($finfo = @new finfo(FILEINFO_MIME, $magicfile)) {
+                    if ($typecharset = @$finfo->file($file)) {
+                        if ($bits = explode(';', $typecharset)) {
+                            $type = $bits[0];
+                        }
+                    }
+                }
+            }
+            catch (Exception $e) {
+                // PHP 8.1+ throws exceptions for corrupt magic files; skip this path
+                continue;
             }
             if ($type == 'image/png') {
                 $workingpath = $i;

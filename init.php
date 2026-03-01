@@ -487,17 +487,20 @@ if (!defined('INSTALLER')) {
         }
 
         // Make sure that multirecipient notifications is installed and active
-        safe_require('module', 'multirecipientnotification');
-        if (!PluginModuleMultirecipientnotification::is_active()) {
-            throw new ConfigSanityException(get_string('multirecipientnotificationnotenabled',
-                                                       'module.multirecipientnotification'));
-        }
-        if (!$siteclosedforupgrade) {
-            // Make sure that placeholder block is installed and active
-            safe_require('blocktype', 'placeholder');
-            if (!PluginBlocktypePlaceholder::is_active()) {
-                throw new ConfigSanityException(get_string('placeholderblocktypenotenabled',
-                                                           'blocktype.placeholder'));
+        // Skip these checks during fresh install (table exists but has no rows yet)
+        if ($plugins) {
+            safe_require('module', 'multirecipientnotification');
+            if (!PluginModuleMultirecipientnotification::is_active()) {
+                throw new ConfigSanityException(get_string('multirecipientnotificationnotenabled',
+                                                           'module.multirecipientnotification'));
+            }
+            if (!$siteclosedforupgrade) {
+                // Make sure that placeholder block is installed and active
+                safe_require('blocktype', 'placeholder');
+                if (!PluginBlocktypePlaceholder::is_active()) {
+                    throw new ConfigSanityException(get_string('placeholderblocktypenotenabled',
+                                                               'blocktype.placeholder'));
+                }
             }
         }
     }

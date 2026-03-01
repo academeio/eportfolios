@@ -284,6 +284,8 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $javascript_array[] = $jsroot . 'switchbox.js';
                     $tinymce_cdn_version = '7.9.1';
                     $headers[] = '<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/' . $tinymce_cdn_version . '/tinymce.min.js" referrerpolicy="no-referrer"></script>';
+                    // TinyMCE 7 only exposes lowercase `tinymce`; add shim for legacy `tinyMCE` references
+                    $headers[] = '<script>window.tinyMCE = window.tinymce;</script>';
                     $content_css = json_encode($THEME->get_url('style/tinymce.css'));
                     $language = current_language();
                     $language = substr($language, 0, ((substr_count($language, '_') > 0) ? 5 : 2));
@@ -369,7 +371,8 @@ EOF;
 $samepage = get_string('samepage', 'mahara');
                     $headers[] = <<<EOF
 <script>
-tinyMCE.init({
+// Store TinyMCE config globally for dynamic editor creation (TinyMCE 7 API)
+window.maharaTinyMCEConfig = {
     {$tinymceconfig}
     schema: 'html4',
     block_formats: 'Paragraph=p; Heading 1=h4; Heading 2=h5; Heading 3=h6; Preformatted=pre',
@@ -458,7 +461,22 @@ tinyMCE.init({
         });
         {$extrasetup}
     }
-});
+};
+// Initialize TinyMCE with stored config
+tinymce.init(maharaTinyMCEConfig);
+
+// Helper to dynamically add a TinyMCE editor to a textarea (TinyMCE 7 replacement for execCommand('mceAddEditor'))
+window.maharaAddEditor = function(elementId) {
+    if (tinymce.get(elementId)) {
+        tinymce.get(elementId).remove();
+    }
+    tinymce.init(Object.assign({}, maharaTinyMCEConfig, {selector: '#' + elementId}));
+};
+// Helper to remove a TinyMCE editor from a textarea
+window.maharaRemoveEditor = function(elementId) {
+    var ed = tinymce.get(elementId);
+    if (ed) { ed.remove(); }
+};
 
 function imageBrowserConfigSuccess(form, data) {
     // handle updates to file browser
@@ -481,7 +499,7 @@ function custom_urlconvert (u, n, e) {
     if (u.indexOf('skype:') == 0) {
       return u;
     }
-    var t = tinyMCE.activeEditor;
+    var t = tinymce.activeEditor;
 
     // Don't convert link href since that's the CSS files that gets loaded into the editor also skip local file URLs
     if (!t.options.get('convert_urls') || (e && e.nodeName == 'LINK') || u.indexOf('file:') === 0)
