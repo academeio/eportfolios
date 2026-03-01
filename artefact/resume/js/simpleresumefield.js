@@ -28,7 +28,7 @@ jQuery(function($) {
             if (typeof tinyMCE != 'undefined') {
                 var editor = tinyMCE.get(t),
                 formTop =  container.closest('#main-column-container').attr('id');
-                $('.mce-toolbar.mce-first').siblings().toggleClass('d-none');
+                $(editor.editorContainer).find('.tox-toolbar-overlord').children().first().siblings().toggleClass('d-none');
                 editor.show();
                 editor.focus();
                 document.location.href = "#" + formTop;

@@ -2,42 +2,30 @@ TinyMCE
 ========
 
 Website: https://www.tiny.cloud/
-Version: 5.10.2
+Version: 7.9.1 (loaded via CDN from cdnjs.cloudflare.com)
+License: GPLv2+
 
-https://www.tiny.cloud/get-tiny/self-hosted/
-- download the latest dev version
-- open the js folder inside the extracted folder
+CDN URL: https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.9.1/tinymce.min.js
 
-Changes:
+TinyMCE core and standard plugins are loaded from cdnjs. Only custom plugins
+are self-hosted in this directory.
 
-  * Added
-    -new versions don't have lang files so keep all of the original language packs (original commit: 259a86431ad1140e15288d39702cea885c08f3fe)
-      - or the single commit: e6281526177bbd62e3b0b4b0fb9efc64fd57aff9
-    -add icons to icons.js inside icons/default
+Upgrade history:
+  * 5.10.2 → 7.9.1 (March 2026)
+    - Switched from bundled distribution to CDN loading
+    - Removed bundled skins, themes, langs, standard plugins, license.txt
+    - Removed server-side spellchecker plugin (browser spellcheck always on)
+    - Removed paste plugin (merged into core in TinyMCE 6)
+    - Removed mobile theme config (removed in TinyMCE 6)
+    - Added license_key: 'gpl' (required since TinyMCE 6.3)
+    - Renamed toolbar items: formatselect→blocks, fontselect→fontfamily,
+      fontsizeselect→fontsize
+    - Renamed config: font_formats→font_family_formats
+    - Added sandbox_iframes: false, convert_unsafe_embeds: false
+    - Migrated custom plugins to TinyMCE 7 APIs
+    - Moved mathslate icon from bundled icons.js into plugin self-registration
 
-    Custom plugins:
-      -/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
-         This is from a previous version that still works. The new one tinymce 5.0 offers is a pay service.
-      -/mathslate (originally added in commit 325cdfac3dfba40efbbad8cd306dcfb385674709)
-        -- includes adding the svg icon to htdocs/js/tinymce/icons/default/icons.js
-      -/tooltoggle - this is a custom plugin. Changed function
-         calls to fit with tinymce 5.0. (originally added in commit 2c490a70bfff677c0b95c0565d39162c8c9bc10d)
-      -/spellchecker to use $CFG->spellcheckerengine
-         if that is enabled instead of default browser spellchecker.
-         (original commit: a42e68b43e4a63db19569facae61898af1b86d3f)
-    - changed the heading of help file for mathslate plugin
-    - restrict heading levels on mobile for accessibility (original commit: 844604d96bcd095cd08235fc97b8f700f81aa55a)
-
- * Removed
-   - replace the current files
-   - remove jquery.tinymce.min.js and tinymce.min.js
-
-    min.js files from main and plugin folders
-    skins/ui/oxide-dark
-    plugins/help
-    min.js from plugin folders
-    skins/content
-    (We used to remove theme/mobile, but this is required for the editor
-    to display on Android devices) We currently override the buttons displayed
-    in the mobile toolbar (in lib/web.php) so image is not there, as there is no easy way to configure it to work with our imagebrowser.
-
+Custom plugins (self-hosted):
+  - plugins/imagebrowser — Image browser dialog using Mahara file browser
+  - plugins/tooltoggle — Toolbar row collapse/expand toggle
+  - plugins/mathslate — LaTeX math editor (requires MathJax to be enabled)

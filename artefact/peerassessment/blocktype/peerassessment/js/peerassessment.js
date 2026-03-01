@@ -170,7 +170,7 @@ function addPeerassessmentError(form, data) {
     if (isTinyMceUsed()) {
         var mce = tinyMCE.get(formname + '_message');
         mce.show();
-        jQuery('.mce-toolbar.mce-first').siblings().addClass('hidden');
+        jQuery(mce.editorContainer).find('.tox-toolbar-overlord').children().first().siblings().addClass('d-none');
         mce.focus();
     }
     if (jQuery('#' + formname).hasClass('modal-docked')) {

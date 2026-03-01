@@ -371,9 +371,10 @@ $cfg->leapovermnetloglevel = 0;
 // $cfg->blockeditorheight = 550;
 
 /**
- * @global boolean $cfg->tinymcespellcheck Activate the TinyMCE spellcheck plugin. Not usually necessary
- * in modern browsers, which have their own built-in spellchecker. Requires the PHP "enchant" or "pspell"
- * module to be installed.
+ * @global boolean $cfg->tinymcespellcheck DEPRECATED since TinyMCE 7 upgrade.
+ * The server-side spellchecker plugin has been removed. Browser spellcheck is
+ * always enabled. This setting is retained for backwards compatibility but
+ * has no effect.
  */
 //$cfg->tinymcespellcheckerengine = 'enchant';
 //$cfg->tinymcespellcheckerengine = 'pspell';

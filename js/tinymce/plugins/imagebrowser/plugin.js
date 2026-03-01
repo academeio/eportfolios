@@ -519,7 +519,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 var node = nodes[i];
                 if (hasImageClass(node)) {
                     node.attr('contenteditable', state ? 'false' : null);
-                    tinymce.util.Tools.resolve('tinymce.util.Tools').each(node.getAll('figcaption'), toggleContentEditable);
+                    tinymce.util.Tools.each(node.getAll('figcaption'), toggleContentEditable);
                 }
             }
         };
@@ -534,14 +534,24 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         icon: 'image',
         tooltip: 'Insert/edit image',
         onAction: imageBrowserDialogue(),
-        stateSelector: 'img:not([data-mce-object],[data-mce-placeholder])'
+        onSetup: function(api) {
+            var nodeChangeHandler = function(e) {
+                var node = e.element;
+                var isImg = node.nodeName === 'IMG'
+                    && !node.getAttribute('data-mce-object')
+                    && !node.getAttribute('data-mce-placeholder');
+                api.setActive(isImg);
+            };
+            editor.on('NodeChange', nodeChangeHandler);
+            return function() {
+                editor.off('NodeChange', nodeChangeHandler);
+            };
+        }
     });
 
     editor.ui.registry.addMenuItem('imagebrowser', {
         icon: 'image',
         text: 'Insert image',
-        onclick: imageBrowserDialogue(),
-        context: 'insert',
-        prependToContext: true
+        onAction: imageBrowserDialogue()
     });
 });

@@ -1,17 +1,18 @@
 /**
  *
- * @package    mahara
+ * @package    eportfolios
  * @subpackage core
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  Academe Research, Inc
  *
  */
 
 /*global tinymce:true */
 
 tinymce.PluginManager.add('tooltoggle', function(editor) {
-    var tooltoggleState = false, DOM = tinymce.DOM;
+    var tooltoggleState = false;
     var firstrow;
 
     editor.ui.registry.addToggleButton('toolbar_toggle', {
@@ -20,24 +21,13 @@ tinymce.PluginManager.add('tooltoggle', function(editor) {
         onAction: function(api) {
             firstrow.siblings().toggleClass('d-none');
             firstrow.find('button').first().toggleClass('flipicon');
-            api.setActive(!api.isActive());
             tooltoggleState = !tooltoggleState;
-            editor.fire('ToolToggleStateChanged', {state: tooltoggleState});
+            api.setActive(tooltoggleState);
         },
         onSetup: function(api) {
-            var self = this;
             firstrow = jQuery(editor.editorContainer).find('.tox-toolbar-overlord').children().first();
             firstrow.siblings().addClass('d-none');
             firstrow.find('button').first().addClass('flipicon');
-            editor.on('ToolToggleStateChanged', function(api) {
-                if (api.state) {
-                    api.target.formElement[2].title = get_string('toggletoolbarsoff');
-                }
-                else {
-                    api.target.formElement[2].title = get_string('toggletoolbarson');
-                }
-            });
-            api.setActive(self.state);
         }
     });
 });

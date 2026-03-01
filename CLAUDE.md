@@ -19,6 +19,10 @@ Child themes need compiled CSS. The `raw` theme ships pre-compiled; child themes
 npx sass theme/primaryschool/sass/style.scss theme/primaryschool/style/style.css \
   --style=compressed --no-source-map --quiet-deps
 
+# Compile TinyMCE content CSS (raw theme)
+npx sass theme/raw/sass/tinymce.scss theme/raw/style/tinymce.css \
+  --style=compressed --no-source-map --quiet-deps
+
 # Compile all child themes
 for theme in default primaryschool maroon modern ocean; do
   mkdir -p "theme/$theme/style"

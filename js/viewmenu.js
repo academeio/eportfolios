@@ -16,7 +16,7 @@ function addFeedbackError(form, data) {
     if (isTinyMceUsed() && $('#configureblock').hasClass('closed')) {
         var mce = tinyMCE.get('add_feedback_form_message');
         mce.show();
-        jQuery('.mce-toolbar.mce-first').siblings().toggleClass('d-none');
+        jQuery(mce.editorContainer).find('.tox-toolbar-overlord').children().first().siblings().toggleClass('d-none');
         mce.focus();
     }
     // The comment block modal will try to close but since it has errors keep it open

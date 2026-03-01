@@ -282,42 +282,31 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $found_tinymce = $check[$key];
                     $javascript_array[] = $wwwroot . 'artefact/file/js/filebrowser.js';
                     $javascript_array[] = $jsroot . 'switchbox.js';
-                    $javascript_array[] = $jsroot . 'tinymce/tinymce.js';
-                    $stylesheets = array_merge($stylesheets, array_reverse(array_values($THEME->get_url('style/tinymceskin.css', true))));
+                    $tinymce_cdn_version = '7.9.1';
+                    $headers[] = '<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/' . $tinymce_cdn_version . '/tinymce.min.js" referrerpolicy="no-referrer"></script>';
                     $content_css = json_encode($THEME->get_url('style/tinymce.css'));
                     $language = current_language();
                     $language = substr($language, 0, ((substr_count($language, '_') > 0) ? 5 : 2));
-                    if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
-                        // In case the language file exists as a string with both lower and upper case, eg fr_FR we test for this
-                        $language = substr($language, 0, 2) . '_' . strtoupper(substr($language, 0, 2));
-                        if (!file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
-                            // In case we fail to find a language of 5 chars, eg pt_BR (Portuguese, Brazil) we try the 'parent' pt (Portuguese)
-                            $language = substr($language, 0, 2);
-                            if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
-                                $language = 'en';
-                            }
+                    $tinymce_language_url_config = '';
+                    if ($language != 'en') {
+                        // TinyMCE 7 language packs on cdnjs
+                        $tinymce_lang_cdn_base = 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' . $tinymce_cdn_version . '/langs/';
+                        $tinymce_lang_file = $language;
+                        if (strlen($language) == 2) {
+                            // Try xx_XX format for two-letter codes (e.g. fr → fr_FR)
+                            $tinymce_lang_file = $language . '_' . strtoupper($language);
                         }
+                        $tinymce_language_url_config = "language_url: '{$tinymce_lang_cdn_base}{$tinymce_lang_file}.min.js',";
                     }
                     $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
                     $extramceconfig = isset($extraconfig['tinymceconfig']) ? $extraconfig['tinymceconfig'] : '';
 
-                    // Check whether to make the spellchecker available
-                    if (get_config('tinymcespellcheckerengine')) {
-                        $spellchecker = ',spellchecker';
-                        $spellchecker_toolbar = '| spellchecker';
-                        $spellchecker_config = "spellchecker_rpc_url : \"{$jsroot}tinymce/plugins/spellchecker/spellchecker.php\",";
-                    }
-                    else {
-                        $spellchecker = $spellchecker_toolbar = '';
-                        $spellchecker_config = 'browser_spellcheck : true,';
-                    }
                     $mathslate = (get_config('mathjax')) ? 'mathslate' : '';
-                    $mathslateplugin = !empty($mathslate) ? ',' . $mathslate : '';
                     $toolbar = array(
                         null,
-                        '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
+                        '"toolbar_toggle | blocks | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
                         '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
-                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap ' . $mathslate . ' ' . $spellchecker_toolbar . ' | table | removeformat pastetext | anchor | code"',
+                        '"fontfamily | fontsize | emoticons nonbreaking charmap ' . $mathslate . ' | table | removeformat pastetext | anchor | code"',
                     );
 
                     // For right-to-left langs, reverse button order & align controls right.
@@ -339,16 +328,22 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
 EOF;
                     }
 
+                    // Build external_plugins config for self-hosted custom plugins
+                    $external_plugins = "imagebrowser: '{$wwwroot}js/tinymce/plugins/imagebrowser/plugin.js',\n";
+                    $external_plugins .= "        tooltoggle: '{$wwwroot}js/tinymce/plugins/tooltoggle/plugin.js'";
+                    if (!empty($mathslate)) {
+                        $external_plugins .= ",\n        mathslate: '{$wwwroot}js/tinymce/plugins/mathslate/plugin.js'";
+                    }
+
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
-    theme: "silver",
-    mobile: {
-        theme: 'mobile',
-        toolbar: ['undo', 'bold', 'italic', 'link', 'bullist', 'styleselect'],
-    },
+    license_key: 'gpl',
     browser_spellcheck: true,
     contextmenu: false,
-    plugins: "tooltoggle,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
+    plugins: "visualblocks,wordcount,link,lists,table,emoticons,code,fullscreen,directionality,searchreplace,nonbreaking,charmap,anchor",
+    external_plugins: {
+        {$external_plugins}
+    },
     skin: 'oxide',
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
@@ -357,14 +352,15 @@ EOF;
     fix_list_elements: true,
     image_advtab: true,
     table_style_by_css: true,
-    {$spellchecker_config}
+    sandbox_iframes: false,
+    convert_unsafe_embeds: false,
 EOF;
                     }
                     else {
                         $tinymceconfig = <<<EOF
     selector: "textarea.tinywysiwyg",
-    theme: "silver",
-    skin: 'light',
+    license_key: 'gpl',
+    skin: 'oxide',
     plugins: "fullscreen,autoresize",
     toolbar: {$toolbar[0]},
 EOF;
@@ -389,9 +385,10 @@ tinyMCE.init({
         + ",button[id|class|title]"
     ,urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
+    {$tinymce_language_url_config}
     directionality: "{$tinymce_langdir}",
     content_css : {$content_css},
-    font_formats: 'Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Open Sans=Open Sans;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;',
+    font_family_formats: 'Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Open Sans=Open Sans;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;',
     remove_script_host: false,
     relative_urls: false,
     target_list: [
@@ -430,11 +427,11 @@ tinyMCE.init({
             }
         });
         ed.on('keyup change', function (e) {
-            checkTextareaMaxLength(ed.settings.id);
+            checkTextareaMaxLength(ed.id);
         });
         ed.on('LoadContent', function(e) {
-            // Hide all the 2nd/3rd row menu buttons
-            jQuery('.mce-toolbar.mce-first').siblings().addClass('d-none');
+            // Hide all the 2nd/3rd row toolbar buttons (tooltoggle plugin handles this)
+            jQuery(ed.editorContainer).find('.tox-toolbar-overlord').children().first().siblings().addClass('d-none');
             // The tinymce fullscreen mode does not work properly in a transformed container div
             // such as div.vertcentre
             // and IE doesn't like a preset z-index
@@ -472,18 +469,18 @@ function custom_urlconvert (u, n, e) {
     if (u.indexOf('skype:') == 0) {
       return u;
     }
-    var t = tinyMCE.activeEditor, s = t.settings;
+    var t = tinyMCE.activeEditor;
 
     // Don't convert link href since that's the CSS files that gets loaded into the editor also skip local file URLs
-    if (!s.convert_urls || (e && e.nodeName == 'LINK') || u.indexOf('file:') === 0)
+    if (!t.options.get('convert_urls') || (e && e.nodeName == 'LINK') || u.indexOf('file:') === 0)
       return u;
 
     // Convert to relative
-    if (s.relative_urls)
+    if (t.options.get('relative_urls'))
       return t.documentBaseURI.toRelative(u);
 
     // Convert to absolute
-    u = t.documentBaseURI.toAbsolute(u, s.remove_script_host);
+    u = t.documentBaseURI.toAbsolute(u, t.options.get('remove_script_host'));
 
     return u;
 }
