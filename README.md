@@ -33,6 +33,10 @@ development.
 See the [Installation Guide](https://github.com/academeio/eportfolios/wiki/Installation)
 for detailed setup instructions.
 
+## Related Projects
+
+- [ePortfolios Mobile](https://github.com/academeio/eportfolios-mobile) — React Native companion app for uploading portfolio content from mobile devices
+
 ## License
 
 GNU General Public License v3. See [LICENSE](LICENSE) for details.
