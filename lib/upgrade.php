@@ -1231,7 +1231,7 @@ function sort_upgrades($k1, $k2) {
     // else obey the order plugin types returns (strip off plugintype. from the start)
     $weight1 = array_search(substr($k1, 0, strpos($k1, '.')), plugin_types());
     $weight2 = array_search(substr($k2, 0, strpos($k2, '.')), plugin_types());
-    return ($weight1 > $weight2);
+    return ($weight1 <=> $weight2);
 }
 
 /** blocktype categories the system exports (including artefact categories)

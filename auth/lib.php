@@ -2543,7 +2543,7 @@ function auth_handle_account_expiries() {
     $expire   = get_config('defaultaccountinactiveexpire');
     $warn     = get_config('defaultaccountinactivewarn');
 
-    $daystoexpire = ceil($warn / 86400) . ' ';
+    $daystoexpire = ceil((int)$warn / 86400) . ' ';
     $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
     $expiredate = format_date(strtotime('+' . $daystoexpire), 'strftimedate');
 
@@ -2661,7 +2661,7 @@ function auth_handle_institution_expiries() {
 
     // If warning time for institution expiry is set
     if ($warn) {
-        $daystoexpire = ceil($warn / 86400) . ' ';
+        $daystoexpire = ceil((int)$warn / 86400) . ' ';
         $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
         $expiredate = format_date(strtotime('+' . $daystoexpire), 'strftimedate');
 
