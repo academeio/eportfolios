@@ -38,7 +38,7 @@ $options['adminemail']->description     = get_string('cliadminemail1', 'admin');
 $options['adminemail']->required = true;
 
 $options['sitename'] = new stdClass();
-$options['sitename']->examplevalue = 'Mahara site';
+$options['sitename']->examplevalue = 'Academe ePortfolios';
 $options['sitename']->shortoptions = array('n');
 $options['sitename']->description  = get_string('clisitename', 'admin');
 $options['sitename']->required     = false;

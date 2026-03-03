@@ -17,11 +17,11 @@
  * 1. Copy this file from config-dist.php to config.php
  * 2. Change the values in it to suit your environment.
  *
- * Information about this file is available on the ePortfolios wiki:
+ * Information about this file is available on the Academe ePortfolios wiki:
  *     https://github.com/academeio/eportfolios/wiki
  *
- * This file includes only the most commonly used ePortfolios configuration directives. For more options
- * that can be placed in this file, see the ePortfolios lib file:
+ * This file includes only the most commonly used Academe ePortfolios configuration directives. For more options
+ * that can be placed in this file, see the Academe ePortfolios lib file:
  *
  *     htdocs/lib/config-defaults.php
  */
@@ -54,13 +54,13 @@ $cfg->dbpass   = '';
  *  * ../data
  *
  * This path must be writable by the webserver and outside the document root (the
- * place where the ePortfolios files like index.php have been installed).
- * For security purposes, ePortfolios will NOT RUN if this is inside your document root.
+ * place where the Academe ePortfolios files like index.php have been installed).
+ * For security purposes, Academe ePortfolios will NOT RUN if this is inside your document root.
  */
 $cfg->dataroot = '/path/to/uploaddir';
 
 /**
- * wwwroot: The base URL of your ePortfolios installation.
+ * wwwroot: The base URL of your Academe ePortfolios installation.
  *
  * (Normally, this is automatically detected. If it doesn't work for you then try specifying it here.)
  */
