@@ -17,8 +17,8 @@ $string['administration'] = 'Administration';
 // Installer
 $string['installation'] = 'Installation';
 $string['release'] = 'version %s (%s)';
-$string['copyright'] = 'Copyright &copy; 2006-2022 Catalyst IT Limited. &copy; 2026 <a href="https://github.com/academeio/eportfolios">Academe Research, Inc.</a>';
-$string['installmahara'] = 'Install ePortfolios';
+$string['copyright'] = 'Copyright &copy; 2006-2022 Catalyst IT Limited. &copy; 2026 <a href="https://github.com/academeio/eportfolios">Academe Research, Inc. (Academe ePortfolios)</a>';
+$string['installmahara'] = 'Install Academe ePortfolios';
 $string['component'] = 'Component or plugin';
 $string['componentdeprecated'] = 'Component "%s" deprecated';
 $string['plugindeprecated'] = 'Plugin is deprecated';
@@ -37,10 +37,10 @@ $string['performinginstallation'] = 'Performing installation...';
 $string['performingupgrades'] = 'Performing upgrades...';
 $string['runupgrade'] = 'Run upgrade';
 $string['gotoinstallpage'] = 'Install via extensions page';
-$string['successfullyinstalled'] = 'Successfully installed ePortfolios.';
+$string['successfullyinstalled'] = 'Successfully installed Academe ePortfolios.';
 $string['thefollowingupgradesareready'] = 'The following upgrades are ready:';
 $string['thefollowingpluginsareready'] = 'The following new plugins are available:';
-$string['registerthismaharasite'] = 'Register this ePortfolios site';
+$string['registerthismaharasite'] = 'Register this Academe ePortfolios site';
 $string['upgradeloading'] = 'Loading...';
 $string['upgrades'] = 'Upgrades';
 $string['newplugins'] = 'New plugins';
@@ -49,38 +49,38 @@ $string['upgradesuccess'] = 'Successfully upgraded';
 $string['upgradesuccesstoversion'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade.';
 $string['noupgrades'] = 'Nothing to upgrade. You are fully up to date.';
-$string['youcanupgrade'] = 'You can upgrade ePortfolios from %s (%s) to %s (%s).';
+$string['youcanupgrade'] = 'You can upgrade Academe ePortfolios from %s (%s) to %s (%s).';
 $string['upgradeinprogress'] = 'An upgrade began at %s and did not complete. <a href="?rerun=1">Run this upgrade anyway.</a>';
 $string['Plugin'] = 'Plugin';
 $string['jsrequiredforupgrade'] = 'You must enable JavaScript to perform an install or upgrade.';
-$string['dbnotutf8warning'] = 'You are not using a UTF-8 database. ePortfolios stores all data as UTF-8 internally. You may still attempt this upgrade, but it is recommended that you convert your database to UTF-8.';
-$string['dbnotutf8mb4warning'] = 'You are not using a utf8mb4 Character Set (4-Byte UTF-8 Unicode Encoding) database. ePortfolios stores all data as utf8mb4 internally. You may still attempt this upgrade, but it is recommended that you convert your database to utf8mb4.';
+$string['dbnotutf8warning'] = 'You are not using a UTF-8 database. Academe ePortfolios stores all data as UTF-8 internally. You may still attempt this upgrade, but it is recommended that you convert your database to UTF-8.';
+$string['dbnotutf8mb4warning'] = 'You are not using a utf8mb4 Character Set (4-Byte UTF-8 Unicode Encoding) database. Academe ePortfolios stores all data as utf8mb4 internally. You may still attempt this upgrade, but it is recommended that you convert your database to utf8mb4.';
 $string['dbcollationmismatch'] = 'A column of your database is using a collation that is not the same as the database default. Please ensure all columns use the same collation as the database.';
-$string['maharainstalled'] = 'ePortfolios is already installed.';
+$string['maharainstalled'] = 'Academe ePortfolios is already installed.';
 $string['cliadminpassword1'] = 'The password for the administration account';
 $string['cliadminemail1'] = 'The email address for the administration account';
 $string['clisitename'] = 'The site name';
 $string['cliupdatesitenamefailed'] = 'Updating site name failed.';
-$string['cliinstallerdescription'] = 'Install ePortfolios and create required data directories';
-$string['cliinstallingmahara'] = 'Installing ePortfolios';
+$string['cliinstallerdescription'] = 'Install Academe ePortfolios and create required data directories';
+$string['cliinstallingmahara'] = 'Installing Academe ePortfolios';
 $string['versionnumber'] = 'Version: %s';
 $string['plugintype'] = 'Plugin: %s';
 $string['updateeventlogconfigoption'] = 'The value for $cfg->eventloglevel may need to be updated from "masq" to "masquerade" in your config.php file.';
 $string['registrationisoptout'] = 'Anonymous registration data is now opt-out';
 
 // CLI upgrade script
-$string['cli_upgrade_description'] = 'Upgrade the ePortfolios database and data to the version of ePortfolios installed.';
-$string['cli_upgrade_title'] = 'Upgrading ePortfolios';
+$string['cli_upgrade_description'] = 'Upgrade the Academe ePortfolios database and data to the version of Academe ePortfolios installed.';
+$string['cli_upgrade_title'] = 'Upgrading Academe ePortfolios';
 $string['cli_upgrade_force'] = 'Force the upgrade to rerun';
 $string['cli_upgrade_flag'] = 'An unfinished upgrade was detected. To try upgrading again, add the "-f" option to the command.';
 
-$string['cliclearingcaches'] = 'Clearing ePortfolios caches.';
+$string['cliclearingcaches'] = 'Clearing Academe ePortfolios caches.';
 $string['cliclearcachesdescription'] = 'Clearing caches will delete cached data from the server. There is no danger in clearing caches, but your site may appear slower for a while until the server and clients calculate new information and cache it.';
 $string['clearcachesheading'] = 'Clear caches';
 $string['clearcachessubmit'] = 'Clear caches';
 $string['clearingcachessucceed'] = 'All caches were cleared.';
 $string['clearingcacheserror'] = 'Error while clearing caches. Please check logs to get more information about this error.';
-$string['maharanotinstalled'] = 'ePortfolios is not currently installed. Please install ePortfolios before trying to upgrade.';
+$string['maharanotinstalled'] = 'Academe ePortfolios is not currently installed. Please install Academe ePortfolios before trying to upgrade.';
 
 // Admin navigation menu
 $string['adminhome']      = 'Admin home';
@@ -211,7 +211,7 @@ $string['cleanurlsdescription'] = "
 <li>http://eportfolios.example.com/user/bob/bobs-portfolio-page</li>
 </ul>
 Before enabling this option, your server administrator must configure your web server so that incoming requests have their URLs rewritten.</p>
-<p>See <a href=\"https://github.com/academeio/eportfolios/wiki/Clean-URL-Configuration\">Clean URL Configuration</a> on the ePortfolios wiki for instructions on how to do this.</p>
+<p>See <a href=\"https://github.com/academeio/eportfolios/wiki/Clean-URL-Configuration\">Clean URL Configuration</a> on the Academe ePortfolios wiki for instructions on how to do this.</p>
 ";
 $string['cleanurlsdisabled'] = 'Clean URLs are disabled.';
 $string['cleanurlsettings'] = 'Clean URL settings';
@@ -304,7 +304,7 @@ $string['Field'] = 'Field';
 $string['Value'] = 'Value';
 $string['sendweeklyupdates'] = 'Send weekly updates';
 $string['sendweeklyupdatesdescription'] = 'Allow your site to send weekly updates with some statistics about your site.';
-$string['newregistrationpolicyinfo1'] = '<ul><li>We have updated our registration data policy to require sites to opt out of providing weekly updates of anonymous data to gain better insight into how ePortfolios is used.</li><li>We have altered what anonymous data we collect.</li></ul>';
+$string['newregistrationpolicyinfo1'] = '<ul><li>We have updated our registration data policy to require sites to opt out of providing weekly updates of anonymous data to gain better insight into how Academe ePortfolios is used.</li><li>We have altered what anonymous data we collect.</li></ul>';
 $string['registerwithmahara1'] = 'Opt out from the data collection';
 $string['registerwithmaharadescription1'] = 'You can opt out from sending anonymised data for your site. We encourage you to keep your site registered though to assist in the product development.';
 $string['Register'] = 'Register';
@@ -342,7 +342,7 @@ $string['viewfullsitestatistics'] = 'View full site statistics';
 $string['institutioncreated_all'] = 'Site installed';
 $string['databasesize'] = 'Database size';
 $string['diskusage'] = 'Disk usage';
-$string['maharaversion'] = 'ePortfolios version';
+$string['maharaversion'] = 'Academe ePortfolios version';
 $string['activeusers'] = 'Active people';
 $string['loggedinsince'] = '%s today, %s since %s, %s all time';
 $string['groupmemberaverage'] = 'On average, each person is in %s groups';
@@ -373,7 +373,7 @@ $string['statsmaxquotaused1'] = 'Has used about %s of disk quota<br>(<a href="%s
 $string['groupcountsbytype'] = 'Number of groups by group type';
 $string['groupcountsbyjointype'] = 'Number of groups by access type';
 $string['blockcountsbytype'] = 'Most frequently used blocks in portfolio pages';
-$string['uptodate'] = 'Your local codebase is up to date with ePortfolios core.';
+$string['uptodate'] = 'Your local codebase is up to date with Academe ePortfolios core.';
 $string['latestversionis'] = 'Most recent major release: <a href="%s">%s</a>';
 $string['latestbranchversionis'] = 'Latest minor version of this release: <a href="%s">%s</a>';
 $string['versionnotinsupport'] = '%s is out of support.';
@@ -429,7 +429,7 @@ $string['loggedinprofileviewaccessdescription1'] = 'A profile page will be viewa
 $string['antispam'] = 'Anti-spam';
 $string['antispamdescription'] = 'The type of anti-spam measures used on publicly visible forms';
 $string['dropdownmenu'] = 'Drop-down navigation';
-$string['dropdownmenudescription2'] = 'The main ePortfolios navigation will use a drop-down format for the sub-navigation.';
+$string['dropdownmenudescription2'] = 'The main Academe ePortfolios navigation will use a drop-down format for the sub-navigation.';
 $string['dropdownmenudescriptioninstitution2'] = 'The main navigation will use a drop-down menu.';
 $string['commentsortorder'] = 'Comment sort order';
 $string['commentsortorderdescription'] = 'Set the sort order for artefact comments when viewed on a page.';
@@ -452,7 +452,7 @@ $string['passwordpolicy'] = 'Password policy';
 $string['passwordpolicydesc'] = 'Password policy for people whose account is set to use the built-in internal authentication method. Select the number of minimum characters and the complexity of the password.';
 $string['passwordpolicylength'] = 'Minimum password length';
 $string['passwordpolicytype'] = 'Password complexity';
-$string['deprecatedmobileapp'] = "Sorry, this mobile application has been superseded. You need to use ePortfolios Mobile instead.";
+$string['deprecatedmobileapp'] = "Sorry, this mobile application has been superseded. You need to use Academe ePortfolios Mobile instead.";
 $string['embeddedcontent'] = 'Embedded content';
 $string['embeddedcontentdescription'] = 'If you would like people to be able to embed videos or other outside content into their portfolios, you can choose which sites to trust below.';
 $string['Everyone'] = 'Everyone';
@@ -664,22 +664,22 @@ $string['licenseurldup'] = 'The URLs must be unique; %s is repeated here.';
 $string['licenseurlnone'] = 'Please specify a URL for %s.';
 
 // Networking options
-$string['networkingextensionsmissing'] = 'Sorry, you cannot configure ePortfolios networking because your PHP installation is missing one or more required extensions:';
+$string['networkingextensionsmissing'] = 'Sorry, you cannot configure Academe ePortfolios networking because your PHP installation is missing one or more required extensions:';
 $string['publickey'] = 'Public key';
 $string['publickeydescription2'] = 'This public key is automatically generated and rotated every %s days.';
 $string['publickeyexpires'] = 'Public key expires';
-$string['enablenetworkingdescription'] = 'Allow your ePortfolios server to communicate with servers running Moodle and other applications.';
+$string['enablenetworkingdescription'] = 'Allow your Academe ePortfolios server to communicate with servers running Moodle and other applications.';
 $string['enablenetworking'] = 'Enable networking';
 $string['networkingenabled'] = 'Networking has been enabled. ';
 $string['networkingdisabled'] = 'Networking has been disabled. ';
-$string['networkingpagedescription'] = 'ePortfolios networking features allow it to communicate with ePortfolios or Moodle sites running on the same or another machine. If networking is enabled, you can use it to configure single sign-on for people who log in at either Moodle or ePortfolios.';
+$string['networkingpagedescription'] = 'Academe ePortfolios networking features allow it to communicate with Academe ePortfolios or Moodle sites running on the same or another machine. If networking is enabled, you can use it to configure single sign-on for people who log in at either Moodle or Academe ePortfolios.';
 $string['networkingunchanged'] = 'Network settings were not changed';
 $string['promiscuousmode'] = 'Auto-register all hosts';
 $string['promiscuousmodedisabled'] = 'Auto-register has been disabled. ';
 $string['promiscuousmodeenabled'] = 'Auto-register has been enabled. ';
-$string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you and allow its account holders to log on to ePortfolios.';
+$string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you and allow its account holders to log on to Academe ePortfolios.';
 $string['wwwroot'] = 'WWW root';
-$string['wwwrootdescription1'] = 'This is the URL for this ePortfolios installation for which the SSL keys are generated.';
+$string['wwwrootdescription1'] = 'This is the URL for this Academe ePortfolios installation for which the SSL keys are generated.';
 $string['deletekey'] = 'Delete this key';
 $string['keydeleted'] = 'Public key has been deleted and regenerated.';
 $string['proxysettings'] = 'Proxy settings';
@@ -816,7 +816,7 @@ $string['uploadgroupmemberscsvpagedescription3'] = '<p>You may use this facility
 <p>The role field can have any of the following, depending on the type of group: <tt>admin</tt>, <tt>member</tt>, or <tt>tutor</tt>.</p>
 
 <div class="warning"> Every CSV file upload removes all existing group members, including group administrators, completely. Ensure that you have at least one administrator for each group in your CSV file.</div>';
-$string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some people could not be emailed. Their email addresses may be invalid, or the server ePortfolios is running on might not be configured to send email properly. The server error log has more details. For now, you may want to contact these people manually:';
+$string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some people could not be emailed. Their email addresses may be invalid, or the server Academe ePortfolios is running on might not be configured to send email properly. The server error log has more details. For now, you may want to contact these people manually:';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'Nobody has been added because there are too many people in your file. The number of members in the institution would have exceeded the maximum number allowed.';
 $string['updateusers'] = 'Update accounts';
 $string['updateusersdescription1'] = 'If your CSV file contains the usernames of people who already exist, their details will be overwritten with the data from the CSV file. You must select this option if you wish to move accounts to a different institution as selected above.';
@@ -851,11 +851,11 @@ import.zip<br>
     <span class="icon icon-file icon-regular"></span> mahara-export-leap-user8-1265165366.zip<br>
     <span class="icon icon-file icon-regular"></span> mahara-export-leap-user1-1266458159.zip<br>
 </pre>
-<p>This ZIP file should normally be generated using the bulk export built into ePortfolios.</p>
+<p>This ZIP file should normally be generated using the bulk export built into Academe ePortfolios.</p>
 <p>If you are importing a lot of accounts, please be patient. The import process can take a long time.</p>';
 $string['importfile'] = 'Bulk export file';
 $string['emailimportedusersaboutnewaccountdescription'] = 'Send an email to people informing them of their new account details.';
-$string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the ePortfolios bulk exporter to export these accounts?';
+$string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the Academe ePortfolios bulk exporter to export these accounts?';
 $string['importfilenotafile'] = 'Error during form submission: file was not recognised.';
 $string['importfilenotreadable'] = 'Error during form submission: file was not readable.';
 $string['bulkleap2aimportfiledescription1'] = 'Enter the path to the ZIP file on your server that contains all exported accounts (in Leap2A format) along with a CSV listing of usernames, e.g. "/home/example/data/import.zip"';
@@ -867,7 +867,7 @@ $string['unabletoreadcsvfile'] = 'Unable to read CSV file %s.';
 $string['importfileisnotazipfile'] = 'Import file %s was not detected as a ZIP file.';
 $string['unzipfailed'] = 'Failed to unzip the Leap2A file %s. See the error log for more information.';
 $string['importfailedfornusers'] = 'Import failed for %d of %d accounts.';
-$string['invalidlistingfile'] = 'Invalid username listing. Did you use the ePortfolios bulk exporter to export these accounts?';
+$string['invalidlistingfile'] = 'Invalid username listing. Did you use the Academe ePortfolios bulk exporter to export these accounts?';
 $string['importing'] = 'Importing';
 
 // Admin Users
@@ -1007,7 +1007,7 @@ $string['failedtoobtainuploadedleapfile'] = 'Failed to obtain the uploaded Leap2
 $string['failedtounzipleap2afile'] = 'Failed to unzip the Leap2A file. Check the error log for more information.';
 $string['fileisnotaziporxmlfile'] = 'This file has not been detected to be a ZIP file or XML file.';
 $string['howdoyouwanttocreatethisuser'] = 'How do you want to create this account?';
-$string['leap2aimportfailed'] = '<p><strong>Sorry, importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your Leap2A file is not supported by this ePortfolios version. Alternatively, there may be a bug in ePortfolios causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to <a href="https://github.com/academeio/eportfolios/issues">open an issue on GitHub</a> to ask for help. Be prepared to be asked for a copy of your file.</p>';
+$string['leap2aimportfailed'] = '<p><strong>Sorry, importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your Leap2A file is not supported by this Academe ePortfolios version. Alternatively, there may be a bug in Academe ePortfolios causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to <a href="https://github.com/academeio/eportfolios/issues">open an issue on GitHub</a> to ask for help. Be prepared to be asked for a copy of your file.</p>';
 $string['newuseremailnotsent'] = 'Failed to send welcome email.';
 $string['newusercreated'] = 'New account created successfully';
 $string['noleap2axmlfiledetected'] = 'No leap2a.xml file detected - please check your export file again.';
@@ -1103,7 +1103,7 @@ $string['resetcolours'] = 'Reset colours';
 $string['resetcoloursdesc2'] = 'Restore the default colours.';
 
 $string['authenticatedby'] = 'Authentication method';
-$string['authenticatedbydescription'] = 'How this person authenticates to ePortfolios';
+$string['authenticatedbydescription'] = 'How this person authenticates to Academe ePortfolios';
 $string['remoteusername'] = 'Username for external authentication';
 $string['remoteusernamedescription1'] = 'If this person signs in to %s from a remote site using an external authentication plugin, this is the username which identifies them on the remote site.';
 $string['institutionsettings'] = 'Institution settings';
@@ -1455,7 +1455,7 @@ $string['cli_langpack'] = 'List by language code, e.g. "de,pt_BR,fr".';
 $string['cli_langpack_backup'] = 'Optional: Back up the language directory before updating.';
 $string['cli_langpack_backup_done'] = 'Backup of language "%s" done';
 $string['cli_langpack_backup_failed'] = '*** WARNING *** Unable to make backup of "%s"';
-$string['cli_langpack_en'] = 'You do not need to update the English langpack as the strings are defined in ePortfolios itself. You can set special lang strings in local/lang/.';
+$string['cli_langpack_en'] = 'You do not need to update the English langpack as the strings are defined in Academe ePortfolios itself. You can set special lang strings in local/lang/.';
 $string['cli_langpack_extract_done'] = 'Copied new "%s" langpack into place';
 $string['cli_langpack_extract_failed'] = '*** WARNING *** Unable to extract files from "%s". Reason: %s';
 $string['cli_langpack_ignore'] = 'The language pack "%s" is already current so will skip updating';
@@ -1484,7 +1484,7 @@ $string['cli_langpack_upload'] = 'Saving language pack "%s" to temp directory';
 $string['cli_restore_done'] = 'Restored backup of "%s" done';
 $string['cli_restore_warning'] = '*** WARNING *** Unable to restore backup of "%s"';
 $string['cli_tmpdir_notwritable'] = 'The temporary upload directory "%s" is not writable.';
-$string['cli_lang_branch'] = 'ePortfolios series version to fetch langpacks for series "%s"';
+$string['cli_lang_branch'] = 'Academe ePortfolios series version to fetch langpacks for series "%s"';
 
 // Fast index for Elasticsearch
 $string['cli_fast_index'] = 'Elasticsearch fast indexer allows quicker indexing of sites by avoiding waiting for the next cron run. Instead, it begins the next run immediately after first finishes.';
