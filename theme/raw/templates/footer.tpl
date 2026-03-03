@@ -24,7 +24,7 @@
     <div class="footer-inner container">
         <div id="powered-by" class="float-start mahara-logo">
             <a href="https://eportfolios.in">
-                <img src="{theme_image_url filename='powered_by_eportfolios'}?v={$CACHEVERSION}" alt="Powered by Academe ePortfolios" class="mahara-footer-logo">
+                <img src="{theme_image_url filename='powered_by_academe_eportfolios'}?v={$CACHEVERSION}" alt="Powered by Academe ePortfolios" class="mahara-footer-logo">
             </a>
         </div>
         <!-- This site is powered by Academe ePortfolios, an open-source

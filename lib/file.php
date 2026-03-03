@@ -396,7 +396,7 @@ function standard_magic_paths($key = 'fullarray') {
 function update_magicdb_path() {
     // Determine where the server's "magic" db is
     if (class_exists('finfo')) {
-        $file = get_config('docroot') . 'theme/raw/images/powered_by_eportfolios.png';
+        $file = get_config('docroot') . 'theme/raw/images/powered_by_academe_eportfolios.png';
 
         $magicpathstotry = standard_magic_paths();
         $workingpath = false;
