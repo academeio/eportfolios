@@ -836,9 +836,10 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     }
     else {
         if (empty($mail->Sender)) {
-            $mail->Sender = $userfrom->email;
+            $mail->Sender = get_config('noreplyaddress');
         }
-        $mail->From = $userfrom->email;
+        $mail->From = get_config('noreplyaddress');
+        $mail->addReplyTo($userfrom->email, display_name($userfrom, $userto));
         $mail->FromName = display_name($userfrom, $userto);
     }
     $replytoset = false;
