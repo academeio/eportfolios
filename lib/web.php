@@ -428,7 +428,24 @@ window.maharaTinyMCEConfig = {
                     });
             });
         },
-        insertMode: 'both'
+        insertMode: 'both',
+        enableAuthoring: true,
+        scopes: ['personal', 'group'],
+        onSave: function(template, scope) {
+            return new Promise(function(resolve, reject) {
+                sendjsonrequest('{$wwwroot}json/structuredcontent.json.php', {
+                    action: 'save',
+                    title: template.title,
+                    description: template.description || '',
+                    content: template.content,
+                    category: template.category || ''
+                }, 'POST', function(data) {
+                    resolve(data);
+                }, function(err) {
+                    reject(err);
+                });
+            });
+        }
     },
     setup: function(ed) {
         {$tinymcebehatsetup}
