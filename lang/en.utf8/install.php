@@ -15,7 +15,7 @@ defined('INTERNAL') || die();
 $string['aboutdefaultcontent'] = '<h2>About us</h2>
 <p><em>Add text about your organisation or the installation here</em></p>
 
-<p><strong>[<em>Name of your installation here</em>]</strong> is powered by <a href="https://github.com/AcademeResearch/ePortfolios">ePortfolios</a>. ePortfolios is provided freely as open source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify ePortfolios provided you agree to:</p>
+<p><strong>[<em>Name of your installation here</em>]</strong> is powered by <a href="https://github.com/AcademeResearch/ePortfolios">Academe ePortfolios</a>. Academe ePortfolios is provided freely as open source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify Academe ePortfolios provided you agree to:</p>
 
 <ul>
     <li>provide the source code to others, </li>

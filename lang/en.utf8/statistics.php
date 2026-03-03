@@ -443,7 +443,7 @@ $string['reportdescinformation'] = '<ul>
 <ul>
 <li>Number of groups</li>
 <li>Database size</li>
-<li>ePortfolios version</li>
+<li>Academe ePortfolios version</li>
 <li>Information on the running of cron</li>
 <li>Groups overview</li>
 </ul></li>
