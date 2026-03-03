@@ -27,10 +27,10 @@
                 <div class="container">
                     <div id="logo-area" class="logo-area">
                         <a class="logo change-to-small" href="https://mahara.org/">
-                            <img src="{$rootpath}{$htmldir}{$maharalogo}" alt="Mahara">
+                            <img src="{$rootpath}{$htmldir}{$maharalogo}" alt="Academe ePortfolios">
                         </a>
                         <a href="https://mahara.org/" class="logoxs change-to-small-default">
-                            <img src="{$rootpath}{$htmldir}{$maharalogosmall}" alt="Mahara">
+                            <img src="{$rootpath}{$htmldir}{$maharalogosmall}" alt="Academe ePortfolios">
                         </a>
                     </div>
                 </div>

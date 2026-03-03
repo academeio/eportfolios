@@ -24,10 +24,10 @@
     <div class="footer-inner container">
         <div id="powered-by" class="float-start mahara-logo">
             <a href="https://eportfolios.in">
-                <img src="{theme_image_url filename='powered_by_eportfolios'}?v={$CACHEVERSION}" alt="Powered by ePortfolios" class="mahara-footer-logo">
+                <img src="{theme_image_url filename='powered_by_eportfolios'}?v={$CACHEVERSION}" alt="Powered by Academe ePortfolios" class="mahara-footer-logo">
             </a>
         </div>
-        <!-- This site is powered by ePortfolios, an open-source
+        <!-- This site is powered by Academe ePortfolios, an open-source
         ePortfolio & Competency Platform. See https://eportfolios.in
         for more details. -->
         <ul class="nav nav-pills footer-nav float-start">

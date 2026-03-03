@@ -6,7 +6,7 @@
     <div id="footer-wrap" class="footer-inner container clearfix">
         <div id="powered-by" class="mahara-logo">
             <a href="https://eportfolios.in">
-                <img src="{theme_image_url filename='powered_by_eportfolios'}?v={$CACHEVERSION}" border="0" alt="Powered by ePortfolios" class="mahara-footer-logo">
+                <img src="{theme_image_url filename='powered_by_eportfolios'}?v={$CACHEVERSION}" border="0" alt="Powered by Academe ePortfolios" class="mahara-footer-logo">
             </a>
         </div>
         <div id="release" class="release-info">
