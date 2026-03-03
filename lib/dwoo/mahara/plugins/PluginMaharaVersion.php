@@ -18,7 +18,7 @@ function PluginMaharaVersion(Core $core) {
     if (!defined('ADMIN') || !$USER->get('admin')) {
         return '';
     }
-    return '<div class="center">Mahara version ' . get_config('release') . ' (' . get_config('version') . ')</div>';
+    return '<div class="center">Academe ePortfolios version ' . get_config('release') . ' (' . get_config('version') . ')</div>';
 }
 
 ?>
