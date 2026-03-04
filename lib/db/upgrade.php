@@ -83,29 +83,34 @@ function xmldb_core_upgrade($oldversion=0) {
         $limit = 1000;
         $total = count($viewids);
         foreach ($viewids as $viewid) {
-            $viewobj = new View($viewid);
-            // check if the view has new layout and description
-            if ($viewobj->uses_new_layout() && $description = $viewobj->get('description')) {
-                if ($newdescription = can_extract_description_text($description)) {
-                    $viewobj->set('description', $newdescription);
-                    $viewobj->commit();
-                }
-                else {
-                    // get all the blocks in the view and move them 1 row down
-                    if ($blockids = get_column('block_instance', 'id', 'view', $viewid)) {
-                        foreach ($blockids as $blockid) {
-                            $bi = new BlockInstance($blockid);
-                            $y = $bi->get('positiony');
-                            $bi->set('positiony', $y + 1);
-                            $bi->commit();
-                        }
+            try {
+                $viewobj = new View($viewid);
+                // check if the view has new layout and description
+                if ($viewobj->uses_new_layout() && $description = $viewobj->get('description')) {
+                    if ($newdescription = can_extract_description_text($description)) {
+                        $viewobj->set('description', $newdescription);
+                        $viewobj->commit();
                     }
-                    // add the description block at the top
-                    $viewobj->description_to_block();
-                    //remove description from view
-                    $viewobj->set('description', '');
-                    $viewobj->commit();
+                    else {
+                        // get all the blocks in the view and move them 1 row down
+                        if ($blockids = get_column('block_instance', 'id', 'view', $viewid)) {
+                            foreach ($blockids as $blockid) {
+                                $bi = new BlockInstance($blockid);
+                                $y = $bi->get('positiony');
+                                $bi->set('positiony', $y + 1);
+                                $bi->commit();
+                            }
+                        }
+                        // add the description block at the top
+                        $viewobj->description_to_block();
+                        //remove description from view
+                        $viewobj->set('description', '');
+                        $viewobj->commit();
+                    }
                 }
+            }
+            catch (Exception $e) {
+                log_debug("Skipping view $viewid: " . $e->getMessage());
             }
             $count++;
             if (($count % $limit) == 0 || $count == $total) {
