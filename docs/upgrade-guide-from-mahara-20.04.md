@@ -290,6 +290,48 @@ These modules may also show as on-disk but not installed. Unlike `submissions`, 
 
 The `View::delete()` method in `lib/view.php` queries `module_submissions` directly at line 1089 without wrapping it in `is_plugin_active('submissions', 'module')` — unlike the LTI check at line 1094 which does have the guard. This is a code-level bug that should be fixed upstream.
 
+## IMPORTANT: CLI Upgrade Does Not Install New Plugins
+
+**`admin/cli/upgrade.php` only upgrades existing plugins — it never installs new ones.**
+
+The CLI script (`admin/cli/upgrade.php:47`) checks `$upgrades['settings']['toupgradecount']` and exits with "Nothing to upgrade" if only new plugins need installing. New plugins are tracked separately in `$upgrades['settings']['newinstalls']` / `newinstallcount`, but the CLI script never reads these values. The iteration at line 73 only loops over the top-level `$upgrades` keys, which only contains plugins that need upgrading (not new installs).
+
+The **web-based** upgrade at `/admin/upgrade.php` does handle new plugin installs.
+
+### When does this matter?
+
+Every time you deploy a **new** plugin (module, artefact, blocktype, etc.) to a production server. Bumping the core version and running `admin/cli/upgrade.php` will update the core version in the DB but silently skip the new plugin.
+
+### Workaround: Install new plugins via CLI
+
+```bash
+php8.1 -r '
+define("INTERNAL", 1); define("ADMIN", 1); define("INSTALLER", 1); define("CLI", 1);
+require("/path/to/htdocs/init.php");
+require(get_config("libroot") . "upgrade.php");
+$upgrade = check_upgrades("module.PLUGINNAME");
+if (!empty($upgrade)) {
+    upgrade_plugin($upgrade);
+    echo "Installed.\n";
+} else {
+    echo "Already installed or not found.\n";
+}
+'
+```
+
+Replace `module.PLUGINNAME` with the plugin type and name (e.g., `module.inactivityreport`, `artefact.file`, `blocktype.text`).
+
+### Verify installation
+
+```bash
+php8.1 -r '
+define("INTERNAL", 1); define("CLI", 1);
+require("/path/to/htdocs/init.php");
+$m = get_record("module_installed", "name", "PLUGINNAME");
+echo $m ? "Installed: v{$m->version} ({$m->release}), active={$m->active}\n" : "NOT installed\n";
+'
+```
+
 ## Troubleshooting
 
 | Issue | Solution |
