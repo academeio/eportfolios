@@ -191,6 +191,105 @@ UPDATE config SET value = '0' WHERE field = 'siteclosedbyadmin';
 
 If using AWS SES (or any email service that requires verified sender domains), the fix in `lib/user.php` ensures all emails use `noreplyaddress` as the `From` address with the user's email in `Reply-To`. Without this, Contact Us, forum notifications, and user-to-user emails fail with "Email address is not verified".
 
+## Post-upgrade: Install Missing Modules
+
+**CRITICAL:** The `submissions` module ships with the codebase but may not be installed by the upgrade process if upgrading from Mahara 20.04. This causes a **SQLException when users try to delete views**, because `lib/view.php:1089` queries `module_submissions` without checking if the plugin is active first.
+
+**Error seen in production:**
+```
+Failed to get a recordset: SELECT "id" FROM "module_submissions"
+WHERE "portfolioelementtype" = ? AND "portfolioelementid" = ?
+```
+
+### How to detect missing modules
+
+Run this audit to compare modules on disk vs installed in DB:
+
+```bash
+php8.1 -r '
+define("INTERNAL", 1); define("CLI", 1);
+require("/path/to/htdocs/init.php");
+$moddir = get_config("docroot") . "module/";
+$ondisk = array_filter(scandir($moddir), function($d) use ($moddir) {
+    return is_dir($moddir . $d) && $d[0] !== "." && $d !== "lib.php";
+});
+$installed = get_records_array("module_installed");
+$names = array();
+foreach ($installed as $m) { $names[$m->name] = $m; }
+foreach ($ondisk as $name) {
+    $status = isset($names[$name])
+        ? "OK (v" . $names[$name]->version . ")"
+        : "MISSING - needs install";
+    echo sprintf("  %-35s %s\n", $name, $status);
+}
+'
+```
+
+### Fix: Install the submissions module
+
+```bash
+php8.1 -r '
+define("INTERNAL", 1); define("CLI", 1);
+require("/path/to/htdocs/init.php");
+require_once("ddl.php");
+
+// Create tables from XMLDB schema
+install_from_xmldb_file(get_config("docroot") . "module/submissions/db/install.xml");
+
+// Register module
+$sub = new stdClass();
+$sub->name = "submissions";
+$sub->version = 2020102700;
+$sub->release = "0.9.3";
+$sub->active = 1;
+insert_record("module_installed", $sub);
+echo "submissions module installed\n";
+'
+```
+
+If the tables already exist (from a partial install), add the missing indexes and register manually:
+
+```bash
+php8.1 -r '
+define("INTERNAL", 1); define("CLI", 1);
+require("/path/to/htdocs/init.php");
+$indexes = array(
+    "CREATE INDEX modusubm_gro_ix ON module_submissions (groupid)",
+    "CREATE INDEX modusubm_ownown_ix ON module_submissions (ownertype, ownerid)",
+    "CREATE INDEX modusubm_tas_ix ON module_submissions (taskid)",
+    "CREATE UNIQUE INDEX modusubm_exp_uix ON module_submissions (exportarchiveid)",
+    "CREATE INDEX modusubmeval_eva_ix ON module_submissions_evaluation (evaluatorid)",
+);
+foreach ($indexes as $sql) {
+    try { execute_sql($sql); echo "OK: $sql\n"; }
+    catch (Exception $e) { echo "SKIP (exists)\n"; }
+}
+// Register if needed
+if (!get_record("module_installed", "name", "submissions")) {
+    $sub = new stdClass();
+    $sub->name = "submissions";
+    $sub->version = 2020102700;
+    $sub->release = "0.9.3";
+    $sub->active = 1;
+    insert_record("module_installed", $sub);
+}
+echo "Done\n";
+'
+```
+
+### Other modules that may be missing (safe)
+
+These modules may also show as on-disk but not installed. Unlike `submissions`, these do NOT cause errors because no core code queries their tables without a plugin-active guard:
+
+| Module | Has DB tables | Impact if missing |
+|--------|---------------|-------------------|
+| `lti_advantage` | Yes (5 tables) | LTI 1.3 features unavailable — no errors |
+| `monitor` | No | Monitoring CLI tools unavailable — no errors |
+
+### Root cause
+
+The `View::delete()` method in `lib/view.php` queries `module_submissions` directly at line 1089 without wrapping it in `is_plugin_active('submissions', 'module')` — unlike the LTI check at line 1094 which does have the guard. This is a code-level bug that should be fixed upstream.
+
 ## Troubleshooting
 
 | Issue | Solution |
