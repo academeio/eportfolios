@@ -59,6 +59,8 @@ $loggedintypes[] = array('name' => 'ever', 'string' => get_string('usershavelogg
 $loggedintypes[] = array('name' => 'never', 'string' => get_string('usershaveneverloggedin', 'admin'));
 $loggedintypes[] = array('name' => 'since', 'string' => get_string('usershaveloggedinsince', 'admin'));
 $loggedintypes[] = array('name' => 'notsince', 'string' => get_string('usershavenotloggedinsince', 'admin'));
+$loggedintypes[] = array('name' => 'residentsince', 'string' => get_string('residentsloggedinsince', 'admin'));
+$loggedintypes[] = array('name' => 'residentnotsince', 'string' => get_string('residentsnotloggedinsince', 'admin'));
 
 $calendar = array(
     'name' => 'loggedindate',

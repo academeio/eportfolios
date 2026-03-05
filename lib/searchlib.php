@@ -233,6 +233,22 @@ function get_admin_user_search_results($search, $offset, $limit) {
                                    'type'   => 'lessthanequal',
                                    'string' => $search->loggedindate);
         }
+        else if ($search->loggedin == 'residentsince') {
+            $constraints[] = array('field'  => 'lastlogin',
+                                   'type'   => 'greaterthan',
+                                   'string' => $search->loggedindate);
+            $constraints[] = array('field'  => 'resident',
+                                   'type'   => 'equals',
+                                   'string' => '1');
+        }
+        else if ($search->loggedin == 'residentnotsince') {
+            $constraints[] = array('field'  => 'lastlogin',
+                                   'type'   => 'lessthanequal',
+                                   'string' => $search->loggedindate);
+            $constraints[] = array('field'  => 'resident',
+                                   'type'   => 'equals',
+                                   'string' => '1');
+        }
 
     }
     // Filter by export queue items

@@ -799,6 +799,11 @@ class PluginSearchInternal extends PluginSearch {
                         $join .= 'JOIN {auth_instance} ai ON ai.id = u.authinstance ';
                         $where .= ' AND ai.authname ' . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
                         break;
+                    case 'resident':
+                        // Exclude site-level and institution-level staff/admins
+                        $where .= ' AND u.staff = 0 AND u.admin = 0';
+                        $where .= ' AND u.id NOT IN (SELECT usr FROM {usr_institution} WHERE staff = 1 OR admin = 1)';
+                        break;
                     default:
                         $where .= ' AND u.' . $f['field']
                             . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);

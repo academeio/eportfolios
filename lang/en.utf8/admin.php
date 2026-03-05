@@ -1374,6 +1374,8 @@ $string['usershaveloggedin'] = 'People have logged in';
 $string['usershaveneverloggedin'] = 'People have never logged in';
 $string['usershaveloggedinsince'] = 'People have logged in since';
 $string['usershavenotloggedinsince'] = 'People have not logged in since';
+$string['residentsloggedinsince'] = 'Residents who have logged in since';
+$string['residentsnotloggedinsince'] = 'Residents who have not logged in since';
 
 // Admin user search duplicate email filter
 $string['duplicateemailfilter1'] = 'Duplicate email addresses';
