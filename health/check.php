@@ -90,9 +90,10 @@ $cron_age = null;
 $cron_last_run = null;
 $overdue = 0;
 try {
+    // db_format_tsfield returns unix timestamp (epoch seconds)
     $earliest = get_field_sql('SELECT ' . db_format_tsfield('nextrun', 'nextrun') . ' FROM {cron} WHERE nextrun IS NOT NULL ORDER BY nextrun ASC LIMIT 1');
     if ($earliest) {
-        $next_ts = strtotime($earliest);
+        $next_ts = (int)$earliest;
         $overdue = time() - $next_ts;
         if ($overdue > 0) {
             $cron_age = $overdue;

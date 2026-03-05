@@ -84,9 +84,10 @@ function get_server_health() {
     // We look at the earliest nextrun — if it's overdue, cron isn't running.
     $health['cron_status'] = 'ok';
     try {
+        // db_format_tsfield returns unix timestamp (epoch seconds)
         $earliest = get_field_sql('SELECT ' . db_format_tsfield('nextrun', 'nextrun') . ' FROM {cron} WHERE nextrun IS NOT NULL ORDER BY nextrun ASC LIMIT 1');
         if ($earliest) {
-            $next_ts = strtotime($earliest);
+            $next_ts = (int)$earliest;
             // If the earliest scheduled job is overdue, cron_age = how long overdue
             $overdue = time() - $next_ts;
             if ($overdue > 0) {
