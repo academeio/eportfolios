@@ -6,7 +6,7 @@
                     </a>
                 </td>
                 <td class="center">
-                    {$institution->name}
+                    {if $institution->name == 'mahara'}Academe ePortfolios{else}{$institution->name}{/if}
                 </td>
                 <td class="center">
                   {if !$institution->site}
