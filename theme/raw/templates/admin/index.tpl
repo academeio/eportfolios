@@ -72,6 +72,112 @@
 </div>
 {/if}
 <div class="card-items js-masonry" data-masonry-options='{ "itemSelector": ".card" }'>
+    {if $serverhealth}
+    <div class="card {if $serverhealth.overall_status == 'critical'}bg-danger{elseif $serverhealth.overall_status == 'warning'}bg-warning{else}bg-success{/if}" id="server-health-card">
+        <h2 class="card-header">{str tag=serverhealth section=admin} <span class="icon icon-heartbeat float-end" role="presentation" aria-hidden="true"></span></h2>
+        <div class="card-body" id="server-health-body">
+            <table class="table table-sm mb-0">
+                <tbody>
+                    <tr>
+                        <td><strong>{str tag=phpversion section=admin}</strong></td>
+                        <td>{$serverhealth.php_version}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{str tag=memorylimit section=admin}</strong></td>
+                        <td>{$serverhealth.memory_limit}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{str tag=loadaverage section=admin}</strong></td>
+                        <td>{$serverhealth.load_average}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{str tag=diskdataroot section=admin}</strong></td>
+                        <td>
+                            {if $serverhealth.disk_used_percent !== null}
+                                <span class="{if $serverhealth.disk_status == 'critical'}text-danger{elseif $serverhealth.disk_status == 'warning'}text-warning{else}text-success{/if}">
+                                    {$serverhealth.disk_free} / {$serverhealth.disk_total} ({$serverhealth.disk_used_percent}%)
+                                </span>
+                            {else}
+                                {$serverhealth.disk_free}
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>{str tag=lastcronrun section=admin}</strong></td>
+                        <td>
+                            <span class="{if $serverhealth.cron_status == 'critical'}text-danger{elseif $serverhealth.cron_status == 'warning'}text-warning{else}text-success{/if}">
+                                {$serverhealth.cron_human}
+                            </span>
+                            {if $serverhealth.cron_stuck_locks > 0}
+                                <span class="badge bg-danger">{$serverhealth.cron_stuck_locks} stuck lock(s)</span>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>{str tag=dbsize section=admin}</strong></td>
+                        <td>{$serverhealth.db_size}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{str tag=missingmodules section=admin}</strong></td>
+                        <td>
+                            {if $serverhealth.missing_modules > 0}
+                                <span class="text-danger">{$serverhealth.missing_modules}</span>
+                                <a href="{$WWWROOT}admin/extensions/plugins.php" class="text-small"> (view)</a>
+                            {else}
+                                <span class="text-success">0</span>
+                            {/if}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-small text-muted">
+            {str tag=serverhealthrefresh section=admin}
+        </div>
+    </div>
+    <script>
+    jQuery(function($) {
+        function refreshServerHealth() {
+            sendjsonrequest(config['wwwroot'] + 'admin/serverhealth.json.php', {}, 'GET', function(response) {
+                var d = response.data;
+                var statusClass = 'bg-success';
+                if (d.overall_status === 'critical') statusClass = 'bg-danger';
+                else if (d.overall_status === 'warning') statusClass = 'bg-warning';
+
+                var card = $('#server-health-card');
+                card.removeClass('bg-success bg-warning bg-danger').addClass(statusClass);
+
+                var diskClass = d.disk_status === 'critical' ? 'text-danger' : (d.disk_status === 'warning' ? 'text-warning' : 'text-success');
+                var cronClass = d.cron_status === 'critical' ? 'text-danger' : (d.cron_status === 'warning' ? 'text-warning' : 'text-success');
+
+                var diskText = d.disk_used_percent !== null
+                    ? '<span class="' + diskClass + '">' + d.disk_free + ' / ' + d.disk_total + ' (' + d.disk_used_percent + '%)</span>'
+                    : d.disk_free;
+
+                var cronText = '<span class="' + cronClass + '">' + d.cron_human + '</span>';
+                if (d.cron_stuck_locks > 0) {
+                    cronText += ' <span class="badge bg-danger">' + d.cron_stuck_locks + ' stuck lock(s)</span>';
+                }
+
+                var missingText = d.missing_modules > 0
+                    ? '<span class="text-danger">' + d.missing_modules + '</span> <a href="' + config['wwwroot'] + 'admin/extensions/plugins.php" class="text-small"> (view)</a>'
+                    : '<span class="text-success">0</span>';
+
+                var rows = card.find('tbody tr');
+                rows.eq(0).find('td:last').text(d.php_version);
+                rows.eq(1).find('td:last').text(d.memory_limit);
+                rows.eq(2).find('td:last').text(d.load_average);
+                rows.eq(3).find('td:last').html(diskText);
+                rows.eq(4).find('td:last').html(cronText);
+                rows.eq(5).find('td:last').text(d.db_size);
+                rows.eq(6).find('td:last').html(missingText);
+            });
+        }
+        setInterval(refreshServerHealth, 60000);
+    });
+    </script>
+    {/if}
+
     {if $register}
 
         <div class="card bg-success register-site">

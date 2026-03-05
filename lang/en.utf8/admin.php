@@ -1670,3 +1670,14 @@ $string['plugininteraction'] = 'Plugin type: Interaction';
 $string['pluginmodule'] = 'Plugin type: Module';
 $string['pluginnotification'] = 'Plugin type: Notification';
 $string['pluginsearch'] = 'Plugin type: Search';
+
+// Server health
+$string['serverhealth'] = 'Server health';
+$string['phpversion'] = 'PHP version';
+$string['memorylimit'] = 'Memory limit';
+$string['loadaverage'] = 'Load average';
+$string['diskdataroot'] = 'Disk (dataroot)';
+$string['lastcronrun'] = 'Cron';
+$string['dbsize'] = 'DB size';
+$string['missingmodules'] = 'Missing modules';
+$string['serverhealthrefresh'] = 'Auto-refreshes every 60 seconds';

@@ -104,6 +104,13 @@ safe_require('module', 'framework');
 if (PluginModuleFramework::is_active()) {
     $smarty->assign('framework', true);
 }
+
+// Server health data for admin dashboard
+if (get_config('installed')) {
+    require_once(get_config('libroot') . 'serverhealth.php');
+    $smarty->assign('serverhealth', get_server_health());
+}
+
 $smarty->display('admin/index.tpl');
 
 function close_site_submit(Pieform $form, $values) {
