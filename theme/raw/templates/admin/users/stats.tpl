@@ -45,18 +45,12 @@
         <th>{str tag=maharaversion section=admin}</th>
         <td>{$institutiondata.release}</td>
     </tr>
-    {if $institutiondata.strlatestbranchversion || $institutiondata.strnotinsupport || $institutiondata.strlatestversion || $institutiondata.uptodate}
+    {if $institutiondata.strlatestversion}
     <tr>
         <td colspan="2">
-        {if $institutiondata.uptodate}
-            {$institutiondata.uptodate}
-        {else}
             <ul>
-            {if $institutiondata.strlatestbranchversion}<li>{$institutiondata.strlatestbranchversion|clean_html|safe}</li>{/if}
-            {if $institutiondata.strnotinsupport}<li><span class="text-danger">{$institutiondata.strnotinsupport}</span></li>{/if}
-            {if $institutiondata.strlatestversion}<li>{$institutiondata.strlatestversion|clean_html|safe}</li>{/if}
+            <li>{$institutiondata.strlatestversion|clean_html|safe}</li>
             </ul>
-        {/if}
         </td>
     </tr>
     {/if}

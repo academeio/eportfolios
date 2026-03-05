@@ -374,7 +374,7 @@ $string['groupcountsbytype'] = 'Number of groups by group type';
 $string['groupcountsbyjointype'] = 'Number of groups by access type';
 $string['blockcountsbytype'] = 'Most frequently used blocks in portfolio pages';
 $string['uptodate'] = 'Your local codebase is up to date with Academe ePortfolios core.';
-$string['latestversionis'] = 'Most recent major release: <a href="%s">%s</a>';
+$string['latestversionis'] = 'Current version: <a href="%s">%s</a>';
 $string['latestbranchversionis'] = 'Latest minor version of this release: <a href="%s">%s</a>';
 $string['versionnotinsupport'] = '%s is out of support.';
 $string['versionnotinsupportdev'] = 'Development version not in support';
