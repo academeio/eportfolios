@@ -79,26 +79,50 @@ function get_server_health() {
         $health['disk_status'] = 'critical';
     }
 
-    // Cron: last run timestamp
-    $lastcron = get_config('lastcronrun');
+    // Cron: detect last run from the cron table's nextrun timestamps.
+    // Jobs with nextrun in the near future were recently executed by cron.
+    // We look at the earliest nextrun — if it's overdue, cron isn't running.
     $health['cron_status'] = 'ok';
-    if ($lastcron) {
-        $cron_age = time() - $lastcron;
-        $health['cron_last_run'] = date('Y-m-d H:i:s', $lastcron);
-        $health['cron_seconds_ago'] = $cron_age;
-        $health['cron_human'] = format_seconds_ago_health($cron_age);
+    try {
+        $earliest = get_field_sql('SELECT ' . db_format_tsfield('nextrun', 'nextrun') . ' FROM {cron} WHERE nextrun IS NOT NULL ORDER BY nextrun ASC LIMIT 1');
+        if ($earliest) {
+            $next_ts = strtotime($earliest);
+            // If the earliest scheduled job is overdue, cron_age = how long overdue
+            $overdue = time() - $next_ts;
+            if ($overdue > 0) {
+                // Jobs are overdue — cron hasn't run since at least this long ago
+                $health['cron_last_run'] = date('Y-m-d H:i:s', $next_ts);
+                $health['cron_seconds_ago'] = $overdue;
+                $health['cron_human'] = format_seconds_ago_health($overdue) . ' (overdue)';
+            }
+            else {
+                // Next job is in the future — cron ran recently
+                // Estimate last run: most frequent jobs run every 5 min, so last run ~ nextrun - 300s
+                $last_run_est = $next_ts - 300;
+                $cron_age = time() - $last_run_est;
+                $health['cron_last_run'] = date('Y-m-d H:i:s', $last_run_est);
+                $health['cron_seconds_ago'] = $cron_age;
+                $health['cron_human'] = format_seconds_ago_health($cron_age);
+            }
 
-        if ($cron_age > 1800) {
-            $health['cron_status'] = 'critical';
+            if ($overdue > 1800) {
+                $health['cron_status'] = 'critical';
+            }
+            else if ($overdue > 600) {
+                $health['cron_status'] = 'warning';
+            }
         }
-        else if ($cron_age > 600) {
+        else {
+            $health['cron_last_run'] = null;
+            $health['cron_seconds_ago'] = null;
+            $health['cron_human'] = 'never';
             $health['cron_status'] = 'warning';
         }
     }
-    else {
+    catch (Exception $e) {
         $health['cron_last_run'] = null;
         $health['cron_seconds_ago'] = null;
-        $health['cron_human'] = 'never';
+        $health['cron_human'] = 'unknown';
         $health['cron_status'] = 'warning';
     }
 

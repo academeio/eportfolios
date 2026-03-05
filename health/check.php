@@ -84,24 +84,45 @@ catch (Exception $e) {
     $overall = 'critical';
 }
 
-// 3. Cron check
-$lastcron = get_config('lastcronrun');
+// 3. Cron check — detect last run from cron table nextrun timestamps
 $cron_status = 'ok';
 $cron_age = null;
-if ($lastcron) {
-    $cron_age = time() - $lastcron;
-    if ($cron_age > 1800) { // 30 minutes
-        $cron_status = 'critical';
-        $overall = 'critical';
+$cron_last_run = null;
+$overdue = 0;
+try {
+    $earliest = get_field_sql('SELECT ' . db_format_tsfield('nextrun', 'nextrun') . ' FROM {cron} WHERE nextrun IS NOT NULL ORDER BY nextrun ASC LIMIT 1');
+    if ($earliest) {
+        $next_ts = strtotime($earliest);
+        $overdue = time() - $next_ts;
+        if ($overdue > 0) {
+            $cron_age = $overdue;
+            $cron_last_run = $next_ts;
+        }
+        else {
+            $last_run_est = $next_ts - 300;
+            $cron_age = time() - $last_run_est;
+            $cron_last_run = $last_run_est;
+        }
+
+        if ($overdue > 1800) {
+            $cron_status = 'critical';
+            $overall = 'critical';
+        }
+        else if ($overdue > 600) {
+            $cron_status = 'warning';
+            if ($overall === 'ok') {
+                $overall = 'warning';
+            }
+        }
     }
-    else if ($cron_age > 600) { // 10 minutes
+    else {
         $cron_status = 'warning';
         if ($overall === 'ok') {
             $overall = 'warning';
         }
     }
 }
-else {
+catch (Exception $e) {
     $cron_status = 'warning';
     if ($overall === 'ok') {
         $overall = 'warning';
@@ -120,7 +141,7 @@ catch (Exception $e) {
 
 $checks['cron'] = array(
     'status' => $cron_status,
-    'last_run' => $lastcron ? date('Y-m-d H:i:s', $lastcron) : null,
+    'last_run' => $cron_last_run ? date('Y-m-d H:i:s', $cron_last_run) : null,
     'seconds_ago' => $cron_age,
     'stuck_locks' => (int)$stuck_locks,
 );
