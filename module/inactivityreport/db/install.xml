@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="module/inactivityreport/db" VERSION="20260305"
+       COMMENT="XMLDB file for inactivityreport module tables"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="module_inactivityreport_history">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true"/>
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="report_date" TYPE="datetime" NOTNULL="true"/>
+                <FIELD NAME="period_start" TYPE="datetime" NOTNULL="true"/>
+                <FIELD NAME="period_end" TYPE="datetime" NOTNULL="true"/>
+                <FIELD NAME="resident_count" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="csv_path" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="institutionix" UNIQUE="false" FIELDS="institution"/>
+                <INDEX NAME="reportdateix" UNIQUE="false" FIELDS="report_date"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>
