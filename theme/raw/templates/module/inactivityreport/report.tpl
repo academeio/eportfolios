@@ -34,7 +34,7 @@
             <tbody>
                 {foreach from=$reports item=report}
                 <tr>
-                    <td>{$report->report_date|format_date:'strftimedate'}</td>
+                    <td>{$report->report_date|strtotime|format_date:'strftimedate'}</td>
                     <td>{$report->institution_displayname}</td>
                     <td>
                         {if $report->resident_count > 0}
@@ -43,7 +43,7 @@
                             <span class="text-success">0</span>
                         {/if}
                     </td>
-                    <td>{$report->ctime|format_date:'strftimedatetime'}</td>
+                    <td>{$report->ctime|strtotime|format_date:'strftimedatetime'}</td>
                     <td>
                         {if $report->resident_count > 0}
                         <a href="{$WWWROOT}module/inactivityreport/report.php?download=1&id={$report->id}" class="btn btn-sm btn-secondary">
