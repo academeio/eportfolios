@@ -8,7 +8,7 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'adminhome/inactivityreport');
 define('SECTION_PLUGINTYPE', 'module');
 define('SECTION_PLUGINNAME', 'inactivityreport');
