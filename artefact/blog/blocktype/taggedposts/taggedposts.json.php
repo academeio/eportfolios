@@ -29,27 +29,19 @@ if ($page < 1) {
 $tagsperpage = 5;
 $values = array($USER->id);
 $typecast = is_postgres() ? '::varchar' : '';
-$sql = "SELECT
-            (CASE
-                WHEN at.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                ELSE at.tag
-            END) AS tag
+$sql = "SELECT at.tag
         FROM {tag} at
-        LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(at.tag, 7)
-        LEFT JOIN {institution} i ON i.name = t2.ownerid
         JOIN {artefact} a ON (at.resourcetype = 'artefact' AND at.resourceid = a.id" . $typecast . ")
         WHERE a.owner = ?
         AND at.resourcetype = 'artefact'
         AND at.resourceid = a.id" . $typecast . "
         AND a.artefacttype = 'blogpost'";
 if ($request !== '') {
-    $sql .= " AND (at.tag LIKE '%' || ? || '%' OR t2.tag LIKE '%' || ? || '%')";
-    $values[] = $request;
+    $sql .= " AND at.tag LIKE '%' || ? || '%'";
     $values[] = $request;
 }
-// We need to do group/order by alias of first column (tag) so we use column positioning
-$sql .= " GROUP BY 1, i.displayname
-          ORDER BY 1 ASC";
+$sql .= " GROUP BY at.tag
+          ORDER BY at.tag ASC";
 $more = true;
 $tmptags = array();
 $alltags = get_records_sql_array($sql, $values);

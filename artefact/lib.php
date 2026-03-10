@@ -1278,17 +1278,10 @@ abstract class ArtefactType implements IArtefactType {
         if (empty($artefactids)) {
             return array();
         }
-        $typecast = is_postgres() ? '::varchar' : '';
         $artefactids = join("','", array_map('intval', $artefactids));
         $tags = get_records_sql_array("
-            SELECT
-                (CASE
-                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                    ELSE t.tag
-                END) AS tag, t.resourceid
+            SELECT t.tag, t.resourceid
             FROM {tag} t
-            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-            LEFT JOIN {institution} i ON i.name = t2.ownerid
             WHERE t.resourcetype = 'artefact' AND t.resourceid IN ('" . $artefactids . "')");
         if (!$tags) {
             return array();
@@ -1304,17 +1297,10 @@ abstract class ArtefactType implements IArtefactType {
             ORDER BY a.title', array($this->id));
 
         // load tags
-        $typecast = is_postgres() ? '::varchar' : '';
         if ($list) {
             $tags = get_records_sql_array("
-                SELECT
-                    (CASE
-                        WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                        ELSE t.tag
-                    END) AS tag, t.resourceid
+                SELECT t.tag, t.resourceid
                 FROM {tag} t
-                LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-                LEFT JOIN {institution} i ON i.name = t2.ownerid
                 WHERE t.resourcetype = 'artefact' AND t.resourceid IN ('" . join("','", array_keys($list)) . "')");
             if ($tags) {
                 foreach ($tags as $t) {
@@ -1421,16 +1407,9 @@ abstract class ArtefactType implements IArtefactType {
         if (empty($id)) {
             return array();
         }
-        $typecast = is_postgres() ? '::varchar' : '';
         $tags = get_column_sql("
-            SELECT
-                (CASE
-                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                    ELSE t.tag
-                END) AS tag
+            SELECT t.tag
             FROM {tag} t
-            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-            LEFT JOIN {institution} i ON i.name = t2.ownerid
             WHERE t.resourcetype = ? AND t.resourceid = ?
             ORDER BY tag", array('artefact', $id));
         if (!$tags) {

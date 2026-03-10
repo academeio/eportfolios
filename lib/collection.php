@@ -2095,16 +2095,9 @@ class Collection {
      */
     public function get_tags() {
         if (!isset($this->tags)) {
-            $typecast = is_postgres() ? '::varchar' : '';
             $this->tags = get_column_sql("
-            SELECT
-                (CASE
-                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                    ELSE t.tag
-                END) AS tag
+            SELECT t.tag
             FROM {tag} t
-            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-            LEFT JOIN {institution} i ON i.name = t2.ownerid
             WHERE t.resourcetype = ? AND t.resourceid = ?
             ORDER BY tag", array('collection', $this->get('id')));
         }

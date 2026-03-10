@@ -151,7 +151,7 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
                 FROM {tag} t
                 JOIN {institution} i ON i.name = t.ownerid AND t.ownertype = 'institution'
                 JOIN {usr_institution} ui ON ui.institution = i.name AND ui.usr = ?
-                WHERE t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype') AND tag NOT LIKE ('tagid_%')";
+                WHERE t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')";
             $values[] = $userid;
         }
         else if ($USER->get('admin')) {
@@ -160,7 +160,7 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
                 SELECT t.tag, 0 AS count, NULL AS prefix
                 FROM {tag} t
                 WHERE t.ownertype = 'institution'
-                AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype') AND tag NOT LIKE ('tagid_%')";
+                AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')";
         }
         else {
             $userinstitutiontags = "
@@ -168,7 +168,7 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
                 SELECT t.tag, 0 AS count, NULL AS prefix
                 FROM {tag} t
                 WHERE t.ownertype = 'institution' AND t.ownerid = 'mahara'
-                AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype') AND tag NOT LIKE ('tagid_%')";
+                AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')";
         }
         $values[] = $userid;
         if ($USER->get('admin') && isset($institution)) {
@@ -205,13 +205,8 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
             FROM (
                 -- Selecting tags used in user section that you own
                 SELECT
-                  (CASE
-                    WHEN t.tag LIKE 'tagid_%' THEN t2.tag
-                   ELSE t.tag
-                  END) AS tag, COUNT(*) AS count, i.displayname AS prefix
+                  t.tag AS tag, COUNT(*) AS count, NULL AS prefix
                 FROM {tag} t
-                LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-                LEFT JOIN {institution} i ON i.name = t2.ownerid AND t2.resourcetype = 'institution'
                 WHERE t.ownertype='user' AND t.ownerid=? AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
                 GROUP BY 1, 3
                 -- Selecting tags used in institution section that you belong to
@@ -222,7 +217,7 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
                 FROM {tag} t
                 JOIN {group} g ON g.id" . $typecast . " = t.ownerid AND t.ownertype='group'
                 JOIN {group_member} gm ON gm.group = g.id AND gm.member = ?
-                WHERE t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype') AND tag NOT LIKE ('tagid_%')
+                WHERE t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
                 -- Selecting the special 'Institution tags' tags that you can see
                 " . $insttagsforuser . "
             ) tags

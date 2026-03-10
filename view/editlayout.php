@@ -244,16 +244,9 @@ function get_basic_elements() {
     global $view, $urlallowed, $group, $institution, $USER, $new;
 
     $createtagsoptions = array();
-    $typecast = is_postgres() ? '::varchar' : '';
     if ($selecttags = get_records_sql_array("
-        SELECT (
-            CASE
-                WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                ELSE t.tag
-            END) AS tag, t.resourcetype, t.id
+        SELECT t.tag, t.resourcetype, t.id
         FROM {tag} t
-        LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-        LEFT JOIN {institution} i ON i.name = t2.ownerid
         WHERE t.ownertype = ? AND t.ownerid = ?
         AND t.resourcetype IN ('artefact', 'blocktype')
         ORDER BY tag ASC", array('user', $USER->id))) {

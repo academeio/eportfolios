@@ -803,19 +803,9 @@ class Institution {
             )
         );
 
-        // Need to change any user's "institution tag" tags for this institution
-        // into normal user tags
-        $typecast = is_postgres() ? '::varchar' : '';
-        if ($userinstitutiontags = get_records_sql_array("
-            SELECT t.id, t.tag, (SELECT t2.tag FROM {tag} t2 WHERE t2.id" . $typecast . " = SUBSTRING(t.tag, 7)) AS realtag
-            FROM {tag} t
-            WHERE ownertype = ? AND ownerid = ?
-            AND tag LIKE 'tagid_%'", array('user', $user->id))) {
-
-            foreach ($userinstitutiontags as $newtag) {
-                execute_sql("UPDATE {tag} SET tag = ? WHERE id = ?", array($newtag->realtag, $newtag->id));
-            }
-        }
+        // tagid_% institution tag references are no longer used.
+        // Previously this block converted tagid_N references back to
+        // plain tag strings when a user left an institution.
 
         // If the user's license default is set to "institution default", remove the pref
         delete_records('usr_account_preference', 'usr', $user->id, 'field', 'licensedefault', 'value', LICENSE_INSTITUTION_DEFAULT);

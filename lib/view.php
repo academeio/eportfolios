@@ -754,16 +754,9 @@ class View {
 
     public function get_tags() {
         if (!isset($this->tags)) {
-            $typecast = is_postgres() ? '::varchar' : '';
             $this->tags = get_column_sql("
-            SELECT
-                (CASE
-                    WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                    ELSE t.tag
-                END) AS tag
+            SELECT t.tag
             FROM {tag} t
-            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-            LEFT JOIN {institution} i ON i.name = t2.ownerid
             WHERE t.resourcetype = ? AND t.resourceid = ?
             ORDER BY tag", array('view', $this->get('id')));
         }
@@ -786,37 +779,18 @@ class View {
                 FROM {view_artefact}
                 WHERE view = ?)", array($this->id, $this->id));
         $blockids = get_column('block_instance', 'id', 'view', $this->id);
-        $typecast = is_postgres() ? '::varchar' : '';
         $alltags = get_column_sql("
-            SELECT (
-                CASE
-                   WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                   ELSE t.tag
-                END) AS tag
+            SELECT t.tag
             FROM {tag} t
-            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-            LEFT JOIN {institution} i ON i.name = t2.ownerid
             WHERE t.resourcetype = ? AND t.resourceid = ?
             UNION
-            SELECT (
-                CASE
-                   WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                   ELSE t.tag
-                END) AS tag
+            SELECT t.tag
             FROM {tag} t
-            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-            LEFT JOIN {institution} i ON i.name = t2.ownerid
             WHERE t.resourcetype = ? AND t.resourceid IN ('" . join("','", $blockids) . "')
             GROUP BY 1
             UNION
-            SELECT (
-                CASE
-                   WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                   ELSE t.tag
-                END) AS tag
+            SELECT t.tag
             FROM {tag} t
-            LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-            LEFT JOIN {institution} i ON i.name = t2.ownerid
             WHERE t.resourcetype = ? AND t.resourceid IN ('" . join("','", $artefactids) . "')
             GROUP BY 1
             ORDER BY tag", array('view', $this->id, 'blocktype', 'artefact'));

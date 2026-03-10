@@ -4259,20 +4259,13 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitution
     else {
         $sort = '1 ASC';
     }
-    $excludeinstitutiontagssql = $excludeinstitutiontags ? " AND t.tag NOT LIKE 'tagid_%'" : '';
-    $typecast = is_postgres() ? '::varchar' : '';
     $tagrecords = get_records_sql_array("
         SELECT
-            (CASE
-                WHEN t.tag LIKE 'tagid_%' THEN CONCAT(i.displayname, ': ', t2.tag)
-                ELSE t.tag
-            END) AS tag, COUNT(t.tag) AS count
+            t.tag AS tag, COUNT(t.tag) AS count
         FROM {tag} t
-        LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-        LEFT JOIN {institution} i ON i.name = t2.ownerid
         WHERE t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
         AND t.ownertype = 'user'
-        AND t.ownerid = ?" . $excludeinstitutiontagssql . "
+        AND t.ownerid = ?
         GROUP BY 1
         ORDER BY " . $sort . (is_null($limit) ? '' : " LIMIT $limit"),
         array($id)
@@ -5322,32 +5315,6 @@ function generate_csv($data, $csvfields, $csvheaders = array()) {
  *
  */
 function check_if_institution_tag($tag) {
-    global $USER;
-    $institutions = $USER->get('institutions');
-    if ($USER->get('admin') && $institutiontags = get_records_sql_array("
-        SELECT id FROM {tag}
-        WHERE tag = ?
-        AND resourcetype = ?
-        AND ownertype = ?",
-        array($tag, 'institution', 'institution'))) {
-        $tag = 'tagid_' . $institutiontags[0]->id;
-    }
-    if ($institutions && $institutiontags = get_records_sql_array("
-        SELECT id FROM {tag}
-        WHERE tag = ?
-        AND resourcetype = ?
-        AND ownertype = ?
-        AND ownerid IN ('" . join("','", array_keys($institutions)) . "')
-        UNION
-        SELECT t.id FROM {tag} t
-        JOIN {institution} i ON i.name = t.ownerid
-        WHERE resourcetype = ?
-        AND ownertype = ?
-        AND ownerid IN ('" . join("','", array_keys($institutions)) . "')
-        AND CONCAT(i.displayname, ': ', t.tag) = ?",
-        array($tag, 'institution', 'institution', 'institution', 'institution', $tag))) {
-        $tag = 'tagid_' . $institutiontags[0]->id;  // if same tag in multiple institutions just pick first
-    }
     return $tag;
 }
 
@@ -5363,19 +5330,6 @@ function check_if_institution_tag($tag) {
  * @return array    Array of strings
  */
 function check_case_sensitive($a, $table) {
-    // Need to avoid tags that could clash with institution tag format
-    // So we remove or strip anything beginning with tagid/tagid_
-    foreach ($a as $k => $v) {
-        if (preg_match("/^tagid(\_*)(.*)/i", $v, $matches)) {
-            if (empty($matches[2])) {
-                unset($a[$k]);
-            }
-            else {
-                $a[$k] = $matches[2];
-            }
-        }
-    }
-
     if (is_mysql()) {
         $db = get_config('dbname');
         $table = get_config('dbprefix') . $table;
