@@ -279,7 +279,9 @@ abstract class ArtefactType implements IArtefactType {
     protected $title;
     protected $description;
     protected $note;
-    protected $tags = array();
+    protected $tags = null;
+    private $tags_loaded = false;
+    private $tags_dirty = false;
     protected $institution;
     protected $group;
     protected $author;
@@ -336,8 +338,12 @@ abstract class ArtefactType implements IArtefactType {
                         $value = time();
                     }
                 }
-                if ($field == 'tags' && !is_array($value)) {
-                    $value = preg_split("/\s*,\s*/", trim($value));
+                if ($field == 'tags') {
+                    if (!is_array($value)) {
+                        $value = preg_split("/\s*,\s*/", trim($value));
+                    }
+                    $this->tags_dirty = true;
+                    $this->tags_loaded = true;
                 }
                 $this->{$field} = $value;
             }
@@ -354,10 +360,7 @@ abstract class ArtefactType implements IArtefactType {
             }
         }
 
-        // load tags
-        if ($this->id) {
-            $this->tags = ArtefactType::artefact_get_tags($this->id);
-        }
+        // Tags are loaded lazily via get_tags() on first access.
 
         // load group permissions
         if ($this->group && !is_array($this->rolepermissions)) {
@@ -550,12 +553,34 @@ abstract class ArtefactType implements IArtefactType {
         if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
         }
+        if ($field == 'tags') {
+            return $this->get_tags();
+        }
         return $this->{$field};
+    }
+
+    /**
+     * Lazy-load tags from the database on first access.
+     * @return array
+     */
+    public function get_tags() {
+        if (!$this->tags_loaded && $this->id) {
+            $this->tags = ArtefactType::artefact_get_tags($this->id);
+            $this->tags_loaded = true;
+        }
+        return is_array($this->tags) ? $this->tags : array();
     }
 
     public function set($field, $value) {
         if (property_exists($this, $field)) {
-            if ($this->{$field} != $value) {
+            if ($field == 'tags') {
+                // Tags need special handling: null == array() in PHP,
+                // so the generic != check below would miss the change.
+                $this->tags_dirty = true;
+                $this->tags_loaded = true;
+                $this->dirty = true;
+            }
+            else if ($this->{$field} != $value) {
                 // Only set it to dirty if it's changed.
                 $this->dirty = true;
                 // Set oldparent only if it has changed.
@@ -645,11 +670,11 @@ abstract class ArtefactType implements IArtefactType {
             $this->save_rolepermissions();
         }
 
-        if (!$is_new) {
-          $deleted = delete_records('tag', 'resourcetype', 'artefact', 'resourceid', $this->id);
+        if ($this->tags_dirty && !$is_new) {
+          delete_records('tag', 'resourcetype', 'artefact', 'resourceid', $this->id);
         }
 
-        if (is_array($this->tags)) {
+        if ($this->tags_dirty && is_array($this->tags)) {
             if ($this->group) {
                 $ownertype = 'group';
                 $ownerid = $this->group;
