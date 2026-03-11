@@ -397,7 +397,7 @@ class Collection {
             $tags = check_case_sensitive($this->get_tags(), 'tag');
             foreach (array_unique($tags) as $tag) {
                 //truncate the tag before insert it into the database
-                $tag = substr($tag, 0, 128);
+                $tag = normalize_tag($tag);
                 $tag = check_if_institution_tag($tag);
                 insert_record('tag',
                     (object)array(

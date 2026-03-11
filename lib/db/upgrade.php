@@ -981,5 +981,43 @@ function xmldb_core_upgrade($oldversion=0) {
         seed_content_templates();
     }
 
+    if ($oldversion < 2026031100) {
+        log_debug('Normalizing tags: lowercase + whitespace collapse + truncate to 128 chars');
+
+        // Step 1: Update all tags to their normalized form (lowercase, collapsed whitespace, trimmed, max 128 chars).
+        // This uses SQL-level equivalents of normalize_tag().
+        if (is_postgres()) {
+            execute_sql("UPDATE {tag} SET tag = SUBSTRING(TRIM(REGEXP_REPLACE(LOWER(tag), '\\s+', ' ', 'g')), 1, 128)");
+        }
+        else {
+            // MariaDB/MySQL
+            execute_sql("UPDATE {tag} SET tag = LEFT(TRIM(REGEXP_REPLACE(LOWER(tag), '[[:space:]]+', ' ')), 128)");
+        }
+
+        // Step 2: Remove duplicate rows that now have identical (resourcetype, resourceid, tag).
+        // Keep the row with the lowest id (earliest created).
+        log_debug('Removing duplicate tags after normalization');
+        if (is_postgres()) {
+            execute_sql("
+                DELETE FROM {tag}
+                WHERE id NOT IN (
+                    SELECT MIN(id) FROM {tag}
+                    GROUP BY resourcetype, resourceid, tag
+                )
+            ");
+        }
+        else {
+            // MariaDB/MySQL: can't reference target table directly in subquery
+            execute_sql("
+                DELETE t1 FROM {tag} t1
+                INNER JOIN {tag} t2
+                    ON  t1.resourcetype = t2.resourcetype
+                    AND t1.resourceid   = t2.resourceid
+                    AND t1.tag          = t2.tag
+                    AND t1.id > t2.id
+            ");
+        }
+    }
+
     return $status;
 }

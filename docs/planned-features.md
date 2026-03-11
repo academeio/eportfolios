@@ -126,8 +126,8 @@ Full design: `~/Developer/sbveportfolios/docs/plans/04-03-2026-tag-query-optimiz
 ### Tag System — Future Improvements
 
 - [ ] **Replace `tagid_%` with proper FK** — Add `institution_tag_id` integer column to tag table. Migrate existing `tagid_<N>` strings to populate the FK. Update queries to use index-backed joins instead of `SUBSTRING()`. Note: zero `tagid_%` tags exist on SBVU — this is a preventive fix for other deployments.
-- [ ] **Cache tag cloud results** — Global tag cloud query (8.1s) scans 1.46M rows for a result that changes infrequently. Cache in a dedicated table, refresh on tag write operations.
-- [ ] **Tag deduplication** — 26,200 unique tag values with case variants ("EPA 1" / "EPA1" / "epa 1"). Normalize to canonical forms.
+- [x] **Cache tag cloud results** — Session-based cache with 5-min TTL + per-request static cache. Invalidation on all tag write paths. DONE in 22.20.6.
+- [x] **Tag deduplication** — Added `normalize_tag()` (lowercase + whitespace collapse + truncate 128) to all 4 write paths. DB migration normalizes existing tags and removes duplicates. DONE in 22.20.6.
 
 ---
 
@@ -138,6 +138,6 @@ Full design: `~/Developer/sbveportfolios/docs/plans/04-03-2026-tag-query-optimiz
 | 22.20.3 | Academe ePortfolios rebrand + PHP 8.1 fixes + SES fix (released) |
 | 22.20.5 | Inactive resident report module (released) |
 | 22.20.6 | Dead `tagid_%` code removal + DB index recommendations (released) |
-| 22.20.7 | Lazy tag loading (done) + tag deduplication + tag cloud caching |
+| 22.20.7 | Lazy tag loading + tag deduplication + tag cloud caching (all done in 22.20.6) |
 | 22.20.8 | Final brand assets + tracker endpoint update |
 | 23.x | PGME plugins bundled + `tagid_%` FK migration + new features |

@@ -693,6 +693,7 @@ abstract class ArtefactType implements IArtefactType {
                 if (empty($tag)) {
                     continue;
                 }
+                $tag = normalize_tag($tag);
                 $tag = check_if_institution_tag($tag);
                 insert_record('tag',
                     (object) array(

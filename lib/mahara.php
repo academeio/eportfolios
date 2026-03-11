@@ -4246,6 +4246,24 @@ function tag_weight($freq) {
     // return log10($freq);
 }
 
+/**
+ * Normalize a tag string for consistent storage.
+ * - Trims whitespace
+ * - Collapses internal whitespace to single spaces
+ * - Lowercases the entire string
+ * - Truncates to 128 characters
+ *
+ * @param string $tag Raw tag input
+ * @return string Normalized tag
+ */
+function normalize_tag($tag) {
+    $tag = trim($tag);
+    $tag = preg_replace('/\s+/', ' ', $tag);
+    $tag = mb_strtolower($tag, 'UTF-8');
+    $tag = substr($tag, 0, 128);
+    return $tag;
+}
+
 function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitutiontags=false) {
     global $USER, $SESSION;
     static $request_cache = array();

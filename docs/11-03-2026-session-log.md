@@ -271,13 +271,44 @@ To be done from `~/Developer/sbvueportfolios/` after DigitalOcean snapshot:
 
 ---
 
+## Activity 8: Tag Cloud Caching (commit 4fcca74)
+
+**Problem:** `get_my_tags()` queries 1.46M rows on SBVU production every time the tag cloud is rendered.
+
+**Solution:**
+- Rewrote `get_my_tags()` in `lib/mahara.php` with dual-layer cache: per-request static variable + session-based cache with 5-minute TTL
+- Added `invalidate_tag_cloud_cache()` function
+- Wired invalidation into all 5 tag write paths: `artefact/lib.php`, `lib/view.php`, `lib/collection.php`, `blocktype/lib.php`, `edittags.php`
+
+---
+
+## Activity 9: Tag Deduplication
+
+**Problem:** Case variants ("EPA 1" / "epa 1" / "EPA1") create duplicates in the tag table.
+
+**Solution:**
+1. Added `normalize_tag()` to `lib/mahara.php` — lowercase + whitespace collapse + trim + truncate to 128 chars
+2. Wired `normalize_tag()` into all 4 tag insert loops (artefact, view, collection, blocktype) — replaces ad-hoc `substr($tag, 0, 128)` calls
+3. DB migration in `lib/db/upgrade.php` (version 2026031100):
+   - SQL-level normalization of all existing tags (LOWER + REGEXP_REPLACE for whitespace)
+   - Duplicate removal keeping earliest row per (resourcetype, resourceid, tag) group
+   - Handles both PostgreSQL and MariaDB syntax differences
+4. Bumped version to 2026031100 / release 22.20.6
+
+**Testing:**
+- `normalize_tag()`: 5/5 unit tests passed
+- Docker upgrade ran successfully
+- Post-migration: 0 duplicate groups, 0 non-lowercase tags remaining
+
+---
+
 ## Remaining v22.20.7 Work
 
 | Item | Status | Complexity |
 |------|--------|------------|
 | Lazy tag loading | **DONE** | Low |
-| Tag cloud caching | Not started | Medium — cache table + invalidation on tag writes |
-| Tag deduplication | Not started | High — migration to normalize 26,200 case variants |
+| Tag cloud caching | **DONE** | Session cache with 5-min TTL + invalidation on tag writes |
+| Tag deduplication | **DONE** | `normalize_tag()` in 4 write paths + DB migration |
 
 ---
 

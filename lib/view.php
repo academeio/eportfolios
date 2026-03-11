@@ -935,8 +935,7 @@ class View {
             $this->tags = check_case_sensitive($this->tags, 'tag');
             delete_records('tag', 'resourcetype', 'view', 'resourceid', $this->get('id'));
             foreach (array_unique($this->get_tags()) as $tag) {
-                //truncate the tag before insert it into the database
-                $tag = substr($tag, 0, 128);
+                $tag = normalize_tag($tag);
                 $tag = check_if_institution_tag($tag);
                 insert_record('tag',
                     (object)array(
