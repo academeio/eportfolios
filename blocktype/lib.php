@@ -1351,6 +1351,7 @@ class BlockInstance {
                 )
             );
         }
+        invalidate_tag_cloud_cache();
     }
 
     /**

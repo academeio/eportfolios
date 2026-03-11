@@ -950,6 +950,7 @@ class View {
                     )
                 );
             }
+            invalidate_tag_cloud_cache();
         }
 
         if (isset($this->copynewgroups)) {

@@ -4247,32 +4247,74 @@ function tag_weight($freq) {
 }
 
 function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitutiontags=false) {
-    global $USER;
+    global $USER, $SESSION;
+    static $request_cache = array();
+
     if (get_config('version') < 2018061801) {
         // we are in upgrade before the table exists
         return false;
     }
     $id = $USER->get('id');
-    if ($limit || $sort != 'alpha') {
-        $sort = 'COUNT(1) DESC';  // In this instance '1' is not a number but the column reference to 'tag' column
+
+    // Build cache key from parameters
+    $cachekey = $id . ':' . ($limit ?: 'all') . ':' . $sort;
+
+    // Per-request static cache (avoids repeated work within one page load)
+    if (isset($request_cache[$cachekey])) {
+        $tagrecords = $request_cache[$cachekey];
     }
     else {
-        $sort = '1 ASC';
+        // Session cache with 5-minute TTL
+        $sessionkey = 'tagcloud_cache';
+        $cached = $SESSION->get($sessionkey);
+        $ttl = 300; // 5 minutes
+
+        if ($cached && isset($cached[$cachekey])
+            && isset($cached['_time']) && (time() - $cached['_time']) < $ttl) {
+            $tagrecords = $cached[$cachekey];
+        }
+        else {
+            // Query the database
+            if ($limit || $sort != 'alpha') {
+                $sortclause = 'COUNT(1) DESC';
+            }
+            else {
+                $sortclause = '1 ASC';
+            }
+            $tagrecords = get_records_sql_array("
+                SELECT
+                    t.tag AS tag, COUNT(t.tag) AS count
+                FROM {tag} t
+                WHERE t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
+                AND t.ownertype = 'user'
+                AND t.ownerid = ?
+                GROUP BY 1
+                ORDER BY " . $sortclause . (is_null($limit) ? '' : " LIMIT $limit"),
+                array($id)
+            );
+            if (!$tagrecords) {
+                $tagrecords = array();
+            }
+
+            // Store in session cache
+            if (!is_array($cached)) {
+                $cached = array();
+            }
+            $cached[$cachekey] = $tagrecords;
+            $cached['_time'] = time();
+            $SESSION->set($sessionkey, $cached);
+        }
+        $request_cache[$cachekey] = $tagrecords;
     }
-    $tagrecords = get_records_sql_array("
-        SELECT
-            t.tag AS tag, COUNT(t.tag) AS count
-        FROM {tag} t
-        WHERE t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
-        AND t.ownertype = 'user'
-        AND t.ownerid = ?
-        GROUP BY 1
-        ORDER BY " . $sort . (is_null($limit) ? '' : " LIMIT $limit"),
-        array($id)
-    );
-    if (!$tagrecords) {
+
+    if (empty($tagrecords)) {
         return array();
     }
+
+    // Cloud size calculation and URL encoding are applied fresh each time
+    // (they're cheap and depend on the full result set)
+    $tagrecords = array_map(function($t) { return clone $t; }, $tagrecords);
+
     if ($cloud) {
         $minfreq = $tagrecords[count($tagrecords) - 1]->count;
         $maxfreq = $tagrecords[0]->count;
@@ -4294,6 +4336,15 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitution
         $t->tagurl = urlencode($t->tag);
     }
     return $tagrecords;
+}
+
+/**
+ * Invalidate the cached tag cloud for the current user.
+ * Call this after tag modifications where immediate freshness is needed.
+ */
+function invalidate_tag_cloud_cache() {
+    global $SESSION;
+    $SESSION->set('tagcloud_cache', null);
 }
 
 function tags_sideblock() {

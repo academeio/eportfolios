@@ -102,6 +102,7 @@ function edit_tag_submit(Pieform $form, $values) {
     );
 
     db_commit();
+    invalidate_tag_cloud_cache();
     $SESSION->add_ok_msg(get_string('tagupdatedsuccessfully'));
     redirect(get_config('wwwroot') . 'tags.php?tag=' . urlencode($values['tagname']));
 }
@@ -117,6 +118,7 @@ function delete_tag_submit(Pieform $form, $values) {
         array($tag, 'user', $userid)
     );
     db_commit();
+    invalidate_tag_cloud_cache();
     $SESSION->add_ok_msg(get_string('tagdeletedsuccessfully'));
     redirect(get_config('wwwroot') . 'tags.php');
 }

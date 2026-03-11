@@ -706,6 +706,7 @@ abstract class ArtefactType implements IArtefactType {
                     )
                 );
             }
+            invalidate_tag_cloud_cache();
         }
 
         $this->postcommit_hook($is_new);

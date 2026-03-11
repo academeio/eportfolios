@@ -411,6 +411,7 @@ class Collection {
                     )
                 );
             }
+            invalidate_tag_cloud_cache();
         }
 
         db_commit();
