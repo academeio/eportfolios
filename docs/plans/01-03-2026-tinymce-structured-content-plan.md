@@ -9,8 +9,8 @@
 **Tech Stack:** TypeScript 5.x, Rollup, Vitest (with jsdom), TinyMCE 7 API
 
 **Repos:**
-- **Plugin:** `~/Development/tinymce-structured-content/` → GitHub `academeio/tinymce-structured-content`
-- **ePortfolios integration:** `~/Development/eportfolios/`
+- **Plugin:** `~/Developer/tinymce-structured-content/` → GitHub `academeio/tinymce-structured-content`
+- **ePortfolios integration:** `~/Developer/eportfolios/`
 
 **Design doc:** `docs/plans/01-03-2026-tinymce-structured-content-design.md`
 
@@ -21,20 +21,20 @@
 ### Task 1: Project Scaffolding
 
 **Files:**
-- Create: `~/Development/tinymce-structured-content/package.json`
-- Create: `~/Development/tinymce-structured-content/tsconfig.json`
-- Create: `~/Development/tinymce-structured-content/rollup.config.js`
-- Create: `~/Development/tinymce-structured-content/.gitignore`
-- Create: `~/Development/tinymce-structured-content/LICENSE`
-- Create: `~/Development/tinymce-structured-content/README.md`
-- Create: `~/Development/tinymce-structured-content/CLAUDE.md`
-- Create: `~/Development/tinymce-structured-content/src/plugin.ts` (minimal stub)
+- Create: `~/Developer/tinymce-structured-content/package.json`
+- Create: `~/Developer/tinymce-structured-content/tsconfig.json`
+- Create: `~/Developer/tinymce-structured-content/rollup.config.js`
+- Create: `~/Developer/tinymce-structured-content/.gitignore`
+- Create: `~/Developer/tinymce-structured-content/LICENSE`
+- Create: `~/Developer/tinymce-structured-content/README.md`
+- Create: `~/Developer/tinymce-structured-content/CLAUDE.md`
+- Create: `~/Developer/tinymce-structured-content/src/plugin.ts` (minimal stub)
 
 **Step 1: Create directory and init git**
 
 ```bash
-mkdir -p ~/Development/tinymce-structured-content
-cd ~/Development/tinymce-structured-content
+mkdir -p ~/Developer/tinymce-structured-content
+cd ~/Developer/tinymce-structured-content
 git init
 ```
 
@@ -182,7 +182,7 @@ TinyMCE 7 plugin for structured content templates. Modular TypeScript, bundled v
 
 ## Design
 
-See ~/Development/eportfolios/docs/plans/01-03-2026-tinymce-structured-content-design.md
+See ~/Developer/eportfolios/docs/plans/01-03-2026-tinymce-structured-content-design.md
 ```
 
 **Step 9: Create minimal src/plugin.ts stub**
@@ -1231,7 +1231,7 @@ git commit -m "chore: build verification, tag v0.1.0"
 
 ## Phase B: ePortfolios Integration
 
-All remaining tasks are in the `~/Development/eportfolios/` repo.
+All remaining tasks are in the `~/Developer/eportfolios/` repo.
 
 ### Task 9: Copy Built Plugin Into ePortfolios
 
@@ -1242,7 +1242,7 @@ All remaining tasks are in the `~/Development/eportfolios/` repo.
 
 ```bash
 mkdir -p js/tinymce/plugins/structuredcontent
-cp ~/Development/tinymce-structured-content/dist/plugin.js js/tinymce/plugins/structuredcontent/plugin.js
+cp ~/Developer/tinymce-structured-content/dist/plugin.js js/tinymce/plugins/structuredcontent/plugin.js
 ```
 
 **Step 2: Commit**

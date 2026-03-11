@@ -8,7 +8,7 @@ ePortfolios is an open-source ePortfolio and competency assessment platform for 
 
 **Stack:** PHP 8.1+, PostgreSQL 12+ or MariaDB 10.6+, Bootstrap 5, SASS/SCSS, jQuery, Smarty templates (Dwoo variant), Apache/Nginx.
 
-**Related:** [ePortfolios Mobile](https://github.com/academeio/eportfolios-mobile) (`~/Development/eportfolios-mobile/`) — React Native companion app. Separate repo, separate stack (RN 0.77, TypeScript, Redux).
+**Related:** [ePortfolios Mobile](https://github.com/academeio/eportfolios-mobile) (`~/Developer/eportfolios-mobile/`) — React Native companion app. Separate repo, separate stack (RN 0.77, TypeScript, Redux).
 
 ## CSS Compilation
 

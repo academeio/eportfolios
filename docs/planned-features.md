@@ -1,6 +1,6 @@
 # ePortfolios — Planned Features & Remaining Work
 
-**Last updated:** 04-03-2026
+**Last updated:** 11-03-2026
 
 ---
 
@@ -85,7 +85,7 @@ Discovered during Mahara 20.04 → 22.10 upgrade + production testing on Digital
 | 4 | `lib/upgrade.php` | `uksort()` bool return → spaceship: `$weight1 <=> $weight2` | ~1234 |
 | 5 | `auth/lib.php` | `ceil()` string operand: `ceil((int)$warn / 86400)` | ~2546 |
 
-Full reference: `~/Development/mahara-plugin-dev/docs/mahara-22.10-php81-compatibility-fixes.md`
+Full reference: `~/Developer/mahara-plugin-dev/docs/mahara-22.10-php81-compatibility-fixes.md`
 
 ### SES Email Compatibility Fix
 
@@ -111,14 +111,17 @@ $mail->addReplyTo($userfrom->email, display_name($userfrom, $userto));
 
 Analysis (04-03-2026) of the 1.54M-row tag table revealed the root cause: the LEFT JOIN pattern `ON t.resourcetype = 'artefact' AND t.resourceid = a.id` uses index `(resourcetype, resourceid, tag)` which starts with `resourcetype`. Since 97% of tags are `resourcetype='artefact'` (767K rows), every artefact lookup scans 767K rows instead of ~2. For users with 2,455 artefacts, that's 1.88 billion comparisons per query.
 
-Full design: `~/Development/sbveportfolios/docs/plans/04-03-2026-tag-query-optimization-design.md`
+Full design: `~/Developer/sbveportfolios/docs/plans/04-03-2026-tag-query-optimization-design.md`
 
 **Phase 1 — New index (deploy with migration, no code changes):**
 - [ ] `ALTER TABLE tag ADD INDEX tag_resid_restyp_ix (resourceid, resourcetype);` — flips lookup order so each artefact ID matches ~2 rows instead of scanning 767K. Expected 100,000x improvement for LEFT JOIN queries.
 
-**Phase 2 — Lazy tag loading (22.20.4):**
-- [ ] Modify View/ArtefactType class hierarchy so tags are NOT loaded during object construction. Tags load on-demand only when explicitly accessed (`$tags_loaded` flag pattern). Eliminates tag queries for ~90% of page loads (most pages don't display tags).
-- [ ] Verify tag display still works in templates, tag search/filter paths, and structured content plugin (tag-based template categories).
+**Phase 2 — Lazy tag loading (DONE — 11-03-2026, commit `4f9b73f`):**
+- [x] Modify ArtefactType so tags are NOT loaded during object construction. Tags load on-demand only when explicitly accessed (`$tags_loaded` flag pattern). Eliminates tag queries for ~90% of page loads. Note: View, Collection, and BlockInstance were already lazy — only ArtefactType was eager.
+- [x] Verify tag display still works in templates, tag search/filter paths, and tag editing pages (19/19 automated tests passing + web smoke tests).
+- [x] Bonus fix: `commit()` no longer does pointless DELETE+INSERT of tags when only non-tag fields change.
+- [x] Bonus fix: clearing tags with empty array now works (PHP `null == array()` quirk).
+- Full write-up: `docs/11-03-2026-lazy-tag-loading.md`
 
 ### Tag System — Future Improvements
 
@@ -132,7 +135,9 @@ Full design: `~/Development/sbveportfolios/docs/plans/04-03-2026-tag-query-optim
 
 | Version | Scope |
 |---------|-------|
-| 22.20.3 | Current — Academe ePortfolios rebrand + PHP 8.1 fixes + SES fix (released) |
-| 22.20.4 | Lazy tag loading + tag deduplication + tag cloud caching |
-| 22.20.5 | Final brand assets + tracker endpoint update |
+| 22.20.3 | Academe ePortfolios rebrand + PHP 8.1 fixes + SES fix (released) |
+| 22.20.5 | Inactive resident report module (released) |
+| 22.20.6 | Dead `tagid_%` code removal + DB index recommendations (released) |
+| 22.20.7 | Lazy tag loading (done) + tag deduplication + tag cloud caching |
+| 22.20.8 | Final brand assets + tracker endpoint update |
 | 23.x | PGME plugins bundled + `tagid_%` FK migration + new features |

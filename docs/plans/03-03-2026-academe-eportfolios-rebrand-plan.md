@@ -250,7 +250,7 @@ git commit -m "rebrand: update templates to 'Academe ePortfolios'"
 **Step 1: Rename the image files**
 
 ```bash
-cd /Users/jagan/Development/eportfolios
+cd /Users/jagan/Developer/eportfolios
 git mv theme/raw/images/powered_by_eportfolios.png theme/raw/images/powered_by_academe_eportfolios.png
 git mv theme/raw/images/powered_by_eportfolios.svg theme/raw/images/powered_by_academe_eportfolios.svg
 ```

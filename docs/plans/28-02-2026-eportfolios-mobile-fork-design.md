@@ -3,7 +3,7 @@
 **Date:** 28-02-2026
 **Status:** Approved
 **Source:** [MaharaProject/mahara-mobile-react-native](https://github.com/MaharaProject/mahara-mobile-react-native)
-**Target:** `~/Development/eportfolios-mobile/`
+**Target:** `~/Developer/eportfolios-mobile/`
 
 ---
 

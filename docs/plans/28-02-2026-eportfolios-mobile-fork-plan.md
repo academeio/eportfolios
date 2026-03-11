@@ -8,9 +8,9 @@
 
 **Tech Stack:** React Native 0.77.3, TypeScript, Redux/RTK, GlueStack UI, React Navigation 7, LinguiJS i18n
 
-**Working directory:** `~/Development/eportfolios-mobile/`
+**Working directory:** `~/Developer/eportfolios-mobile/`
 
-**Design doc:** `~/Development/eportfolios/docs/plans/28-02-2026-eportfolios-mobile-fork-design.md`
+**Design doc:** `~/Developer/eportfolios/docs/plans/28-02-2026-eportfolios-mobile-fork-design.md`
 
 ---
 
@@ -18,7 +18,7 @@
 
 **Files:**
 - Source: `https://github.com/MaharaProject/mahara-mobile-react-native` (clone to temp)
-- Target: `~/Development/eportfolios-mobile/` (all files go here)
+- Target: `~/Developer/eportfolios-mobile/` (all files go here)
 
 **Step 1: Clone upstream to a temp directory**
 
@@ -29,7 +29,7 @@ git clone https://github.com/MaharaProject/mahara-mobile-react-native.git /tmp/m
 **Step 2: Initialize git in the target directory**
 
 ```bash
-cd ~/Development/eportfolios-mobile
+cd ~/Developer/eportfolios-mobile
 git init
 ```
 
@@ -38,10 +38,10 @@ git init
 Copy the contents of `MaharaMobile/` — not the directory itself — to the repo root. Also copy `COPYING` and `README.md` from the upstream repo root.
 
 ```bash
-cp -a /tmp/mahara-mobile-upstream/MaharaMobile/* ~/Development/eportfolios-mobile/
-cp -a /tmp/mahara-mobile-upstream/MaharaMobile/.* ~/Development/eportfolios-mobile/ 2>/dev/null || true
-cp /tmp/mahara-mobile-upstream/COPYING ~/Development/eportfolios-mobile/
-cp /tmp/mahara-mobile-upstream/README.md ~/Development/eportfolios-mobile/README.upstream.md
+cp -a /tmp/mahara-mobile-upstream/MaharaMobile/* ~/Developer/eportfolios-mobile/
+cp -a /tmp/mahara-mobile-upstream/MaharaMobile/.* ~/Developer/eportfolios-mobile/ 2>/dev/null || true
+cp /tmp/mahara-mobile-upstream/COPYING ~/Developer/eportfolios-mobile/
+cp /tmp/mahara-mobile-upstream/README.md ~/Developer/eportfolios-mobile/README.upstream.md
 ```
 
 Note: Save upstream README as `README.upstream.md` — we'll write our own `README.md` in Task 2.
@@ -49,24 +49,24 @@ Note: Save upstream README as `README.upstream.md` — we'll write our own `READ
 **Step 4: Verify the flattened structure**
 
 ```bash
-ls ~/Development/eportfolios-mobile/
+ls ~/Developer/eportfolios-mobile/
 # Expected: android/ ios/ src/ locales/ patches/ package.json app.json index.js
 #           tsconfig.json metro.config.js babel.config.js Gemfile COPYING etc.
 ```
 
 Verify key files exist:
 ```bash
-test -f ~/Development/eportfolios-mobile/package.json && echo "OK: package.json"
-test -f ~/Development/eportfolios-mobile/app.json && echo "OK: app.json"
-test -d ~/Development/eportfolios-mobile/src && echo "OK: src/"
-test -d ~/Development/eportfolios-mobile/android && echo "OK: android/"
-test -d ~/Development/eportfolios-mobile/ios && echo "OK: ios/"
+test -f ~/Developer/eportfolios-mobile/package.json && echo "OK: package.json"
+test -f ~/Developer/eportfolios-mobile/app.json && echo "OK: app.json"
+test -d ~/Developer/eportfolios-mobile/src && echo "OK: src/"
+test -d ~/Developer/eportfolios-mobile/android && echo "OK: android/"
+test -d ~/Developer/eportfolios-mobile/ios && echo "OK: ios/"
 ```
 
 **Step 5: Create import commit**
 
 ```bash
-cd ~/Development/eportfolios-mobile
+cd ~/Developer/eportfolios-mobile
 git add -A
 git commit -m "Import Mahara Mobile 25.0.5 (GPL v3) as base for ePortfolios Mobile"
 ```
@@ -88,7 +88,7 @@ rm -rf /tmp/mahara-mobile-upstream
 **Step 1: Copy GPL v3 license text from COPYING to LICENSE**
 
 ```bash
-cd ~/Development/eportfolios-mobile
+cd ~/Developer/eportfolios-mobile
 mv COPYING LICENSE
 ```
 
